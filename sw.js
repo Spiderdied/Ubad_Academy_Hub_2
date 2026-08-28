@@ -6,7 +6,7 @@
    ═══════════════════════════════════════════════════════════ */
 'use strict';
 
-const VERSION = 'v1.0.1';                 /* bumped — new icons + install button */
+const VERSION = 'v1.0.2';                 /* bumped — new icons + install button */
 const CACHE   = 'ubad-hub-' + VERSION;
 
 const SHELL = [

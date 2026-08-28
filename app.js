@@ -110,6 +110,12 @@ en:{
  'set.exported':'Backup file downloaded.',
  'search.ph':'Search notes, courses, events…','search.none':'No results for “{q}”',
  'search.notes':'Notes','search.courses':'Courses','search.events':'Events','search.decks':'Flashcards','search.quizzes':'Quizzes',
+ 'set.install':'Install app','set.installDesc':'Install UBAD ACADEMY HUB as a real app — full screen, offline, one tap from your home screen.',
+ 'set.installBtn':'Install now','set.installed':'App installed. Enjoy your academy!',
+ 'set.installHow':'No automatic install prompt is available in this browser. How to install manually:',
+ 'set.ios':'iPhone / iPad (Safari): tap the Share button, then “Add to Home Screen”.',
+ 'set.android':'Android (Chrome): menu ⋮ → “Install app” (or “Add to Home screen”).',
+ 'set.desktop':'Desktop (Chrome / Edge): click the install icon in the address bar, or menu ⋮ → “Install page as app”.',
 },
 ar:{
  'app.name':'أكاديمية عُباد','hub.head':'ادخل إلى أكاديميتك',
@@ -189,6 +195,12 @@ ar:{
  'set.exported':'تم تنزيل ملف النسخة الاحتياطية.',
  'search.ph':'ابحث في الملاحظات والمقررات والفعاليات…','search.none':'لا نتائج لـ «{q}»',
  'search.notes':'الملاحظات','search.courses':'المقررات','search.events':'الفعاليات','search.decks':'البطاقات','search.quizzes':'الاختبارات',
+ 'set.install':'تثبيت التطبيق','set.installDesc':'ثبّت أكاديمية عُباد كتطبيق مستقل — ملء الشاشة، يعمل دون اتصال، وبضغطة واحدة من شاشتك الرئيسية.',
+ 'set.installBtn':'تثبيت الآن','set.installed':'تم تثبيت التطبيق. استمتع بأكاديميتك!',
+ 'set.installHow':'لا تتوفر نافذة تثبيت تلقائية في هذا المتصفح. طريقة التثبيت اليدوي:',
+ 'set.ios':'آيفون / آيباد (سفاري): اضغط زر المشاركة ⬆ ثم «إضافة إلى الشاشة الرئيسية».',
+ 'set.android':'أندرويد (كروم): القائمة ⋮ ← «تثبيت التطبيق» (أو «إضافة إلى الشاشة الرئيسية»).',
+ 'set.desktop':'الحاسوب (كروم / إيدج): اضغط أيقونة التثبيت في شريط العنوان، أو القائمة ⋮ ← «تثبيت الصفحة كتطبيق».',
 }};
 const t=(k,vars)=>{ let s=(I18N[state.settings.lang]||I18N.en)[k]; if(s==null) s=I18N.en[k]||k;
   if(vars) for(const key in vars) s=s.split('{'+key+'}').join(vars[key]); return s; };
@@ -312,7 +324,26 @@ const Sound={ files:{click:'assets/audio/click.mp3',move:'assets/audio/3d-move.m
       o.connect(g); g.connect(this.ctx.destination); o.start(t0); o.stop(t0+.15);
     }catch(e){} }
 };
-
+/* ═══ 5.5 PWA install ════════════════════════════════════════ */
+const PWA={
+  evt:null,
+  standalone:()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true,
+  init(){
+    window.addEventListener('beforeinstallprompt',e=>{
+      e.preventDefault(); this.evt=e;   /* capture the native prompt */
+    });
+    window.addEventListener('appinstalled',()=>{
+      this.evt=null; toast(t('set.installed'));
+    });
+  },
+  async prompt(){
+    if(!this.evt) return false;
+    try{ await this.evt.prompt();
+      const r=await this.evt.userChoice.catch(()=>null);
+      this.evt=null; return !!(r&&r.outcome==='accepted');
+    }catch(e){ return false; }
+  }
+};
 /* ═══ 6. toast + modal ═══════════════════════════════════════ */
 function toast(msg,kind){ const root=$('#toast-root'); const el=document.createElement('div');
   el.className='toast'+(kind==='err'?' err':'');
@@ -1466,6 +1497,10 @@ LAYERS.settings={
       <button class="switch ${s.sound?'on':''}" id="set-sound" role="switch" aria-checked="${s.sound}" aria-label="${t('set.sound')}"></button>
     </div>
     <div class="set-group card card-pad">
+          <div class="set-group card card-pad set-row" id="set-install">
+      <div class="set-h">${ic('dl')}<div><h2>${t('set.install')}</h2><p>${t('set.installDesc')}</p></div></div>
+      <button class="btn btn-primary" id="set-install-btn">${ic('ul','ic-s')}<span>${t('set.installBtn')}</span></button>
+    </div>
       <div class="set-h">${ic('dl')}<div><h2>${t('set.backup')}</h2><p>${t('set.backupDesc')}</p></div></div>
       <div class="pillrow">
         <button class="btn" id="set-export">${ic('dl','ic-s')}<span>${t('set.export')}</span></button>
@@ -1499,7 +1534,18 @@ LAYERS.settings={
       if(state.settings.sound) Sound.play('click'); });
     $('#set-export',sec).addEventListener('click',exportBackup);
     $('#set-import',sec).addEventListener('click',()=>$('#set-file',sec).click());
-    $('#set-file',sec).addEventListener('change',e=>{
+        const installRow=$('#set-install',sec);
+    if(PWA.standalone()) installRow.style.display='none';
+    $('#set-install-btn',sec).addEventListener('click',async()=>{
+      if(PWA.standalone()) return;
+      if(PWA.evt){ const ok=await PWA.prompt(); if(ok) installRow.style.display='none'; }
+      else openModal({ title:t('set.install'),
+        body:`<p class="m-msg">${t('set.installHow')}</p>
+          <p class="m-msg">• ${t('set.ios')}</p>
+          <p class="m-msg">• ${t('set.android')}</p>
+          <p class="m-msg">• ${t('set.desktop')}</p>`,
+        actions:[{label:t('common.close')}]}); });
+     $('#set-file',sec).addEventListener('change',e=>{
       const f=e.target.files[0]; e.target.value=''; if(f) importBackup(f); });
     $('#set-wipe',sec).addEventListener('click',()=>confirmModal({
       title:t('set.clearAll'),msg:t('set.clearMsg'),okLabel:t('set.clearAll'),onOk:wipeAll }));
@@ -1653,8 +1699,9 @@ async function boot(){
   bindTilt();
   try{ await DB.open(); }catch(e){}          /* 6. IndexedDB (memory fallback ok) */
   try{ await Promise.all([loadData(),loadNotes()]); }catch(e){} /* 7. user data */
-  Sound.init();           /* 8. audio manager (silent until gesture) */
-  Nav.init('hub');        /* 9. render Main Hub — service worker is registered in index.html */
+  Sound.init();  /* 8. audio manager (silent until gesture) */
+    PWA.init();
+   Nav.init('hub');        /* 9. render Main Hub — service worker is registered in index.html */
 }
 boot().catch(()=>{ /* last-resort: never leave a blank screen */
   const s=document.getElementById('stage');

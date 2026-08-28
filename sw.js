@@ -6,10 +6,9 @@
    ═══════════════════════════════════════════════════════════ */
 'use strict';
 
-const VERSION = 'v1.0.0';                 /* bump to ship an update */
+const VERSION = 'v1.0.1';                 /* bumped — new icons + install button */
 const CACHE   = 'ubad-hub-' + VERSION;
 
-/* app shell — one failed resource never blocks installation */
 const SHELL = [
   './',
   './index.html',
@@ -17,7 +16,11 @@ const SHELL = [
   './app.js',
   './manifest.json',
   './assets/icons/icon.svg',
-  './assets/icons/icon-maskable.svg'
+  './assets/icons/icon-maskable.svg',
+  './assets/icons/icon-192.png',
+  './assets/icons/icon-512.png',
+  './assets/icons/icon-maskable-512.png',
+  './assets/icons/apple-touch-icon.png'
 ];
 
 self.addEventListener('install', (e) => {

@@ -1497,10 +1497,6 @@ LAYERS.settings={
       <button class="switch ${s.sound?'on':''}" id="set-sound" role="switch" aria-checked="${s.sound}" aria-label="${t('set.sound')}"></button>
     </div>
     <div class="set-group card card-pad">
-          <div class="set-group card card-pad set-row" id="set-install">
-      <div class="set-h">${ic('dl')}<div><h2>${t('set.install')}</h2><p>${t('set.installDesc')}</p></div></div>
-      <button class="btn btn-primary" id="set-install-btn">${ic('ul','ic-s')}<span>${t('set.installBtn')}</span></button>
-    </div>
       <div class="set-h">${ic('dl')}<div><h2>${t('set.backup')}</h2><p>${t('set.backupDesc')}</p></div></div>
       <div class="pillrow">
         <button class="btn" id="set-export">${ic('dl','ic-s')}<span>${t('set.export')}</span></button>

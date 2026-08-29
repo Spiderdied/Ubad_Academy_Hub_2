@@ -552,3 +552,48 @@ canvas.chart{width:100%;display:block}
   .layer{transition:opacity .2s ease}
   .flip-in{transition-duration:.2s}
                                                }
+/* ═══════════════ PERF PATCH v1 ═══════════════ */
+
+/* 1) عتامة أعلى تعوّض غياب الضبابية (نفس الإحساس، بلا كلفة) */
+:root{
+  --glass:rgba(17,25,54,.80);
+  --glass2:rgba(19,28,60,.74);
+  --cardbg:rgba(16,24,52,.84);
+  --headbg:rgba(8,12,30,.90);
+  --toastbg:rgba(15,22,48,.96);
+  --modalbg:rgba(13,19,40,.94);
+}
+[data-theme="light"]{
+  --glass:rgba(255,255,255,.86);
+  --glass2:rgba(255,255,255,.80);
+  --cardbg:rgba(255,255,255,.92);
+  --headbg:rgba(248,250,255,.94);
+  --modalbg:rgba(252,253,255,.97);
+}
+
+/* 2) إلغاء الضبابية من العناصر المتكررة — كان أكبر مستهلك */
+.btn,.icon-btn,.card,.rowitem,.hub-inner,.sat,.toast,
+.ed-audio,.opt,.flip-face{
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+}
+/* الهيدر يُعاد تمييعه مع كل سكرول — يُزال نهائيًا */
+.lhead{backdrop-filter:none;-webkit-backdrop-filter:none}
+/* بطاقات الهب تبقى مموّهة على الديسكتوب فقط (8 بطاقات = مقبول) */
+@media(min-width:769px) and (hover:hover){
+  .hub-inner{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+}
+
+/* 3) طبقات الخلفية: بلا فلتر + إيقاف تام بعد انتهاء الحركة */
+.layer{transition:transform var(--tl) var(--ease),opacity .4s ease;will-change:auto}
+.layer.is-behind{opacity:.30;filter:none}
+.layer.is-parked{visibility:hidden}
+.layer.is-enter,.layer.is-exit{will-change:transform,opacity}
+
+/* 4) موبايل: ظلال أخف وإلغاء أي ضبابية متبقية */
+@media(max-width:768px){
+  .modal,.search-panel,.mback,.search-wrap{
+    backdrop-filter:none;-webkit-backdrop-filter:none}
+  .card{box-shadow:0 12px 28px -14px rgba(2,6,20,.5)}
+  .hub-inner{box-shadow:0 14px 32px -14px rgba(2,6,20,.55)}
+  .flip-face{box-shadow:0 12px 28px -14px rgba(2,6,20,.5)}
+    }

@@ -367,7 +367,7 @@ const inp=(id,ph,val,type)=>`<input class="input" id="${id}" type="${type||'text
 const stageEl=()=>document.getElementById('stage');
 const Nav={
   stack:[], busy:false, invalid:new Set(),
-  invalidate(...ids){ ids.forEach(i=>this.invalid.add(i)); },
+  invalidate(...ids){ ids.forEach(i=>this.invalid.add(i)); },   parkBehind(){ for(let i=0;i<this.stack.length-1;i++) this.stack[i].el.classList.add('is-parked'); },   unpark(){ this.stack.forEach(it=>it.el.classList.remove('is-parked')); },
   title(it){ try{ const d=LAYERS[it.id]; return d&&d.title?d.title(it.params):''; }catch(e){ return ''; } },
   init(id){ /* first layer, no sound, no animation */
     const def=LAYERS[id]; if(!def) return;
@@ -392,18 +392,20 @@ const Nav={
     this.busy=true;
     requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.remove('is-enter')));
     Sound.play(this.stack.length>2?'transition':'move');
-    setTimeout(()=>{ this.busy=false; }, RM.matches?80:600); },
+    setTimeout(()=>{ this.busy=false; this.parkBehind(); }, RM.matches?80:600); },
   pop(instant){ if(this.stack.length<=1) return;
     if(this.busy&&!instant) return;
     const cur=this.stack[this.stack.length-1];
     if(!instant&&LAYERS[cur.id]&&LAYERS[cur.id].onBeforePop&&LAYERS[cur.id].onBeforePop(cur)===false) return;
+    this.unpark();
     this.stack.pop(); this.busy=true;
     this.updateDepths();
-    if(instant){ cur.el.remove(); this.busy=false; }
+    if(instant){ cur.el.remove(); this.busy=false; this.parkBehind(); }
     else{ cur.el.classList.add('is-exit'); Sound.play('back');
       setTimeout(()=>{ cur.el.remove(); this.busy=false;
         const top=this.stack[this.stack.length-1];
         if(top&&this.invalid.has(top.id)){ this.invalid.delete(top.id); this.refreshTop(); }
+        this.parkBehind();              
       }, RM.matches?80:600); } },
   popTo(i,instant){ while(this.stack.length-1>i) this.pop(instant===undefined?true:instant); },
   updateDepths(){ const n=this.stack.length;
@@ -422,7 +424,7 @@ const Nav={
       let fresh; try{ fresh=LAYERS[it.id].render(it.params); }catch(err){ return; }
       fresh.classList.add('layer'); fresh.dataset.layer=it.id;
       it.el.replaceWith(fresh); it.el=fresh; });
-    this.updateDepths(); }
+    this.updateDepths(); this.parkBehind(); }
 };
 function chrome(o){ /* standard layer shell: back button + breadcrumb + body */
   const sec=document.createElement('section'); sec.className='layer';

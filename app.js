@@ -96,7 +96,7 @@ en:{
  'set.language':'Language','set.langDesc':'Interface language and direction (LTR / RTL).',
  'set.profile':'Profile','set.username':'Username','set.usernamePh':'Your name',
  'set.usernameDesc':'Used only for the greeting on your dashboard — never renames your data.',
- 'set.appearance':'Appearance','set.theme':'Theme','set.dark':'Dark','set.light':'Light',
+ 'set.appearance':'Appearance','set.theme':'Theme', 'set.dark':'Dark','set.light':'Light',  'set.th.dark':'Midnight','set.th.oled':'OLED Black','set.th.light':'Aurora',  'set.th.paper':'Paper','set.th.sage':'Sage','set.th.rose':'Rose',
  'set.sound':'Interface sounds','set.soundDesc':'Subtle feedback sounds. Falls back gracefully if audio files are not present.',
  'set.backup':'Backup & restore','set.backupDesc':'Export all of your data as a JSON file and restore it on any device. No account needed.',
  'set.export':'Export backup','set.import':'Import backup',
@@ -175,7 +175,7 @@ ar:{
  'set.language':'اللغة','set.langDesc':'لغة الواجهة واتجاهها (من اليمين لليسار / من اليسار لليمين).',
  'set.profile':'الملف الشخصي','set.username':'اسم المستخدم','set.usernamePh':'اسمك',
  'set.usernameDesc':'يُستخدم فقط في التحية على لوحة التحكم — لا يعيد تسمية بياناتك أبدًا.',
- 'set.appearance':'المظهر','set.theme':'السمة','set.dark':'داكنة','set.light':'فاتحة',
+ 'set.appearance':'المظهر','set.theme':'السمة','set.dark':'داكنة','set.light':'فاتحة',  'set.th.dark':'منتصف الليل','set.th.oled':'أسود نقي','set.th.light':'الشفق',  'set.th.paper':'ورقي','set.th.sage':'نعناعي','set.th.rose':'وردي',
  'set.sound':'أصوات الواجهة','set.soundDesc':'أصوات تفاعل خفيفة. تعمل حتى لو لم تكن الملفات الصوتية موجودة بعد.',
  'set.backup':'النسخ الاحتياطي والاستعادة','set.backupDesc':'صدّر جميع بياناتك كملف JSON واستعدها على أي جهاز. بدون حساب.',
  'set.export':'تصدير نسخة احتياطية','set.import':'استيراد نسخة احتياطية',
@@ -206,7 +206,7 @@ function loadPrefs(){ try{ const p=JSON.parse(localStorage.getItem(PREF_KEY)||'{
   if(p.name) state.user.name=normStr(p.name,40,'Ubad');
   if(p.lang==='ar'||p.lang==='en') state.settings.lang=p.lang;
   if(typeof p.sound==='boolean') state.settings.sound=p.sound;
-  if(p.theme==='dark'||p.theme==='light') state.settings.theme=p.theme; }catch(e){} }
+  if(THEMES.includes(p.theme)) state.settings.theme=p.theme; }catch(e){} }
 
 /* ═══ 4. storage — IndexedDB (graceful memory fallback) ══════ */
 const DB={ db:null,
@@ -243,7 +243,7 @@ function hydrate(d){ if(!d||typeof d!=='object') return;
   const s=d.settings||{};
   if(s.lang==='ar'||s.lang==='en') state.settings.lang=s.lang;
   if(typeof s.sound==='boolean') state.settings.sound=s.sound;
-  if(s.theme==='dark'||s.theme==='light') state.settings.theme=s.theme;
+  if(THEMES.includes(s.theme)) state.settings.theme=s.theme;
   state.courses=normArr(d.courses).map(normCourse).filter(Boolean);
   state.events=normArr(d.events).map(e=>({ id:normStr(e&&e.id,40)||uid(), title:normStr(e&&e.title,120,'Event'),
     desc:normStr(e&&e.desc,500), date:/^\d{4}-\d{2}-\d{2}$/.test((e&&e.date)||'')?e.date:today(),
@@ -1456,12 +1456,21 @@ LAYERS.settings={
         <button class="btn btn-primary" id="set-name-save">${t('common.save')}</button>
       </div>
     </div>
-    <div class="set-group card card-pad">
-      <div class="set-h">${s.theme==='light'?ic('sun'):ic('moon')}<div><h2>${t('set.appearance')}</h2><p>${t('set.theme')}</p></div></div>
-      <div class="pillrow" id="set-theme">
-        <button class="pill ${s.theme!=='light'?'on':''}" data-th="dark">${t('set.dark')}</button>
-        <button class="pill ${s.theme==='light'?'on':''}" data-th="light">${t('set.light')}</button>
+   <div class="set-group card card-pad">
+      <div class="set-h">${(s.theme==='dark'||s.theme==='oled')?ic('moon'):ic('sun')}<div><h2>${t('set.appearance')}</h2><p>${t('set.theme')}</p></div></div>
+      <div class="swatches" id="set-theme" role="radiogroup" aria-label="${t('set.theme')}">
+        ${[['dark','#0A1024','#22D3EE|#3B82F6|#8B5CF6'],['oled','#000000','#22D3EE|#3B82F6|#8B5CF6'],
+           ['light','#F7F9FF','#0891B2|#2563EB|#7C3AED'],['paper','#FBF6EC','#0F766E|#B45309|#9F1239'],
+           ['sage','#F7FBF7','#0D9488|#047857|#4338CA'],['rose','#FDF5F8','#DB2777|#9333EA|#BE185D']]
+          .map(([id,bg,dots])=>{ const d=dots.split('|'); return `
+          <button class="swatch ${s.theme===id?'on':''}" data-th="${id}" role="radio" aria-checked="${s.theme===id}">
+            <span class="sw-prev" style="background:${bg}">
+              <i style="background:${d[0]}"></i><i style="background:${d[1]}"></i><i style="background:${d[2]}"></i>
+            </span>
+            <span class="sw-name">${t('set.th.'+id)}</span>
+          </button>`;}).join('')}
       </div>
+    </div>
     </div>
     <div class="set-group card card-pad set-row">
       <div class="set-h">${ic('vol')}<div><h2>${t('set.sound')}</h2><p>${t('set.soundDesc')}</p></div></div>
@@ -1510,10 +1519,14 @@ LAYERS.settings={
 };
 function applyLang(){ const l=state.settings.lang==='ar'?'ar':'en';
   document.documentElement.lang=l; document.documentElement.dir=l==='ar'?'rtl':'ltr'; }
-function applyTheme(){ const th=state.settings.theme==='light'?'light':'dark';
+const THEMES=['dark','oled','light','paper','sage','rose'];
+const THEME_META={'dark':'#050816','oled':'#000000','light':'#EDF1FB',
+  'paper':'#F6EFE6','sage':'#EDF5EF','rose':'#F9EFF2'};
+function applyTheme(){ const th=THEMES.includes(state.settings.theme)?state.settings.theme:'dark';
+  state.settings.theme=th;
   document.documentElement.dataset.theme=th;
   const m=document.querySelector('meta[name=theme-color]');
-  if(m) m.content=th==='light'?'#EDF1FB':'#050816'; }
+  if(m) m.content=THEME_META[th]||'#050816'; }
 function setLang(l){ state.settings.lang=l; saveData(); applyLang();
   Sound.play('transition'); Nav.rerenderAll(); }
 function setTheme(th){ state.settings.theme=th; saveData(); applyTheme(); Nav.rerenderAll(); }

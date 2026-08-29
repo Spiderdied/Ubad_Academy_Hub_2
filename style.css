@@ -698,3 +698,88 @@ canvas.chart{width:100%;display:block}
 .sw-prev i:nth-child(3){left:26px}
 .sw-name{font-size:11.5px;font-weight:600;color:var(--ink2)}
 .swatch.on .sw-name{color:var(--ink)}
+/* ═══════════════ SATURATION BOOST (light themes) ═══════════════ */
+
+/* ── وردي: تريو جديد كليًا — وردي ناري · بنفسجي · فوشيا ── */
+[data-theme="rose"]{
+  --acc-c:#E11D48; --acc-b:#7C3AED; --acc-v:#C026D3;
+  --ink:#2E1B25; --ink2:#5D3A4C; --ink3:#8A6478;
+  --line:rgba(190,24,93,.24); --line2:rgba(190,24,93,.44);
+  --seg-on:rgba(219,39,119,.16);
+  --pri-bg:rgba(219,39,119,.15); --pri-bd:rgba(219,39,119,.65); --pri-fg:#BE123C;
+  --glow-a:rgba(124,58,237,.13); --glow-b:rgba(225,29,72,.12);
+  --shadow:0 18px 44px -16px rgba(190,24,93,.38);
+}
+
+/* ── الشفق: نفس العائلة، تشبع أعلى وحدود أوضح ── */
+[data-theme="light"]{
+  --ink:#101731; --ink2:#39456E; --ink3:#5E6A94;
+  --line:rgba(37,64,160,.22); --line2:rgba(37,64,160,.42);
+  --seg-on:rgba(59,90,246,.15);
+  --pri-bg:rgba(124,58,237,.14); --pri-bd:rgba(124,58,237,.6);
+  --glow-a:rgba(124,58,237,.14); --glow-b:rgba(8,145,178,.13);
+  --shadow:0 18px 44px -16px rgba(37,64,160,.34);
+}
+
+/* ── ورقي: برونز أعمق وأدفأ ── */
+[data-theme="paper"]{
+  --acc-c:#0F766E; --acc-b:#C2410C; --acc-v:#BE123C;
+  --ink:#241C10; --ink2:#54452C; --ink3:#7E6C4E;
+  --line:rgba(122,80,30,.26); --line2:rgba(122,80,30,.46);
+  --seg-on:rgba(194,65,12,.15);
+  --pri-bg:rgba(194,65,12,.14); --pri-bd:rgba(194,65,12,.6); --pri-fg:#9A3412;
+  --glow-a:rgba(194,65,12,.14); --glow-b:rgba(15,118,110,.12);
+  --shadow:0 18px 44px -16px rgba(122,80,30,.38);
+}
+
+/* ── نعناعي: أخضر أشد حيوية ── */
+[data-theme="sage"]{
+  --acc-c:#0D9488; --acc-b:#059669; --acc-v:#4F46E5;
+  --ink:#13211A; --ink2:#33513F; --ink3:#5C7A69;
+  --line:rgba(20,100,60,.24); --line2:rgba(20,100,60,.44);
+  --seg-on:rgba(5,150,105,.15);
+  --pri-bg:rgba(5,150,105,.13); --pri-bd:rgba(5,150,105,.6); --pri-fg:#047857;
+  --glow-a:rgba(79,70,229,.11); --glow-b:rgba(13,148,136,.14);
+  --shadow:0 18px 44px -16px rgba(20,90,60,.34);
+}
+
+/* ── بلاطات أيقونات الهب: من "غسول" 10% إلى لون حاضر 20% ── */
+[data-theme="light"] .acc-c,[data-theme="light"] .acc-b,[data-theme="light"] .acc-v,
+[data-theme="paper"] .acc-c,[data-theme="paper"] .acc-b,[data-theme="paper"] .acc-v,
+[data-theme="sage"] .acc-c,[data-theme="sage"] .acc-b,[data-theme="sage"] .acc-v,
+[data-theme="rose"] .acc-c,[data-theme="rose"] .acc-b,[data-theme="rose"] .acc-v{
+  --soft:.2;
+}
+/* القيم أعلاه نسبة مختصرة — الصيغة الصحيحة: */
+[data-theme="light"]  .acc-c{--soft:rgba(8,145,178,.20);--softline:rgba(8,145,178,.45);--glowcol:rgba(8,145,178,.16);--hline:rgba(8,145,178,.6);--hglow:0 16px 44px -10px rgba(8,145,178,.4)}
+[data-theme="light"]  .acc-b{--soft:rgba(37,99,235,.20);--softline:rgba(37,99,235,.45);--glowcol:rgba(37,99,235,.16);--hline:rgba(37,99,235,.6);--hglow:0 16px 44px -10px rgba(37,99,235,.4)}
+[data-theme="light"]  .acc-v{--soft:rgba(124,58,237,.20);--softline:rgba(124,58,237,.45);--glowcol:rgba(124,58,237,.16);--hline:rgba(124,58,237,.6);--hglow:0 16px 44px -10px rgba(124,58,237,.4)}
+[data-theme="rose"]   .acc-c{--soft:rgba(225,29,72,.20);--softline:rgba(225,29,72,.45);--glowcol:rgba(225,29,72,.16);--hline:rgba(225,29,72,.6);--hglow:0 16px 44px -10px rgba(225,29,72,.4)}
+[data-theme="rose"]   .acc-b{--soft:rgba(124,58,237,.20);--softline:rgba(124,58,237,.45);--glowcol:rgba(124,58,237,.16);--hline:rgba(124,58,237,.6);--hglow:0 16px 44px -10px rgba(124,58,237,.4)}
+[data-theme="rose"]   .acc-v{--soft:rgba(192,38,211,.20);--softline:rgba(192,38,211,.45);--glowcol:rgba(192,38,211,.16);--hline:rgba(192,38,211,.6);--hglow:0 16px 44px -10px rgba(192,38,211,.4)}
+[data-theme="paper"]  .acc-c{--soft:rgba(15,118,110,.20);--softline:rgba(15,118,110,.45);--glowcol:rgba(15,118,110,.15);--hline:rgba(15,118,110,.6);--hglow:0 16px 44px -10px rgba(15,118,110,.38)}
+[data-theme="paper"]  .acc-b{--soft:rgba(194,65,12,.20);--softline:rgba(194,65,12,.45);--glowcol:rgba(194,65,12,.15);--hline:rgba(194,65,12,.6);--hglow:0 16px 44px -10px rgba(194,65,12,.38)}
+[data-theme="paper"]  .acc-v{--soft:rgba(190,18,60,.20);--softline:rgba(190,18,60,.45);--glowcol:rgba(190,18,60,.15);--hline:rgba(190,18,60,.6);--hglow:0 16px 44px -10px rgba(190,18,60,.38)}
+[data-theme="sage"]   .acc-c{--soft:rgba(13,148,136,.20);--softline:rgba(13,148,136,.45);--glowcol:rgba(13,148,136,.15);--hline:rgba(13,148,136,.6);--hglow:0 16px 44px -10px rgba(13,148,136,.38)}
+[data-theme="sage"]   .acc-b{--soft:rgba(5,150,105,.20);--softline:rgba(5,150,105,.45);--glowcol:rgba(5,150,105,.15);--hline:rgba(5,150,105,.6);--hglow:0 16px 44px -10px rgba(5,150,105,.38)}
+[data-theme="sage"]   .acc-v{--soft:rgba(79,70,229,.20);--softline:rgba(79,70,229,.45);--glowcol:rgba(79,70,229,.15);--hline:rgba(79,70,229,.6);--hglow:0 16px 44px -10px rgba(79,70,229,.38)}
+
+/* ── الشرائح (chips): بدل الرمادي — لمسة لون الثيم ── */
+[data-theme="light"] .chip{background:rgba(37,99,235,.10);border-color:rgba(37,99,235,.35);color:#1D4ED8}
+[data-theme="rose"]  .chip{background:rgba(225,29,72,.10);border-color:rgba(225,29,72,.38);color:#BE123C}
+[data-theme="paper"] .chip{background:rgba(194,65,12,.10);border-color:rgba(194,65,12,.38);color:#9A3412}
+[data-theme="sage"]  .chip{background:rgba(5,150,105,.10);border-color:rgba(5,150,105,.38);color:#047857}
+
+/* ── شريط التقدم وأشرطة التحليلات أعرض إشراقًا قليلًا ── */
+[data-theme="light"] .progress>i,[data-theme="rose"] .progress>i,
+[data-theme="paper"] .progress>i,[data-theme="sage"] .progress>i{
+  box-shadow:0 0 8px rgba(0,0,0,.06)}
+
+/* ── النقاط الزخرفية للخلفية أوضح في الفاتح ── */
+[data-theme="light"] .bg-grid,[data-theme="rose"] .bg-grid,
+[data-theme="paper"] .bg-grid,[data-theme="sage"] .bg-grid{opacity:1}
+
+/* ── زر رئيسي أكثر حضورًا ── */
+[data-theme="light"] .btn-primary,[data-theme="rose"] .btn-primary,
+[data-theme="paper"] .btn-primary,[data-theme="sage"] .btn-primary{
+  font-weight:700}

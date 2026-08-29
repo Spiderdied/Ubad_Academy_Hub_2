@@ -112,7 +112,7 @@ en:{
  'search.notes':'Notes','search.courses':'Courses','search.events':'Events','search.decks':'Flashcards','search.quizzes':'Quizzes',
 },
 ar:{
- 'app.name':'أكاديمية عُباد','hub.head':'ادخل إلى أكاديميتك',
+ 'app.name':'أكاديمية عُبَدْ','hub.head':'ادخل إلى أكاديميتك',
  'hub.foot':'محلي · دون اتصال · خاص','nav.hub':'الرئيسية',
  'nav.dashboard':'لوحة التحكم','nav.courses':'المقررات','nav.notes':'الملاحظات','nav.calendar':'التقويم',
  'nav.grades':'الدرجات والمعدل','nav.analytics':'التحليلات','nav.study':'أدوات الدراسة','nav.settings':'الإعدادات',
@@ -176,7 +176,7 @@ ar:{
  'set.profile':'الملف الشخصي','set.username':'اسم المستخدم','set.usernamePh':'اسمك',
  'set.usernameDesc':'يُستخدم فقط في التحية على لوحة التحكم — لا يعيد تسمية بياناتك أبدًا.',
  'set.appearance':'المظهر','set.theme':'السمة','set.dark':'داكنة','set.light':'فاتحة',  'set.th.dark':'منتصف الليل','set.th.oled':'أسود نقي','set.th.light':'الشفق',  'set.th.paper':'ورقي','set.th.sage':'نعناعي','set.th.rose':'وردي',
- 'set.sound':'أصوات الواجهة','set.soundDesc':'أصوات تفاعل خفيفة. تعمل حتى لو لم تكن الملفات الصوتية موجودة بعد.',
+ 'set.sound':'أصوات الواجهة','set.soundDesc':'أصوات تفاعل خفيفة..',
  'set.backup':'النسخ الاحتياطي والاستعادة','set.backupDesc':'صدّر جميع بياناتك كملف JSON واستعدها على أي جهاز. بدون حساب.',
  'set.export':'تصدير نسخة احتياطية','set.import':'استيراد نسخة احتياطية',
  'set.importConfirm':'الاستيراد سيستبدل جميع البيانات الحالية على هذا الجهاز. هل تريد المتابعة؟',

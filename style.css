@@ -597,3 +597,104 @@ canvas.chart{width:100%;display:block}
   .hub-inner{box-shadow:0 14px 32px -14px rgba(2,6,20,.55)}
   .flip-face{box-shadow:0 12px 28px -14px rgba(2,6,20,.5)}
     }
+/* ═══════════════ THEMES PATCH v1 ═══════════════ */
+
+/* التوهج الخلفي يصبح قابلًا للثيم */
+.bg-glow-a{background:radial-gradient(closest-side,var(--glow-a,rgba(139,92,246,.16)),transparent 70%)}
+.bg-glow-b{background:radial-gradient(closest-side,var(--glow-b,rgba(34,211,238,.11)),transparent 70%)}
+
+/* أساس فاتح مشترك لكل الثيمات الفاتحة (يشمل عتامات رقعة الأداء) */
+[data-theme="light"],[data-theme="paper"],[data-theme="sage"],[data-theme="rose"]{
+  color-scheme:light;
+  --glass:rgba(255,255,255,.86); --glass2:rgba(255,255,255,.80);
+  --cardbg:rgba(255,255,255,.92); --headbg:rgba(248,250,255,.94);
+  --in-bg:rgba(255,255,255,.85); --toastbg:rgba(255,255,255,.96);
+  --modalbg:rgba(252,253,255,.97);
+  --dng-bg:rgba(220,38,38,.08); --dng-bd:rgba(220,38,38,.4); --dng-fg:#DC2626;
+  --ok:#059669; --no:#DC2626;
+}
+[data-theme="light"] .bg-glow,[data-theme="paper"] .bg-glow,
+[data-theme="sage"] .bg-glow,[data-theme="rose"] .bg-glow{opacity:.5}
+
+/* ── أسود نقي (OLED) ── */
+[data-theme="oled"]{
+  --bg0:#000000; --bg1:#06070E; --bg2:#0A0C16;
+  --line:rgba(140,160,255,.16); --line2:rgba(140,160,255,.30);
+  --dot:rgba(150,170,255,.08);
+  --glass:rgba(10,12,24,.78); --glass2:rgba(12,15,30,.72);
+  --cardbg:rgba(10,13,26,.86); --headbg:rgba(0,0,0,.72);
+  --in-bg:rgba(8,10,22,.6); --modalbg:rgba(6,8,18,.95); --toastbg:rgba(8,10,22,.95);
+  --shadow:0 24px 60px -18px rgba(0,0,0,.9);
+}
+[data-theme="oled"] .bg-grid{opacity:.55}
+[data-theme="oled"] .mback{background:rgba(0,0,0,.68)}
+
+/* ── ورقي ── */
+[data-theme="paper"]{
+  --bg0:#F3EBDD; --bg1:#EDE2CF; --bg2:#FBF6EA;
+  --ink:#2C2317; --ink2:#5C4F3A; --ink3:#8C7E67;
+  --acc-c:#0F766E; --acc-b:#B45309; --acc-v:#9F1239;
+  --line:rgba(122,92,50,.20); --line2:rgba(122,92,50,.36);
+  --dot:rgba(122,92,50,.13);
+  --seg-on:rgba(180,83,9,.14);
+  --pri-bg:rgba(180,83,9,.12); --pri-bd:rgba(180,83,9,.5); --pri-fg:#8A4406;
+  --shadow:0 18px 44px -18px rgba(122,85,40,.32);
+  --glow-a:rgba(180,83,9,.10); --glow-b:rgba(15,118,110,.09);
+}
+[data-theme="paper"] .mback,[data-theme="paper"] .search-wrap{background:rgba(70,55,35,.35)}
+
+/* ── نعناعي ── */
+[data-theme="sage"]{
+  --bg0:#ECF3ED; --bg1:#E2EDE5; --bg2:#F7FBF7;
+  --ink:#1C2B22; --ink2:#43604F; --ink3:#6F8679;
+  --acc-c:#0D9488; --acc-b:#047857; --acc-v:#4338CA;
+  --line:rgba(30,90,60,.18); --line2:rgba(30,90,60,.34);
+  --dot:rgba(30,90,60,.12);
+  --seg-on:rgba(4,120,87,.13);
+  --pri-bg:rgba(4,120,87,.11); --pri-bd:rgba(4,120,87,.5); --pri-fg:#046C50;
+  --shadow:0 18px 44px -18px rgba(20,80,55,.28);
+  --glow-a:rgba(67,56,202,.08); --glow-b:rgba(13,148,136,.10);
+}
+[data-theme="sage"] .mback,[data-theme="sage"] .search-wrap{background:rgba(30,70,50,.30)}
+
+/* ── وردي ── */
+[data-theme="rose"]{
+  --bg0:#F8EDF1; --bg1:#F2E4EA; --bg2:#FDF5F8;
+  --ink:#33202A; --ink2:#6C4A59; --ink3:#9A7C89;
+  --acc-c:#DB2777; --acc-b:#9333EA; --acc-v:#BE185D;
+  --line:rgba(150,70,100,.18); --line2:rgba(150,70,100,.34);
+  --dot:rgba(150,70,100,.12);
+  --seg-on:rgba(190,24,93,.12);
+  --pri-bg:rgba(190,24,93,.10); --pri-bd:rgba(190,24,93,.5); --pri-fg:#A31553;
+  --shadow:0 18px 44px -18px rgba(150,70,100,.30);
+  --glow-a:rgba(147,51,234,.08); --glow-b:rgba(219,39,119,.09);
+}
+[data-theme="rose"] .mback,[data-theme="rose"] .search-wrap{background:rgba(90,45,65,.32)}
+
+/* بلاطات الأيقونات في الهب: لون محايد دافئ/بارد حسب الثيم (الأيقونات تحتفظ بألوانها) */
+[data-theme="paper"] .acc-c,[data-theme="paper"] .acc-b,[data-theme="paper"] .acc-v{
+  --soft:rgba(122,92,50,.10);--softline:rgba(122,92,50,.30);--glowcol:rgba(122,92,50,.10);
+  --hline:rgba(122,92,50,.42);--hglow:0 16px 44px -12px rgba(122,85,40,.28)}
+[data-theme="sage"] .acc-c,[data-theme="sage"] .acc-b,[data-theme="sage"] .acc-v{
+  --soft:rgba(30,90,60,.10);--softline:rgba(30,90,60,.30);--glowcol:rgba(30,90,60,.10);
+  --hline:rgba(30,90,60,.42);--hglow:0 16px 44px -12px rgba(20,80,55,.25)}
+[data-theme="rose"] .acc-c,[data-theme="rose"] .acc-b,[data-theme="rose"] .acc-v{
+  --soft:rgba(150,70,100,.10);--softline:rgba(150,70,100,.30);--glowcol:rgba(150,70,100,.10);
+  --hline:rgba(150,70,100,.42);--hglow:0 16px 44px -12px rgba(150,70,100,.26)}
+
+/* ── منتقي الثيمات (مربعات معاينة) ── */
+.swatches{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(min-width:480px){.swatches{grid-template-columns:repeat(6,1fr)}}
+.swatch{display:flex;flex-direction:column;align-items:center;gap:7px;padding:10px 4px 8px;
+  border-radius:14px;border:1px solid var(--line);background:var(--glass2);transition:.15s}
+.swatch:hover{border-color:var(--line2);transform:translateY(-1px)}
+.swatch:active{transform:scale(.96)}
+.swatch.on{border-color:var(--acc-b);background:var(--seg-on);box-shadow:0 0 0 2px rgba(59,130,246,.25)}
+.sw-prev{width:38px;height:38px;border-radius:12px;position:relative;overflow:hidden;
+  border:1px solid rgba(0,0,0,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.sw-prev i{position:absolute;bottom:5px;width:6px;height:6px;border-radius:99px}
+.sw-prev i:nth-child(1){left:6px}
+.sw-prev i:nth-child(2){left:16px}
+.sw-prev i:nth-child(3){left:26px}
+.sw-name{font-size:11.5px;font-weight:600;color:var(--ink2)}
+.swatch.on .sw-name{color:var(--ink)}

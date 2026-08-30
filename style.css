@@ -783,3 +783,36 @@ canvas.chart{width:100%;display:block}
 [data-theme="light"] .btn-primary,[data-theme="rose"] .btn-primary,
 [data-theme="paper"] .btn-primary,[data-theme="sage"] .btn-primary{
   font-weight:700}
+/* ═══════════════ EXPERIENCE PATCH v1 ═══════════════ */
+
+/* طبقة الجزيئات داخل الهب فقط */
+.layer .lbody{position:relative;z-index:1}
+.hub-stars{position:absolute;inset:0;z-index:0;pointer-events:none}
+
+/* نبضة الحفظ */
+@keyframes pulseGlow{from{box-shadow:0 0 0 0 rgba(34,211,238,.55)}to{box-shadow:0 0 0 16px rgba(34,211,238,0)}}
+.pulse-once{animation:pulseGlow .6s var(--ease)}
+
+/* زر مفعّل (التثبيت) */
+.icon-btn.on{border-color:rgba(34,211,238,.55);color:var(--acc-c);background:rgba(34,211,238,.10)}
+
+/* شاشة الترحيب */
+.welcome{width:min(480px,100%);padding:30px;display:flex;flex-direction:column;gap:16px;text-align:start}
+.welcome-logo{width:58px!important;height:58px!important;filter:drop-shadow(0 8px 20px rgba(59,130,246,.4))}
+.wl-title{font-size:clamp(22px,5vw,30px);font-weight:750;letter-spacing:-.02em}
+.wl-body{color:var(--ink2);line-height:1.85;white-space:pre-line}
+.wl-enter{justify-content:center;height:48px;font-size:15px;margin-top:4px}
+
+/* مؤقت التركيز */
+.focus-wrap{max-width:460px;margin-inline:auto;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center}
+.focus-top{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.focus-ring{position:relative;display:grid;place-items:center}
+.fr-bg{fill:none;stroke:var(--line);stroke-width:6}
+.fr-fg{fill:none;stroke:var(--acc-c);stroke-width:6;stroke-linecap:round;
+  transform:rotate(-90deg);transform-origin:60px 60px;transition:stroke-dashoffset .3s linear}
+.focus-wrap[data-phase="break"] .fr-fg{stroke:var(--acc-v)}
+.focus-time{position:absolute;font-size:36px;font-weight:700;letter-spacing:.02em}
+.focus-ctl{display:flex;gap:10px}
+
+/* شريحة الملاحظة المثبتة */
+.pin-chip{color:var(--acc-c)}

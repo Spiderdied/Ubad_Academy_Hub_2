@@ -1903,7 +1903,7 @@ async function boot(){
   try{ await DB.open(); }catch(e){}          /* 6. IndexedDB (memory fallback ok) */
   try{ await Promise.all([loadData(),loadNotes()]); }catch(e){} /* 7. user data */
   Sound.init();           /* 8. audio manager (silent until gesture) */
-    Hist.init();   let firstRun=false; try{ firstRun=!localStorage.getItem('ubad.seen.v1'); }catch(e){}   Nav.init(firstRun?'welcome':'hub');        /* 9. render Main Hub — service worker is registered in index.html */
+      Hist.init();   Nav.init('hub');        /* 9. render Main Hub — service worker is registered in index.html */        /* 9. render Main Hub — service worker is registered in index.html */
 }
 boot().catch(()=>{ /* last-resort: never leave a blank screen */
   const s=document.getElementById('stage');

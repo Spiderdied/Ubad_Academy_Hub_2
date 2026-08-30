@@ -110,6 +110,16 @@ en:{
  'set.exported':'Backup file downloaded.',
  'search.ph':'Search notes, courses, events…','search.none':'No results for “{q}”',
  'search.notes':'Notes','search.courses':'Courses','search.events':'Events','search.decks':'Flashcards','search.quizzes':'Quizzes',
+ 'welcome.title':'Welcome to your academy',
+ 'welcome.body':'Your personal academic space — courses, notes, schedule and study tools, all in one place and fully offline.',
+ 'welcome.lang':'Language','welcome.name':'What should we call you?','welcome.enter':'Enter the academy',
+ 'dash.greet.morning':'Good morning, {name}','dash.greet.afternoon':'Good afternoon, {name}',
+ 'dash.greet.evening':'Good evening, {name}','dash.greet.night':'Burning the midnight oil, {name}',
+ 'focus.tab':'Focus','focus.session':'Focus session','focus.break':'Break',
+ 'focus.start':'Start','focus.pause':'Pause','focus.reset':'Reset',
+ 'focus.today':'Sessions today','focus.length':'Session length','focus.min':'min',
+ 'focus.doneMsg':'Focus session complete — take a break','focus.breakOver':'Break over — ready for another round?',
+ 'notes.pin':'Pin note','notes.unpin':'Unpin note','notes.pinned':'Pinned',
 },
 ar:{
  'app.name':'أكاديمية عُبَدْ','hub.head':'ادخل إلى أكاديميتك',
@@ -189,6 +199,16 @@ ar:{
  'set.exported':'تم تنزيل ملف النسخة الاحتياطية.',
  'search.ph':'ابحث في الملاحظات والمقررات والفعاليات…','search.none':'لا نتائج لـ «{q}»',
  'search.notes':'الملاحظات','search.courses':'المقررات','search.events':'الفعاليات','search.decks':'البطاقات','search.quizzes':'الاختبارات',
+ 'welcome.title':'أهلًا بك في أكاديميتك',
+ 'welcome.body':'مساحتك الأكاديمية الشخصية — مقررات وملاحظات وجدول وأدوات دراسة، في مكان واحد وبدون اتصال.',
+ 'welcome.lang':'اللغة','welcome.name':'ماذا نناديك؟','welcome.enter':'ادخل الأكاديمية',
+ 'dash.greet.morning':'صباح الخير، {name}','dash.greet.afternoon':'مساء الخير، {name}',
+ 'dash.greet.evening':'مساء الخير، {name}','dash.greet.night':'طابت ليلتك، {name}',
+ 'focus.tab':'التركيز','focus.session':'جلسة تركيز','focus.break':'راحة',
+ 'focus.start':'ابدأ','focus.pause':'إيقاف مؤقت','focus.reset':'إعادة',
+ 'focus.today':'جلسات اليوم','focus.length':'مدة الجلسة','focus.min':'دقيقة',
+ 'focus.doneMsg':'انتهت جلسة التركيز — خذ قسطًا من الراحة','focus.breakOver':'انتهت الراحة — جاهز لجلسة أخرى؟',
+ 'notes.pin':'تثبيت الملاحظة','notes.unpin':'إلغاء التثبيت','notes.pinned':'مثبتة',
 }};
 const t=(k,vars)=>{ let s=(I18N[state.settings.lang]||I18N.en)[k]; if(s==null) s=I18N.en[k]||k;
   if(vars) for(const key in vars) s=s.split('{'+key+'}').join(vars[key]); return s; };
@@ -197,7 +217,7 @@ const t=(k,vars)=>{ let s=(I18N[state.settings.lang]||I18N.en)[k]; if(s==null) s
 const state={
   user:{name:'Ubad'},
   settings:{lang:'en',sound:true,theme:'dark'},
-  courses:[], notes:[], events:[], tasks:[], grades:[], decks:[], quizzes:[]
+  courses:[], notes:[], events:[], tasks:[], grades:[], decks:[], quizzes:[],   focus:{day:'',done:0},
 };
 const PREF_KEY='ubad.prefs.v1';
 function savePrefs(){ try{ localStorage.setItem(PREF_KEY,JSON.stringify({
@@ -244,6 +264,8 @@ function hydrate(d){ if(!d||typeof d!=='object') return;
   if(s.lang==='ar'||s.lang==='en') state.settings.lang=s.lang;
   if(typeof s.sound==='boolean') state.settings.sound=s.sound;
   if(THEMES.includes(s.theme)) state.settings.theme=s.theme;
+  state.focus=(d.focus&&typeof d.focus==='object')?
+    { day:normStr(d.focus.day,10), done:clampNum(d.focus.done,0,999,0) }:{ day:'',done:0 };
   state.courses=normArr(d.courses).map(normCourse).filter(Boolean);
   state.events=normArr(d.events).map(e=>({ id:normStr(e&&e.id,40)||uid(), title:normStr(e&&e.title,120,'Event'),
     desc:normStr(e&&e.desc,500), date:/^\d{4}-\d{2}-\d{2}$/.test((e&&e.date)||'')?e.date:today(),
@@ -267,19 +289,19 @@ async function loadNotes(){ try{
   const arr=await DB.all('notes');
   state.notes=arr.filter(n=>n&&n.id).map(n=>({ id:n.id, title:normStr(n.title,120), body:normStr(n.body,20000),
     tags:normArr(n.tags).map(x=>normStr(x,24)).slice(0,8),
-    createdAt:clampNum(n.createdAt,0,1e15,Date.now()), updatedAt:clampNum(n.updatedAt,0,1e15,Date.now()),
+    createdAt:clampNum(n.createdAt,0,1e15,Date.now()), updatedAt:clampNum(n.updatedAt,0,1e15,Date.now()),pin:!!n.pin,
     images:normArr(n.images).filter(a=>a&&a.blob instanceof Blob).map(a=>({name:normStr(a.name,80,'image'),blob:a.blob})),
     audio:normArr(n.audio).filter(a=>a&&a.blob instanceof Blob).map(a=>({name:normStr(a.name,80,'audio'),blob:a.blob})) }))
-    .sort((a,b)=>b.updatedAt-a.updatedAt);
+    .sort((a,b)=>(b.pin?1:0)-(a.pin?1:0)||b.updatedAt-a.updatedAt);
 }catch(e){ state.notes=state.notes||[]; } }
 async function saveNote(rec){ try{ await DB.put('notes',rec); }catch(e){}
   const i=state.notes.findIndex(n=>n.id===rec.id);
   if(i>-1) state.notes[i]=rec; else state.notes.unshift(rec);
-  state.notes.sort((a,b)=>b.updatedAt-a.updatedAt); }
+  state.notes.sort((a,b)=>(b.pin?1:0)-(a.pin?1:0)||b.updatedAt-a.updatedAt); }
 function saveData(){ Nav.invalidate('dashboard','analytics'); savePrefs();
-  DB.put('kv',{id:'appdata',data:{user:state.user,settings:state.settings,courses:state.courses,
-    events:state.events,tasks:state.tasks,grades:state.grades,decks:state.decks,quizzes:state.quizzes}}).catch(()=>{}); }
-
+    DB.put('kv',{id:'appdata',data:{user:state.user,settings:state.settings,courses:state.courses,
+    events:state.events,tasks:state.tasks,grades:state.grades,decks:state.decks,quizzes:state.quizzes,
+    focus:state.focus}}).catch(()=>{}); }
 /* ═══ 5. audio manager — fails silently, never blocks ════════ */
 const Sound={ files:{click:'assets/audio/click.mp3',move:'assets/audio/3d-move.mp3',
     back:'assets/audio/back.mp3',transition:'assets/audio/transition.mp3'},
@@ -312,7 +334,147 @@ const Sound={ files:{click:'assets/audio/click.mp3',move:'assets/audio/3d-move.m
       o.connect(g); g.connect(this.ctx.destination); o.start(t0); o.stop(t0+.15);
     }catch(e){} }
 };
+/* ═══ 5.7 history bridge (native back) ══════════════════════ */
+const Hist={
+  ready:false,
+  depth(){ return Nav.stack.length-1; },
+  init(){ try{ history.replaceState({d:0},''); }catch(e){}
+    this.ready=true;
+    window.addEventListener('popstate',e=>this.onPop(e)); },
+  pushDepth(){ try{ history.pushState({d:this.depth()},''); }catch(e){} },
+  sync(){ try{ history.replaceState({d:this.depth()},''); }catch(e){} },
+  onPop(e){
+    if(!this.ready) return;
+    const d=(e.state&&typeof e.state.d==='number')?e.state.d:0;
+    const cur=this.depth();
+    if(d<cur) Nav._histBack(cur-d);
+    else if(d>cur) this.sync();
+  }
+};
 
+/* ═══ 5.8 FX — جزيئات الهب + الاحتفال ═══════════════════════ */
+const FX={
+  sRaf:0,
+  weak:(navigator.hardwareConcurrency||4)<=2||((navigator.deviceMemory||4)<=2),
+  hubGate(nav){ const top=nav.stack[nav.stack.length-1];
+    if(top&&top.id==='hub'&&!this.weak&&!RM.matches) this.starsStart();
+    else this.starsStop(); },
+  starsStart(){
+    const layer=document.querySelector('.layer[data-layer="hub"]');
+    const cv=layer&&layer.querySelector('.hub-stars'); if(!cv) return;
+    this.starsStop();
+    const w=layer.clientWidth||innerWidth, h=layer.clientHeight||innerHeight;
+    const dpr=Math.min(1.5,devicePixelRatio||1);
+    cv.width=w*dpr; cv.height=h*dpr;
+    const x=cv.getContext('2d'); x.setTransform(dpr,0,0,dpr,0,0);
+    const th=document.documentElement.dataset.theme;
+    const light=th!=='dark'&&th!=='oled';
+    const cols=['34,211,238','59,130,246','139,92,246'];
+    const ps=Array.from({length:26},()=>({ x:Math.random()*w, y:Math.random()*h,
+      vy:-(.05+Math.random()*.11), r:.8+Math.random()*1.4,
+      ph:Math.random()*6.28, sp:.4+Math.random()*.8, c:cols[Math.random()*3|0] }));
+    let t=0; const AM=light?.32:.8;
+    const loop=()=>{ t+=.016; x.clearRect(0,0,w,h);
+      ps.forEach(p=>{ p.y+=p.vy; if(p.y<-4){ p.y=h+4; p.x=Math.random()*w; }
+        const a=AM*(.35+.65*(Math.sin(t*p.sp+p.ph)*.5+.5));
+        x.beginPath(); x.arc(p.x,p.y,p.r,0,6.283);
+        x.fillStyle=`rgba(${p.c},${a.toFixed(3)})`; x.fill(); });
+      this.sRaf=requestAnimationFrame(loop); };
+    this.sRaf=requestAnimationFrame(loop);
+    if(!this._rs){ this._rs=true;
+      window.addEventListener('resize',()=>{ if(this.sRaf) this.starsStart(); });
+      document.addEventListener('visibilitychange',()=>{
+        if(document.hidden){ this.starsStop(); } else this.hubGate(Nav); }); }
+  },
+  starsStop(){ if(this.sRaf){ cancelAnimationFrame(this.sRaf); this.sRaf=0; } },
+  confetti(){
+    if(RM.matches||this.weak) return;
+    try{
+      const cv=document.createElement('canvas');
+      const w=innerWidth,h=innerHeight,dpr=Math.min(2,devicePixelRatio||1);
+      cv.width=w*dpr; cv.height=h*dpr;
+      cv.style.cssText='position:fixed;inset:0;z-index:600;pointer-events:none';
+      const x=cv.getContext('2d'); x.setTransform(dpr,0,0,dpr,0,0);
+      $('#overlay-root').appendChild(cv);
+      const cols=['#22D3EE','#3B82F6','#8B5CF6','#34D399'];
+      const ps=Array.from({length:70},()=>({ x:w/2+(Math.random()-.5)*90, y:h*.32,
+        vx:(Math.random()-.5)*9, vy:-(4+Math.random()*7), g:.18+Math.random()*.08,
+        r:2+Math.random()*3, c:cols[Math.random()*cols.length|0],
+        rot:Math.random()*6, vr:(Math.random()-.5)*.3 }));
+      const t0=performance.now();
+      const step=now=>{ const el=now-t0; x.clearRect(0,0,w,h);
+        ps.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=p.g; p.rot+=p.vr;
+          x.save(); x.globalAlpha=Math.max(0,1-el/1100);
+          x.translate(p.x,p.y); x.rotate(p.rot); x.fillStyle=p.c;
+          x.fillRect(-p.r,-p.r*.6,p.r*2,p.r*1.2); x.restore(); });
+        if(el<1150) requestAnimationFrame(step); else cv.remove(); };
+      requestAnimationFrame(step);
+    }catch(e){}
+  }
+};
+
+/* ═══ 5.9 مؤقت التركيز ══════════════════════════════════════ */
+const Focus={
+  phase:'focus', mins:25, breakMins:5, remaining:25*60, running:false, endsAt:0, iv:0,
+  today(){ return ymd(new Date()); },
+  done(){ if(state.focus.day!==this.today()){ state.focus.day=this.today(); state.focus.done=0; }
+    return state.focus.done||0; },
+  start(rr){ this.running=true; this.endsAt=Date.now()+this.remaining*1000;
+    clearInterval(this.iv); this.iv=setInterval(()=>this.tick(rr),250); this.tick(rr); },
+  pause(){ this.running=false; clearInterval(this.iv);
+    this.remaining=Math.max(0,Math.round((this.endsAt-Date.now())/1000)); },
+  reset(){ this.running=false; clearInterval(this.iv);
+    this.remaining=(this.phase==='focus'?this.mins:this.breakMins)*60; },
+  setPhase(p){ this.phase=p; this.reset(); },
+  tick(rr){ const left=this.running?
+      Math.max(0,Math.round((this.endsAt-Date.now())/1000)):this.remaining;
+    this.remaining=left;
+    if(left<=0){ this.running=false; clearInterval(this.iv);
+      if(this.phase==='focus'){
+        state.focus.day=this.today(); state.focus.done=(state.focus.done||0)+1;
+        saveData(); Sound.play('transition'); toast(t('focus.doneMsg')); FX.confetti();
+        this.setPhase('break');
+      } else { Sound.play('transition'); toast(t('focus.breakOver')); this.setPhase('focus'); }
+      return; }
+    if(rr) rr(); }
+};
+
+/* ── مساعدات صغيرة ── */
+function pulse(el){ if(!el||RM.matches) return;
+  el.classList.remove('pulse-once'); void el.offsetWidth; el.classList.add('pulse-once'); }
+function fmtMMSS(s){ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+function greetKey(){ const h=new Date().getHours();
+  return h>=5&&h<12?'morning':h>=12&&h<17?'afternoon':h>=17&&h<22?'evening':'night'; }
+function bindEdgeBack(){ /* سحب من حافة البداية = رجوع (للمتصفحات بلا إيماءة أصلية) */
+  if(!matchMedia('(pointer:coarse)').matches) return;
+  let x0=0,y0=0,armed=false; const EDGE=26,DIST=72;
+  window.addEventListener('touchstart',e=>{
+    armed=false;
+    if(Nav.busy||Nav.stack.length<=1||searchOpen||activeModal) return;
+    const t=e.touches[0],W=innerWidth;
+    const rtl=document.documentElement.dir==='rtl';
+    const nearStart=rtl?(W-t.clientX)<EDGE:t.clientX<EDGE;
+    if(!nearStart) return;
+    armed=true; x0=t.clientX; y0=t.clientY;
+  },{passive:true});
+  window.addEventListener('touchmove',e=>{
+    if(!armed) return; const t=e.touches[0];
+    if(Math.abs(t.clientY-y0)>Math.abs(t.clientX-x0)*1.2) armed=false;
+  },{passive:true});
+  window.addEventListener('touchend',e=>{
+    if(!armed) return; armed=false;
+    const dx=e.changedTouches[0].clientX-x0;
+    const back=document.documentElement.dir==='rtl'?dx<-DIST:dx>DIST;
+    if(back) Nav.back();
+  });
+  window.addEventListener('pointercancel',()=>{ armed=false; });
+}
+function bindKeys(){ /* Ctrl/Cmd + K للبحث */
+  window.addEventListener('keydown',e=>{
+    if((e.ctrlKey||e.metaKey)&&String(e.key).toLowerCase()==='k'){
+      if(activeModal||searchOpen) return;
+      e.preventDefault(); openSearch(); } });
+}
 /* ═══ 6. toast + modal ═══════════════════════════════════════ */
 function toast(msg,kind){ const root=$('#toast-root'); const el=document.createElement('div');
   el.className='toast'+(kind==='err'?' err':'');
@@ -337,7 +499,7 @@ function openModal(opt){
       if(lastFocus&&lastFocus.focus) lastFocus.focus(); },170); } };
   (opt.actions||[]).forEach(a=>{ const b=document.createElement('button');
     b.className='btn '+(a.cls||''); b.textContent=a.label;
-    b.addEventListener('click',()=>a.onClick?a.onClick(()=>api.close()):api.close());
+    b.addEventListener('click',()=>{ if(a.cls&&a.cls.includes('btn-primary')) pulse(b);       a.onClick?a.onClick(()=>api.close()):api.close(); });
     foot.appendChild(b); });
   if(!(opt.actions||[]).length) foot.style.display='none';
   $('.m-x',root).addEventListener('click',()=>api.close());
@@ -367,17 +529,28 @@ const inp=(id,ph,val,type)=>`<input class="input" id="${id}" type="${type||'text
 const stageEl=()=>document.getElementById('stage');
 const Nav={
   stack:[], busy:false, invalid:new Set(),
-  invalidate(...ids){ ids.forEach(i=>this.invalid.add(i)); },   parkBehind(){ for(let i=0;i<this.stack.length-1;i++) this.stack[i].el.classList.add('is-parked'); },   unpark(){ this.stack.forEach(it=>it.el.classList.remove('is-parked')); },
+  invalidate(...ids){ ids.forEach(i=>this.invalid.add(i)); },
+  parkBehind(){ for(let i=0;i<this.stack.length-1;i++) this.stack[i].el.classList.add('is-parked'); },
+  unpark(){ this.stack.forEach(it=>it.el.classList.remove('is-parked')); },
   title(it){ try{ const d=LAYERS[it.id]; return d&&d.title?d.title(it.params):''; }catch(e){ return ''; } },
-  init(id){ /* first layer, no sound, no animation */
-    const def=LAYERS[id]; if(!def) return;
+  init(id){ const def=LAYERS[id]; if(!def) return;
     const item={id,params:{},el:null};
     let el; try{ el=def.render({}); }
     catch(err){ el=document.createElement('section'); el.className='layer';
       el.innerHTML=`<div class="lbody"><div class="wrap">${emptyState('alert','Initialization error','')}</div></div>`; }
     el.classList.add('layer'); el.dataset.layer=id; item.el=el;
     this.stack.push(item); this.updateDepths();
-    stageEl().appendChild(el); },
+    stageEl().appendChild(el); FX.hubGate(this); },
+  replace(id,params){ params=params||{};
+    const old=this.stack.pop(); if(old) old.el.remove();
+    const def=LAYERS[id]; if(!def) return;
+    const item={id,params,el:null};
+    let el; try{ el=def.render(params); }
+    catch(err){ el=document.createElement('section'); el.className='layer';
+      el.innerHTML=`<div class="lbody"><div class="wrap">${emptyState('alert','Something went wrong.','')}</div></div>`; }
+    el.classList.add('layer'); el.dataset.layer=id; item.el=el;
+    this.stack.push(item); this.updateDepths();
+    stageEl().appendChild(el); Hist.sync(); FX.hubGate(this); },
   push(id,params){ if(this.busy) return; params=params||{};
     const def=LAYERS[id]; if(!def) return;
     const item={id,params,el:null}; this.stack.push(item);
@@ -388,26 +561,36 @@ const Nav={
     this.updateDepths();
     el.classList.add('is-enter');
     stageEl().appendChild(el);
-    el.getBoundingClientRect(); /* commit start position */
+    el.getBoundingClientRect();
     this.busy=true;
     requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.remove('is-enter')));
     Sound.play(this.stack.length>2?'transition':'move');
+    Hist.pushDepth(); FX.hubGate(this);
     setTimeout(()=>{ this.busy=false; this.parkBehind(); }, RM.matches?80:600); },
+  back(){ if(this.busy||this.stack.length<=1) return;
+    if(Hist.ready){ try{ history.back(); return; }catch(e){} }
+    this._histBack(1); },
   pop(instant){ if(this.stack.length<=1) return;
-    if(this.busy&&!instant) return;
-    const cur=this.stack[this.stack.length-1];
-    if(!instant&&LAYERS[cur.id]&&LAYERS[cur.id].onBeforePop&&LAYERS[cur.id].onBeforePop(cur)===false) return;
-    this.unpark();
-    this.stack.pop(); this.busy=true;
-    this.updateDepths();
-    if(instant){ cur.el.remove(); this.busy=false; this.parkBehind(); }
-    else{ cur.el.classList.add('is-exit'); Sound.play('back');
-      setTimeout(()=>{ cur.el.remove(); this.busy=false;
-        const top=this.stack[this.stack.length-1];
-        if(top&&this.invalid.has(top.id)){ this.invalid.delete(top.id); this.refreshTop(); }
-        this.parkBehind();              
-      }, RM.matches?80:600); } },
-  popTo(i,instant){ while(this.stack.length-1>i) this.pop(instant===undefined?true:instant); },
+    if(instant){ const cur=this.stack.pop(); if(cur) cur.el.remove();
+      this.busy=true; this.updateDepths();
+      setTimeout(()=>{ this.busy=false; this.parkBehind(); }, RM.matches?80:600);
+      Hist.sync(); FX.hubGate(this); return; }
+    this.back(); },
+  popTo(i){ let g=0;
+    while(this.stack.length-1>i&&g++<20){ const it=this.stack.pop(); if(it) it.el.remove(); }
+    this.updateDepths(); Hist.sync(); FX.hubGate(this); },
+  _histBack(n){ if(this.busy){ Hist.sync(); return; }
+    const cur=this.stack[this.stack.length-1]; if(!cur){ Hist.sync(); return; }
+    if(LAYERS[cur.id]&&LAYERS[cur.id].onBeforePop&&
+       LAYERS[cur.id].onBeforePop(cur)===false){ Hist.pushDepth(); return; }
+    for(let i=0;i<n-1;i++){ const it=this.stack.pop(); if(it) it.el.remove(); }
+    this.stack.pop(); this.busy=true; this.updateDepths();
+    cur.el.classList.add('is-exit'); Sound.play('back');
+    setTimeout(()=>{ cur.el.remove(); this.busy=false;
+      const top=this.stack[this.stack.length-1];
+      if(top&&this.invalid.has(top.id)){ this.invalid.delete(top.id); this.refreshTop(); }
+      this.parkBehind(); FX.hubGate(this);
+    }, RM.matches?80:600); },
   updateDepths(){ const n=this.stack.length;
     this.stack.forEach((it,i)=>{ const top=(i===n-1);
       it.el.style.setProperty('--depth',String(n-1-i));
@@ -419,12 +602,12 @@ const Nav={
     let fresh; try{ fresh=LAYERS[top.id].render(top.params); }
     catch(err){ return; }
     fresh.classList.add('layer'); fresh.dataset.layer=top.id;
-    top.el.replaceWith(fresh); top.el=fresh; this.updateDepths(); },
+    top.el.replaceWith(fresh); top.el=fresh; this.updateDepths(); FX.hubGate(this); },
   rerenderAll(){ this.stack.slice().forEach(it=>{
       let fresh; try{ fresh=LAYERS[it.id].render(it.params); }catch(err){ return; }
       fresh.classList.add('layer'); fresh.dataset.layer=it.id;
       it.el.replaceWith(fresh); it.el=fresh; });
-    this.updateDepths(); this.parkBehind(); }
+    this.updateDepths(); this.parkBehind(); FX.hubGate(this); }
 };
 function chrome(o){ /* standard layer shell: back button + breadcrumb + body */
   const sec=document.createElement('section'); sec.className='layer';
@@ -558,7 +741,7 @@ const LAYERS={};
 LAYERS.hub={
   title:()=>t('nav.hub'),
   render(){
-    const sec=document.createElement('section'); sec.className='layer';
+    const sec=document.createElement('section'); sec.className='layer';     sec.innerHTML+='<canvas class="hub-stars" aria-hidden="true"></canvas>';
     const gpa=calcGPA(state.grades);
     const cards=[
       {id:'dashboard',icon:'grid',  acc:'acc-c',y:'8px', z:'10px',r:'7deg', fd:'7s',  fdel:'-1s'},
@@ -635,7 +818,7 @@ LAYERS.dashboard={
     const body=`
     <div style="margin-bottom:18px">
       <p class="eyebrow">${esc(fmtDate(new Date(),{weekday:'long',day:'numeric',month:'long'}))}</p>
-      <h1 class="dash-hi">${esc(t('dash.greeting',{name:state.user.name}))}</h1>
+      <h1 class="dash-hi">${esc(t('dash.greet.'+greetKey(),{name:state.user.name}))}</h1>
     </div>
     <div class="tiles">
       <button class="tile card" data-nav="grades"><span class="tile-ic">${ic('cap')}</span><b>${gpa?gpa.gpa.toFixed(2):'—'}</b><span class="lbl">${t('dash.stGpa')}</span></button>
@@ -681,7 +864,7 @@ LAYERS.dashboard={
     $('#q-task',sec).addEventListener('keydown',e=>{ if(e.key==='Enter') addQuick(); });
     $$('.task-tick',sec).forEach(b=>b.addEventListener('click',()=>{
       const x=state.tasks.find(y=>y.id===b.dataset.id);
-      if(x){ x.done=true; saveData(); refresh(); } }));
+      if(x){ x.done=true; saveData(); refresh();         if(!state.tasks.some(y=>!y.done)) FX.confetti(); } }));
     $$('.task-del',sec).forEach(b=>b.addEventListener('click',()=>confirmModal({
       title:t('dash.tasks'),msg:t('common.confirmDelete'),
       onOk:()=>{ state.tasks=state.tasks.filter(y=>y.id!==b.dataset.id); saveData(); refresh(); toast(t('toast.deleted')); } })));
@@ -784,6 +967,7 @@ LAYERS.unit={
     $$('.tick',sec).forEach(b=>b.addEventListener('click',()=>{
       const l=u.lessons.find(x=>x.id===b.dataset.lid); if(!l) return;
       l.done=!l.done; saveData();
+      if(u.lessons.length&&u.lessons.every(x=>x.done)) FX.confetti();
       b.classList.toggle('on',l.done); b.setAttribute('aria-checked',String(l.done));
       b.closest('.lesson-row').classList.toggle('done',l.done); }));
     $$('.l-del',sec).forEach(b=>b.addEventListener('click',()=>confirmModal({
@@ -850,7 +1034,7 @@ LAYERS.notes={
           <span class="nc-title">${esc(n.title||t('notes.untitled'))}</span>
           <span class="nc-snip">${esc(n.body.slice(0,120))}</span>
           <span class="nc-meta mono">${esc(fmtDate(new Date(n.updatedAt),{day:'numeric',month:'short',year:'numeric'}))}</span>
-          <span class="nc-flags">${n.images.length?ic('img','ic-s'):''}${n.audio.length?ic('mic','ic-s'):''}
+          <span class="nc-flags">${n.pin?`<span class="chip pin-chip">${ic('pin','ic-xs')}${t('notes.pinned')}</span>`:''}${n.images.length?ic('img','ic-s'):''}${n.audio.length?ic('mic','ic-s'):''}
             ${n.tags.slice(0,2).map(tg=>`<span class="chip">${esc(tg)}</span>`).join('')}</span>
         </button>`).join('')
         :emptyState('note',t('notes.empty'),t('notes.emptyHint'));
@@ -869,10 +1053,11 @@ LAYERS.noteEditor={
     const ex=p.id?state.notes.find(n=>n.id===p.id):null;
     const doc={ id:ex?ex.id:uid(), title:ex?ex.title:'', body:ex?ex.body:'',
       tags:ex?ex.tags.slice():[], createdAt:ex?ex.createdAt:Date.now(),
+      pin:ex?!!ex.pin:false,      
       images:ex?ex.images.map(a=>({name:a.name,blob:a.blob})):[],
       audio:ex?ex.audio.map(a=>({name:a.name,blob:a.blob})):[], saved:true };
     const sec=chrome({title:ex?t('nav.notes'):t('notes.new'),
-      actions:`<button class="btn btn-primary btn-sm" id="ed-save">${ic('check','ic-s')}<span>${t('common.save')}</span></button>`,
+      actions:`<button class="icon-btn ${doc.pin?'on':''}" id="ed-pin" aria-label="${t(doc.pin?'notes.unpin':'notes.pin')}">${ic('pin')}</button>       <button class="btn btn-primary btn-sm" id="ed-save">${ic('check','ic-s')}<span>${t('common.save')}</span></button>`,
       body:`
       <div class="ed">
         <input class="input ed-title" id="ed-title" placeholder="${t('notes.titlePh')}" value="${esc(doc.title)}" maxlength="120" aria-label="${t('notes.titlePh')}">
@@ -923,10 +1108,10 @@ LAYERS.noteEditor={
       doc.body=$('#ed-body',sec).value;
       doc.tags=$('#ed-tags',sec).value.split(',').map(s=>s.trim()).filter(Boolean).slice(0,8);
       const rec={ id:doc.id,title:doc.title,body:doc.body,tags:doc.tags,
-        createdAt:doc.createdAt,updatedAt:Date.now(),images:doc.images,audio:doc.audio };
-      await saveNote(rec);
+        createdAt:doc.createdAt,updatedAt:Date.now(),images:doc.images,audio:doc.audio,pin:!!doc.pin };
+       await saveNote(rec);
       doc.saved=true; Nav.invalidate('dashboard','notes'); toast(t('toast.saved')); };
-    $('#ed-save',sec).addEventListener('click',()=>{ save(); });
+    $('#ed-save',sec).addEventListener('click',e=>{ pulse(e.currentTarget); save(); });     $('#ed-pin',sec).addEventListener('click',()=>{       doc.pin=!doc.pin;       const pb=$('#ed-pin',sec); pb.classList.toggle('on',doc.pin);       pb.setAttribute('aria-label',t(doc.pin?'notes.unpin':'notes.pin'));       mark(); });
     const delBtn=$('#ed-del',sec);
     if(delBtn) delBtn.addEventListener('click',()=>confirmModal({
       title:t('nav.notes'),msg:t('notes.deleteMsg'),
@@ -1176,6 +1361,7 @@ LAYERS.study={
       <div class="seg" role="tablist">
         <button class="on" data-tab="cards" role="tab" aria-selected="true">${t('study.tabCards')}</button>
         <button data-tab="quiz" role="tab" aria-selected="false">${t('study.tabQuiz')}</button>
+        <button data-tab="focus" role="tab" aria-selected="false">${ic('timer','ic-s')} ${t('focus.tab')}</button>
       </div>
       <div id="st-pane" style="margin-top:16px"></div>`});
     const pane=$('#st-pane',sec), addBtn=$('#st-add',sec);
@@ -1216,12 +1402,58 @@ LAYERS.study={
           onOk:()=>{ state.quizzes=state.quizzes.filter(z=>z.id!==b.dataset.id); saveData(); drawQuizzes(); toast(t('toast.deleted')); } }); }));
       $$('[data-quiz]',pane).forEach(r=>{ r.addEventListener('click',()=>Nav.push('quizEdit',{quizId:r.dataset.quiz}));
         r.addEventListener('keydown',e=>{ if(e.key==='Enter') Nav.push('quizEdit',{quizId:r.dataset.quiz}); }); }); };
-    const draw=()=>{ (tab==='cards'?drawDecks:drawQuizzes)(); };
+      const drawFocus=()=>{
+      const C=2*Math.PI*54;
+      const full=(Focus.phase==='focus'?Focus.mins:Focus.breakMins)*60||1;
+      const off=C*(1-Math.min(1,Focus.remaining/full));
+      pane.innerHTML=`
+      <div class="focus-wrap card card-pad" data-phase="${Focus.phase}">
+        <div class="focus-top">
+          <span class="chip ${Focus.phase==='focus'?'chip-ok':''}">${t(Focus.phase==='focus'?'focus.session':'focus.break')}</span>
+          <span class="chip mono">${t('focus.today')}: ${Focus.done()}</span>
+        </div>
+        <div class="focus-ring">
+          <svg viewBox="0 0 120 120" width="216" height="216" aria-hidden="true">
+            <circle class="fr-bg" cx="60" cy="60" r="54"/>
+            <circle class="fr-fg" id="fr-arc" cx="60" cy="60" r="54"
+              stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}"/>
+          </svg>
+          <div class="focus-time mono" id="fr-time">${fmtMMSS(Focus.remaining)}</div>
+        </div>
+        <div class="focus-ctl">
+          <button class="btn btn-primary" id="fo-go">${Focus.running?t('focus.pause'):t('focus.start')}</button>
+          <button class="btn" id="fo-reset">${t('focus.reset')}</button>
+        </div>
+        <div style="width:100%">
+          <div class="sect-h"><h2>${t('focus.length')}</h2></div>
+          <div class="pillrow" id="fo-mins" style="justify-content:center">
+            ${[15,25,50].map(m=>`<button class="pill ${Focus.mins===m?'on':''}" data-m="${m}" ${Focus.running?'disabled':''}>${m} ${t('focus.min')}</button>`).join('')}
+          </div>
+        </div>
+      </div>`;
+      const rr=()=>{ const tm=$('#fr-time',pane), arc=$('#fr-arc',pane); if(!tm) return;
+        const f2=(Focus.phase==='focus'?Focus.mins:Focus.breakMins)*60||1;
+        tm.textContent=fmtMMSS(Focus.remaining);
+        if(arc) arc.setAttribute('stroke-dashoffset',(C*(1-Math.min(1,Focus.remaining/f2))).toFixed(1)); };
+      $('#fo-go',pane).addEventListener('click',()=>{
+        Focus.running?Focus.pause():Focus.start(rr);
+        Sound.play('click');
+        $('#fo-go',pane).textContent=Focus.running?t('focus.pause'):t('focus.start'); rr(); });
+      $('#fo-reset',pane).addEventListener('click',()=>{
+        Focus.reset(); Sound.play('click');
+        $('#fo-go',pane).textContent=t('focus.start'); rr(); });
+      $('#fo-mins',pane).addEventListener('click',e=>{
+        const b=e.target.closest('[data-m]'); if(!b||Focus.running) return;
+        Focus.mins=+b.dataset.m; if(Focus.phase==='focus') Focus.reset();
+        Sound.play('click'); drawFocus(); });
+    };
+     const draw=()=>{ addBtn.style.display=(tab==='focus')?'none':'';       (tab==='cards'?drawDecks:tab==='quiz'?drawQuizzes:drawFocus)(); };
     $$('.seg button',sec).forEach(b=>b.addEventListener('click',()=>{
       tab=b.dataset.tab;
       $$('.seg button',sec).forEach(x=>{ x.classList.toggle('on',x===b);
         x.setAttribute('aria-selected',String(x===b)); }); draw(); }));
-    addBtn.addEventListener('click',()=>{
+        addBtn.addEventListener('click',()=>{
+      if(tab==='focus') return;
       if(tab==='cards') openDeckModal(null,()=>drawDecks());
       else Nav.push('quizEdit',{}); });
     draw();
@@ -1416,6 +1648,7 @@ LAYERS.quizPlay={
     const drawRes=()=>{
       const correct=answers.filter((a,k)=>a===quiz.questions[k].correct).length;
       const pctN=Math.round(correct/quiz.questions.length*100);
+      if(pctN>=80) FX.confetti();
       box.innerHTML=`
       <div class="card card-pad res-hero"><span class="res-num mono">${pctN}%</span>
         <span class="res-lbl">${t('study.score')} · ${correct} / ${quiz.questions.length}</span></div>
@@ -1613,7 +1846,7 @@ async function exportBackup(){
     const payload={ app:'ubad-academy-hub', version:1, exportedAt:new Date().toISOString(),
       data:{ user:state.user, settings:state.settings,
         courses:state.courses, events:state.events, tasks:state.tasks,
-        grades:state.grades, decks:state.decks, quizzes:state.quizzes, notes } };
+        grades:state.grades, decks:state.decks,quizzes:state.quizzes, focus:state.focus, notes } };
     const blob=new Blob([JSON.stringify(payload)],{type:'application/json'});
     const a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
@@ -1646,6 +1879,7 @@ async function importBackup(file){
             tags:normArr(n&&n.tags).map(x=>normStr(x,24)).slice(0,8),
             createdAt:clampNum(n&&n.createdAt,0,1e15,Date.now()),
             updatedAt:clampNum(n&&n.updatedAt,0,1e15,Date.now()),
+            pin:!!(n&&n.pin),
             images:imgs, audio:auds }; }));
         try{ await DB.clear('notes'); }catch(e){}
         for(const rec of notes){ try{ await DB.put('notes',rec); }catch(e){} }
@@ -1665,11 +1899,11 @@ async function boot(){
   applyLang();            /* 3. language before first paint of layers */
   applyTheme();           /* 4. theme */
   bindParallax();         /* 5. pointer engines */
-  bindTilt();
+  bindTilt();   bindEdgeBack();   bindKeys();
   try{ await DB.open(); }catch(e){}          /* 6. IndexedDB (memory fallback ok) */
   try{ await Promise.all([loadData(),loadNotes()]); }catch(e){} /* 7. user data */
   Sound.init();           /* 8. audio manager (silent until gesture) */
-  Nav.init('hub');        /* 9. render Main Hub — service worker is registered in index.html */
+    Hist.init();   let firstRun=false; try{ firstRun=!localStorage.getItem('ubad.seen.v1'); }catch(e){}   Nav.init(firstRun?'welcome':'hub');        /* 9. render Main Hub — service worker is registered in index.html */
 }
 boot().catch(()=>{ /* last-resort: never leave a blank screen */
   const s=document.getElementById('stage');

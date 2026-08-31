@@ -551,7 +551,8 @@ canvas.chart{width:100%;display:block}
   .hub-stage{transform:none!important}
   .layer{transition:opacity .2s ease}
   .flip-in{transition-duration:.2s}
-                                               }
+}
+
 /* ═══════════════ PERF PATCH v1 ═══════════════ */
 
 /* 1) عتامة أعلى تعوّض غياب الضبابية (نفس الإحساس، بلا كلفة) */
@@ -596,7 +597,8 @@ canvas.chart{width:100%;display:block}
   .card{box-shadow:0 12px 28px -14px rgba(2,6,20,.5)}
   .hub-inner{box-shadow:0 14px 32px -14px rgba(2,6,20,.55)}
   .flip-face{box-shadow:0 12px 28px -14px rgba(2,6,20,.5)}
-    }
+}
+
 /* ═══════════════ THEMES PATCH v1 ═══════════════ */
 
 /* التوهج الخلفي يصبح قابلًا للثيم */
@@ -698,6 +700,7 @@ canvas.chart{width:100%;display:block}
 .sw-prev i:nth-child(3){left:26px}
 .sw-name{font-size:11.5px;font-weight:600;color:var(--ink2)}
 .swatch.on .sw-name{color:var(--ink)}
+
 /* ═══════════════ SATURATION BOOST (light themes) ═══════════════ */
 
 /* ── وردي: تريو جديد كليًا — وردي ناري · بنفسجي · فوشيا ── */
@@ -744,13 +747,6 @@ canvas.chart{width:100%;display:block}
 }
 
 /* ── بلاطات أيقونات الهب: من "غسول" 10% إلى لون حاضر 20% ── */
-[data-theme="light"] .acc-c,[data-theme="light"] .acc-b,[data-theme="light"] .acc-v,
-[data-theme="paper"] .acc-c,[data-theme="paper"] .acc-b,[data-theme="paper"] .acc-v,
-[data-theme="sage"] .acc-c,[data-theme="sage"] .acc-b,[data-theme="sage"] .acc-v,
-[data-theme="rose"] .acc-c,[data-theme="rose"] .acc-b,[data-theme="rose"] .acc-v{
-  --soft:.2;
-}
-/* القيم أعلاه نسبة مختصرة — الصيغة الصحيحة: */
 [data-theme="light"]  .acc-c{--soft:rgba(8,145,178,.20);--softline:rgba(8,145,178,.45);--glowcol:rgba(8,145,178,.16);--hline:rgba(8,145,178,.6);--hglow:0 16px 44px -10px rgba(8,145,178,.4)}
 [data-theme="light"]  .acc-b{--soft:rgba(37,99,235,.20);--softline:rgba(37,99,235,.45);--glowcol:rgba(37,99,235,.16);--hline:rgba(37,99,235,.6);--hglow:0 16px 44px -10px rgba(37,99,235,.4)}
 [data-theme="light"]  .acc-v{--soft:rgba(124,58,237,.20);--softline:rgba(124,58,237,.45);--glowcol:rgba(124,58,237,.16);--hline:rgba(124,58,237,.6);--hglow:0 16px 44px -10px rgba(124,58,237,.4)}
@@ -783,3 +779,34 @@ canvas.chart{width:100%;display:block}
 [data-theme="light"] .btn-primary,[data-theme="rose"] .btn-primary,
 [data-theme="paper"] .btn-primary,[data-theme="sage"] .btn-primary{
   font-weight:700}
+
+/* ═══════════════ MISSING-FEATURE STYLES (مطلوبة للـ app.js الحالي) ═══════════════ */
+
+/* 1) جزيئات الهب — إجباري: بدونها الكانفس يخرب التخطيط */
+.hub-stars{position:absolute;inset:0;z-index:0;pointer-events:none}
+.layer .lbody{position:relative;z-index:1}
+
+/* 2) نبضة الحفظ */
+@keyframes pulseGlow{from{box-shadow:0 0 0 0 rgba(34,211,238,.55)}to{box-shadow:0 0 0 16px rgba(34,211,238,0)}}
+.pulse-once{animation:pulseGlow .6s var(--ease)}
+
+/* 3) حالة "مفعّل" لزر التثبيت */
+.icon-btn.on{border-color:rgba(34,211,238,.55);color:var(--acc-c);background:rgba(34,211,238,.10)}
+
+/* 4) شريحة الملاحظة المثبتة */
+.pin-chip{color:var(--acc-c)}
+
+/* 5) مؤقت التركيز */
+.focus-wrap{max-width:460px;margin-inline:auto;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center}
+.focus-top{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.focus-ring{position:relative;display:grid;place-items:center}
+.fr-bg{fill:none;stroke:var(--line);stroke-width:6}
+.fr-fg{fill:none;stroke:var(--acc-c);stroke-width:6;stroke-linecap:round;
+  transform:rotate(-90deg);transform-origin:60px 60px;transition:stroke-dashoffset .3s linear}
+.focus-wrap[data-phase="break"] .fr-fg{stroke:var(--acc-v)}
+.focus-time{position:absolute;font-size:36px;font-weight:700;letter-spacing:.02em}
+.focus-ctl{display:flex;gap:10px}
+
+/* 6) اتساق: مدخلات الوضع الداكن بعتمة البطاقات الجديدة */
+:root{--in-bg:rgba(12,19,42,.80)}
+[data-theme="oled"]{--in-bg:rgba(8,10,22,.70)}

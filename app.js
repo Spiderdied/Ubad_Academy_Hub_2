@@ -605,6 +605,7 @@ const Nav={
       it.el.style.setProperty('--depth',String(n-1-i));
       it.el.classList.toggle('is-active',top);
       it.el.classList.toggle('is-behind',!top);
+      if(top) it.el.classList.remove('is-parked'); /* FIX: الطبقة العلوية لازم تظهر فورًا بعد الرجوع */
       it.el.setAttribute('aria-hidden',String(!top));
       try{ it.el.inert=!top; }catch(e){} }); },
   refreshTop(){ const top=this.stack[this.stack.length-1]; if(!top) return;
@@ -751,7 +752,7 @@ LAYERS.hub={
   title:()=>t('nav.hub'),
   render(){
     const sec=document.createElement('section'); sec.className='layer';
-    sec.innerHTML='<canvas class="hub-stars" aria-hidden="true"></canvas>'; /* FIX 2: canvas layer */
+    sec.innerHTML='<canvas class="hub-stars" aria-hidden="true"></canvas>';
     const gpa=calcGPA(state.grades);
     const cards=[
       {id:'dashboard',icon:'grid',  acc:'acc-c',y:'8px', z:'10px',r:'7deg', fd:'7s',  fdel:'-1s'},
@@ -763,7 +764,8 @@ LAYERS.hub={
       {id:'study',    icon:'layers',acc:'acc-c',y:'4px',  z:'40px',r:'-3deg',fd:'8.5s',fdel:'-2.5s'},
       {id:'settings', icon:'sliders',acc:'acc-v',y:'12px',z:'12px',r:'-7deg',fd:'10.5s',fdel:'-6s'},
     ];
-    sec.innerHTML+=` /* FIX 2: += keeps the canvas */
+    /* += (وليس =) حتى نحافظ على كانفس النجوم المعيّن أعلاه */
+    sec.innerHTML+=`
     <div class="lbody hub-body"><div class="wrap">
       <header class="hub-top">
         <div class="brand">${ic('logo','brand-logo')}
@@ -820,7 +822,7 @@ LAYERS.dashboard={
       <span class="row-main"><span class="row-title">${esc(e.title)}</span>
         <span class="row-sub">${e.time?esc(e.time)+' · ':''}${esc(e.desc||'')}</span></span>
       ${ic('chr','ic-s dir-flip row-chev')}</button></li>`;
-    const noteRow=n=>`<li><button class="rowitem" data-nav="noteEditor" data-params='{"id":"${n.id}"}'>
+    const noteRow=n=>`<li><button class="rowitem" data-nav="noteEditor" data-params='${esc(JSON.stringify({id:n.id}))}'>
       <span class="row-ic">${ic('note')}</span>
       <span class="row-main"><span class="row-title">${esc(n.title||t('notes.untitled'))}</span>
         <span class="row-sub">${esc(n.body.slice(0,60))}</span></span>
@@ -932,14 +934,15 @@ LAYERS.courseDetail={
     <div class="sect-h" style="margin-top:22px"><h2>${t('courses.units')}</h2>
       <button class="btn btn-primary btn-sm" id="cd-addunit">${ic('plus','ic-s')}<span>${t('courses.newUnit')}</span></button></div>
     ${c.units.length?`<div class="list">${c.units.map(u=>{ const st=unitStats(u); return `
-      <button class="rowitem" data-nav="unit" data-params='${JSON.stringify({courseId:c.id,unitId:u.id})}'>
+      <button class="rowitem" data-nav="unit" data-params='${esc(JSON.stringify({courseId:c.id,unitId:u.id}))}'>
         <span class="row-ic">${ic('layers')}</span>
         <span class="row-main"><span class="row-title">${esc(u.title)}</span>
           <span class="row-sub mono">${st.done}/${st.total} ${t('courses.lessonsLc')}</span></span>
         ${ic('chr','ic-s dir-flip row-chev')}</button>`;}).join('')}</div>`
       : emptyState('layers',t('courses.noUnits'))}`;
     const sec=chrome({title:c.name,body});
-    $('#cd-edit',sec).addEventListener('click',()=>openCourseModal(c,()=>Nav.refreshTop()));
+    $('#cd-edit',sec).addEventListener('click',()=>openCourseModal(c,()=>{
+      Nav.invalidate('courses'); Nav.refreshTop(); }));
     $('#cd-del',sec).addEventListener('click',()=>confirmModal({
       title:t('courses.edit'),msg:t('common.confirmDelete'),
       onOk:()=>{ state.courses=state.courses.filter(x=>x.id!==c.id); saveData();
@@ -950,7 +953,7 @@ LAYERS.courseDetail={
       actions:[{label:t('common.cancel')},{label:t('common.add'),cls:'btn-primary',onClick:close=>{
         const v=$('#u-title').value.trim(); if(!v) return;
         c.units.push({id:uid(),title:v.slice(0,80),lessons:[]});
-        saveData(); close(); Nav.refreshTop(); }}]}));
+        saveData(); Nav.invalidate('courses'); close(); Nav.refreshTop(); }}]}));
     return sec;
   }
 };
@@ -977,30 +980,31 @@ LAYERS.unit={
     const sec=chrome({title:u.title,body});
     $$('.tick',sec).forEach(b=>b.addEventListener('click',()=>{
       const l=u.lessons.find(x=>x.id===b.dataset.lid); if(!l) return;
-      l.done=!l.done; saveData();
+      l.done=!l.done; saveData(); Nav.invalidate('courseDetail','courses');
       if(u.lessons.length&&u.lessons.every(x=>x.done)) FX.confetti();
       b.classList.toggle('on',l.done); b.setAttribute('aria-checked',String(l.done));
       b.closest('.lesson-row').classList.toggle('done',l.done); }));
     $$('.l-del',sec).forEach(b=>b.addEventListener('click',()=>confirmModal({
       title:t('courses.lessons'),msg:t('common.confirmDelete'),
-      onOk:()=>{ u.lessons=u.lessons.filter(x=>x.id!==b.dataset.lid); saveData(); Nav.refreshTop(); } })));
+      onOk:()=>{ u.lessons=u.lessons.filter(x=>x.id!==b.dataset.lid); saveData();
+        Nav.invalidate('courseDetail','courses'); Nav.refreshTop(); } })));
     $('#u-add',sec).addEventListener('click',()=>openModal({
       title:t('courses.newLesson'),
       body:field(t('courses.lessonName'),inp('l-title','','')),
       actions:[{label:t('common.cancel')},{label:t('common.add'),cls:'btn-primary',onClick:close=>{
         const v=$('#l-title').value.trim(); if(!v) return;
         u.lessons.push({id:uid(),title:v.slice(0,120),done:false});
-        saveData(); close(); Nav.refreshTop(); }}]}));
+        saveData(); Nav.invalidate('courseDetail','courses'); close(); Nav.refreshTop(); }}]}));
     $('#u-rename',sec).addEventListener('click',()=>openModal({
       title:t('common.edit'),
       body:field(t('courses.unitName'),inp('u-title2','',u.title)),
       actions:[{label:t('common.cancel')},{label:t('common.save'),cls:'btn-primary',onClick:close=>{
         const v=$('#u-title2').value.trim(); if(!v) return;
-        u.title=v.slice(0,80); saveData(); close(); Nav.refreshTop(); }}]}));
+        u.title=v.slice(0,80); saveData(); Nav.invalidate('courseDetail'); close(); Nav.refreshTop(); }}]}));
     $('#u-del',sec).addEventListener('click',()=>confirmModal({
       title:t('courses.deleteUnit'),msg:t('common.confirmDelete'),
       onOk:()=>{ c.units=c.units.filter(x=>x.id!==u.id); saveData();
-        Nav.invalidate('courses'); Nav.pop(); toast(t('toast.deleted')); } }));
+        Nav.invalidate('courses','courseDetail'); Nav.pop(); toast(t('toast.deleted')); } }));
     return sec;
   }
 };
@@ -1041,7 +1045,7 @@ LAYERS.notes={
     const draw=()=>{ const needle=q.toLowerCase();
       const items=state.notes.filter(n=>!needle||(n.title+' '+n.body+' '+n.tags.join(' ')).toLowerCase().includes(needle));
       listEl.innerHTML=items.length?items.map(n=>`
-        <button class="note-card card tilt" data-nav="noteEditor" data-params='{"id":"${n.id}"}'>
+        <button class="note-card card tilt" data-nav="noteEditor" data-params='${esc(JSON.stringify({id:n.id}))}'>
           <span class="nc-title">${esc(n.title||t('notes.untitled'))}</span>
           <span class="nc-snip">${esc(n.body.slice(0,120))}</span>
           <span class="nc-meta mono">${esc(fmtDate(new Date(n.updatedAt),{day:'numeric',month:'short',year:'numeric'}))}</span>
@@ -1299,7 +1303,7 @@ function gbClass(l){ return l[0]==='A'?'gb-a':l[0]==='B'?'gb-b':l[0]==='C'?'gb-c
 function openGradeModal(gr,cb){
   openModal({title:gr?t('grades.edit'):t('grades.new'),
     body:`
-    ${field(t('grades.course'),inp('g-name','',gr?gr.courseName:''))}
+    ${field(t('grades.course'),`<input class="input" id="g-name" list="dl-courses" placeholder="${esc(t('grades.coursePh'))}" value="${esc(gr?gr.courseName:'')}">`)}
     <datalist id="dl-courses">${state.courses.map(c=>`<option value="${esc(c.name)}"></option>`).join('')}</datalist>
     <div class="f-2col">
       ${field(t('grades.credits'),inp('g-cred',null,gr?gr.credits:3,'number'))}
@@ -1368,17 +1372,18 @@ LAYERS.analytics={
 };
 
 /* ── STUDY TOOLS ──────────────────────────────────────────── */
+let studyTab='cards'; /* يحفظ التاب النشط عبر إعادة الرسم */
 LAYERS.study={
   title:()=>t('nav.study'),
   render(){
-    let tab='cards';
+    let tab=studyTab;
     const sec=chrome({title:t('nav.study'),
       actions:`<button class="btn btn-primary btn-sm" id="st-add">${ic('plus','ic-s')}<span id="st-add-l">${t('study.newDeck')}</span></button>`,
       body:`
       <div class="seg" role="tablist">
-        <button class="on" data-tab="cards" role="tab" aria-selected="true">${t('study.tabCards')}</button>
-        <button data-tab="quiz" role="tab" aria-selected="false">${t('study.tabQuiz')}</button>
-        <button data-tab="focus" role="tab" aria-selected="false">${ic('timer','ic-s')} ${t('focus.tab')}</button>
+        <button class="${tab==='cards'?'on':''}" data-tab="cards" role="tab" aria-selected="${tab==='cards'}">${t('study.tabCards')}</button>
+        <button class="${tab==='quiz'?'on':''}" data-tab="quiz" role="tab" aria-selected="${tab==='quiz'}">${t('study.tabQuiz')}</button>
+        <button class="${tab==='focus'?'on':''}" data-tab="focus" role="tab" aria-selected="${tab==='focus'}">${ic('timer','ic-s')} ${t('focus.tab')}</button>
       </div>
       <div id="st-pane" style="margin-top:16px"></div>`});
     const pane=$('#st-pane',sec), addBtn=$('#st-add',sec);
@@ -1448,7 +1453,9 @@ LAYERS.study={
           </div>
         </div>
       </div>`;
-      const rr=()=>{ const tm=$('#fr-time',pane), arc=$('#fr-arc',pane); if(!tm) return;
+      /* ندور على العناصر في المستند كله حتى يظل التحديث شغالًا بعد أي إعادة رسم */
+      const rr=()=>{ const tm=document.getElementById('fr-time'), arc=document.getElementById('fr-arc');
+        if(!tm) return;
         const f2=(Focus.phase==='focus'?Focus.mins:Focus.breakMins)*60||1;
         tm.textContent=fmtMMSS(Focus.remaining);
         if(arc) arc.setAttribute('stroke-dashoffset',(C*(1-Math.min(1,Focus.remaining/f2))).toFixed(1)); };
@@ -1467,7 +1474,7 @@ LAYERS.study={
     const draw=()=>{ addBtn.style.display=(tab==='focus')?'none':'';
       (tab==='cards'?drawDecks:tab==='quiz'?drawQuizzes:drawFocus)(); };
     $$('.seg button',sec).forEach(b=>b.addEventListener('click',()=>{
-      tab=b.dataset.tab;
+      tab=b.dataset.tab; studyTab=tab;
       $$('.seg button',sec).forEach(x=>{ x.classList.toggle('on',x===b);
         x.setAttribute('aria-selected',String(x===b)); }); draw(); }));
     addBtn.addEventListener('click',()=>{
@@ -1552,14 +1559,15 @@ LAYERS.deck={
       $$('.dc-del',list).forEach(b=>b.addEventListener('click',()=>confirmModal({
         title:t('common.delete'),msg:t('common.confirmDelete'),
         onOk:()=>{ d.cards.splice(+b.dataset.i,1); p.order=d.cards.map((_,i)=>i); order=p.order; pos=0;
-          saveData(); drawList(); drawView(); } }))); };
+          saveData(); Nav.invalidate('study'); drawList(); drawView(); } }))); };
     $('#dk-add',sec).addEventListener('click',()=>openCardModal(null,card=>{
       d.cards.push(card); p.order=d.cards.map((_,i)=>i); order=p.order;
       pos=d.cards.length-1; flipped=false;
-      saveData(); drawList(); drawView(); }));
+      saveData(); Nav.invalidate('study'); drawList(); drawView(); }));
     $('#dk-del',sec).addEventListener('click',()=>confirmModal({
       title:t('study.deleteDeck'),msg:t('study.deleteDeckMsg'),
-      onOk:()=>{ state.decks=state.decks.filter(x=>x.id!==d.id); saveData(); Nav.pop(); toast(t('toast.deleted')); } }));
+      onOk:()=>{ state.decks=state.decks.filter(x=>x.id!==d.id); saveData();
+        Nav.invalidate('study'); Nav.pop(); toast(t('toast.deleted')); } }));
     drawList(); drawView();
     return sec;
   }
@@ -1571,9 +1579,10 @@ function openCardModal(card,cb){
     actions:[{label:t('common.cancel')},{label:t('common.save'),cls:'btn-primary',onClick:close=>{
       const f=$('#cd-front').value.trim(), b=$('#cd-back').value.trim();
       if(!f||!b) return;
-      if(card){ card.front=f.slice(0,300); card.back=b.slice(0,300); }
-      else cb({id:uid(),front:f.slice(0,300),back:b.slice(0,300)});
-      saveData(); close(); toast(t('toast.saved')); }}]});
+      if(card){ card.front=f.slice(0,300); card.back=b.slice(0,300);
+        saveData(); close(); if(cb)cb(); }
+      else { close(); if(cb)cb({id:uid(),front:f.slice(0,300),back:b.slice(0,300)}); }
+      toast(t('toast.saved')); }}]});
 }
 LAYERS.quizEdit={
   title:p=>{ const q=state.quizzes.find(x=>x.id===p.quizId); return q?q.title:t('study.newQuiz'); },
@@ -1634,7 +1643,8 @@ LAYERS.quizEdit={
           options:q.options.map(o=>o.trim().slice(0,160)),correct:q.correct})) };
       const ix=state.quizzes.findIndex(x=>x.id===clean.id);
       if(ix>-1) state.quizzes[ix]=clean; else state.quizzes.push(clean);
-      api.dirty=false; saveData(); toast(t('toast.saved')); Nav.pop(); });
+      api.dirty=false; saveData(); Nav.invalidate('study');
+      toast(t('toast.saved')); Nav.pop(); });
     sec._qe=api;
     return sec;
   }
@@ -1721,7 +1731,7 @@ LAYERS.settings={
             <span class="sw-name">${t('set.th.'+id)}</span>
           </button>`;}).join('')}
       </div>
-    </div> /* FIX 3: extra </div> removed */
+    </div>
     <div class="set-group card card-pad set-row">
       <div class="set-h">${ic('vol')}<div><h2>${t('set.sound')}</h2><p>${t('set.soundDesc')}</p></div></div>
       <button class="switch ${s.sound?'on':''}" id="set-sound" role="switch" aria-checked="${s.sound}" aria-label="${t('set.sound')}"></button>
@@ -1923,7 +1933,7 @@ async function boot(){
   try{ await Promise.all([loadData(),loadNotes()]); }catch(e){} /* 7. user data */
   Sound.init();           /* 8. audio manager (silent until gesture) */
   Hist.init();            /* 8.5 native back bridge */
-  Nav.init('hub');        /* 9. render Main Hub — FIX 1: no welcome reference */
+  Nav.init('hub');        /* 9. render Main Hub */
 }
 boot().catch(()=>{ /* last-resort: never leave a blank screen */
   const s=document.getElementById('stage');

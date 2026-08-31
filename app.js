@@ -96,7 +96,9 @@ en:{
  'set.language':'Language','set.langDesc':'Interface language and direction (LTR / RTL).',
  'set.profile':'Profile','set.username':'Username','set.usernamePh':'Your name',
  'set.usernameDesc':'Used only for the greeting on your dashboard — never renames your data.',
- 'set.appearance':'Appearance','set.theme':'Theme', 'set.dark':'Dark','set.light':'Light',  'set.th.dark':'Midnight','set.th.oled':'OLED Black','set.th.light':'Aurora',  'set.th.paper':'Paper','set.th.sage':'Sage','set.th.rose':'Rose',
+ 'set.appearance':'Appearance','set.theme':'Theme','set.dark':'Dark','set.light':'Light',
+ 'set.th.dark':'Midnight','set.th.oled':'OLED Black','set.th.light':'Aurora',
+ 'set.th.paper':'Paper','set.th.sage':'Sage','set.th.rose':'Rose',
  'set.sound':'Interface sounds','set.soundDesc':'Subtle feedback sounds. Falls back gracefully if audio files are not present.',
  'set.backup':'Backup & restore','set.backupDesc':'Export all of your data as a JSON file and restore it on any device. No account needed.',
  'set.export':'Export backup','set.import':'Import backup',
@@ -185,7 +187,9 @@ ar:{
  'set.language':'اللغة','set.langDesc':'لغة الواجهة واتجاهها (من اليمين لليسار / من اليسار لليمين).',
  'set.profile':'الملف الشخصي','set.username':'اسم المستخدم','set.usernamePh':'اسمك',
  'set.usernameDesc':'يُستخدم فقط في التحية على لوحة التحكم — لا يعيد تسمية بياناتك أبدًا.',
- 'set.appearance':'المظهر','set.theme':'السمة','set.dark':'داكنة','set.light':'فاتحة',  'set.th.dark':'منتصف الليل','set.th.oled':'أسود نقي','set.th.light':'الشفق',  'set.th.paper':'ورقي','set.th.sage':'نعناعي','set.th.rose':'وردي',
+ 'set.appearance':'المظهر','set.theme':'السمة','set.dark':'داكنة','set.light':'فاتحة',
+ 'set.th.dark':'منتصف الليل','set.th.oled':'أسود نقي','set.th.light':'الشفق',
+ 'set.th.paper':'ورقي','set.th.sage':'نعناعي','set.th.rose':'وردي',
  'set.sound':'أصوات الواجهة','set.soundDesc':'أصوات تفاعل خفيفة..',
  'set.backup':'النسخ الاحتياطي والاستعادة','set.backupDesc':'صدّر جميع بياناتك كملف JSON واستعدها على أي جهاز. بدون حساب.',
  'set.export':'تصدير نسخة احتياطية','set.import':'استيراد نسخة احتياطية',
@@ -217,7 +221,8 @@ const t=(k,vars)=>{ let s=(I18N[state.settings.lang]||I18N.en)[k]; if(s==null) s
 const state={
   user:{name:'Ubad'},
   settings:{lang:'en',sound:true,theme:'dark'},
-  courses:[], notes:[], events:[], tasks:[], grades:[], decks:[], quizzes:[],   focus:{day:'',done:0},
+  courses:[], notes:[], events:[], tasks:[], grades:[], decks:[], quizzes:[],
+  focus:{day:'',done:0}
 };
 const PREF_KEY='ubad.prefs.v1';
 function savePrefs(){ try{ localStorage.setItem(PREF_KEY,JSON.stringify({
@@ -289,7 +294,7 @@ async function loadNotes(){ try{
   const arr=await DB.all('notes');
   state.notes=arr.filter(n=>n&&n.id).map(n=>({ id:n.id, title:normStr(n.title,120), body:normStr(n.body,20000),
     tags:normArr(n.tags).map(x=>normStr(x,24)).slice(0,8),
-    createdAt:clampNum(n.createdAt,0,1e15,Date.now()), updatedAt:clampNum(n.updatedAt,0,1e15,Date.now()),pin:!!n.pin,
+    createdAt:clampNum(n.createdAt,0,1e15,Date.now()), updatedAt:clampNum(n.updatedAt,0,1e15,Date.now()), pin:!!n.pin,
     images:normArr(n.images).filter(a=>a&&a.blob instanceof Blob).map(a=>({name:normStr(a.name,80,'image'),blob:a.blob})),
     audio:normArr(n.audio).filter(a=>a&&a.blob instanceof Blob).map(a=>({name:normStr(a.name,80,'audio'),blob:a.blob})) }))
     .sort((a,b)=>(b.pin?1:0)-(a.pin?1:0)||b.updatedAt-a.updatedAt);
@@ -299,9 +304,10 @@ async function saveNote(rec){ try{ await DB.put('notes',rec); }catch(e){}
   if(i>-1) state.notes[i]=rec; else state.notes.unshift(rec);
   state.notes.sort((a,b)=>(b.pin?1:0)-(a.pin?1:0)||b.updatedAt-a.updatedAt); }
 function saveData(){ Nav.invalidate('dashboard','analytics'); savePrefs();
-    DB.put('kv',{id:'appdata',data:{user:state.user,settings:state.settings,courses:state.courses,
+  DB.put('kv',{id:'appdata',data:{user:state.user,settings:state.settings,courses:state.courses,
     events:state.events,tasks:state.tasks,grades:state.grades,decks:state.decks,quizzes:state.quizzes,
     focus:state.focus}}).catch(()=>{}); }
+
 /* ═══ 5. audio manager — fails silently, never blocks ════════ */
 const Sound={ files:{click:'assets/audio/click.mp3',move:'assets/audio/3d-move.mp3',
     back:'assets/audio/back.mp3',transition:'assets/audio/transition.mp3'},
@@ -334,6 +340,7 @@ const Sound={ files:{click:'assets/audio/click.mp3',move:'assets/audio/3d-move.m
       o.connect(g); g.connect(this.ctx.destination); o.start(t0); o.stop(t0+.15);
     }catch(e){} }
 };
+
 /* ═══ 5.7 history bridge (native back) ══════════════════════ */
 const Hist={
   ready:false,
@@ -475,6 +482,7 @@ function bindKeys(){ /* Ctrl/Cmd + K للبحث */
       if(activeModal||searchOpen) return;
       e.preventDefault(); openSearch(); } });
 }
+
 /* ═══ 6. toast + modal ═══════════════════════════════════════ */
 function toast(msg,kind){ const root=$('#toast-root'); const el=document.createElement('div');
   el.className='toast'+(kind==='err'?' err':'');
@@ -499,7 +507,8 @@ function openModal(opt){
       if(lastFocus&&lastFocus.focus) lastFocus.focus(); },170); } };
   (opt.actions||[]).forEach(a=>{ const b=document.createElement('button');
     b.className='btn '+(a.cls||''); b.textContent=a.label;
-    b.addEventListener('click',()=>{ if(a.cls&&a.cls.includes('btn-primary')) pulse(b);       a.onClick?a.onClick(()=>api.close()):api.close(); });
+    b.addEventListener('click',()=>{ if(a.cls&&a.cls.includes('btn-primary')) pulse(b);
+      a.onClick?a.onClick(()=>api.close()):api.close(); });
     foot.appendChild(b); });
   if(!(opt.actions||[]).length) foot.style.display='none';
   $('.m-x',root).addEventListener('click',()=>api.close());
@@ -741,7 +750,8 @@ const LAYERS={};
 LAYERS.hub={
   title:()=>t('nav.hub'),
   render(){
-    const sec=document.createElement('section'); sec.className='layer';     sec.innerHTML+='<canvas class="hub-stars" aria-hidden="true"></canvas>';
+    const sec=document.createElement('section'); sec.className='layer';
+    sec.innerHTML='<canvas class="hub-stars" aria-hidden="true"></canvas>'; /* FIX 2: canvas layer */
     const gpa=calcGPA(state.grades);
     const cards=[
       {id:'dashboard',icon:'grid',  acc:'acc-c',y:'8px', z:'10px',r:'7deg', fd:'7s',  fdel:'-1s'},
@@ -753,7 +763,7 @@ LAYERS.hub={
       {id:'study',    icon:'layers',acc:'acc-c',y:'4px',  z:'40px',r:'-3deg',fd:'8.5s',fdel:'-2.5s'},
       {id:'settings', icon:'sliders',acc:'acc-v',y:'12px',z:'12px',r:'-7deg',fd:'10.5s',fdel:'-6s'},
     ];
-    sec.innerHTML=`
+    sec.innerHTML+=` /* FIX 2: += keeps the canvas */
     <div class="lbody hub-body"><div class="wrap">
       <header class="hub-top">
         <div class="brand">${ic('logo','brand-logo')}
@@ -864,7 +874,8 @@ LAYERS.dashboard={
     $('#q-task',sec).addEventListener('keydown',e=>{ if(e.key==='Enter') addQuick(); });
     $$('.task-tick',sec).forEach(b=>b.addEventListener('click',()=>{
       const x=state.tasks.find(y=>y.id===b.dataset.id);
-      if(x){ x.done=true; saveData(); refresh();         if(!state.tasks.some(y=>!y.done)) FX.confetti(); } }));
+      if(x){ x.done=true; saveData(); refresh();
+        if(!state.tasks.some(y=>!y.done)) FX.confetti(); } }));
     $$('.task-del',sec).forEach(b=>b.addEventListener('click',()=>confirmModal({
       title:t('dash.tasks'),msg:t('common.confirmDelete'),
       onOk:()=>{ state.tasks=state.tasks.filter(y=>y.id!==b.dataset.id); saveData(); refresh(); toast(t('toast.deleted')); } })));
@@ -1053,11 +1064,12 @@ LAYERS.noteEditor={
     const ex=p.id?state.notes.find(n=>n.id===p.id):null;
     const doc={ id:ex?ex.id:uid(), title:ex?ex.title:'', body:ex?ex.body:'',
       tags:ex?ex.tags.slice():[], createdAt:ex?ex.createdAt:Date.now(),
-      pin:ex?!!ex.pin:false,      
+      pin:ex?!!ex.pin:false,
       images:ex?ex.images.map(a=>({name:a.name,blob:a.blob})):[],
       audio:ex?ex.audio.map(a=>({name:a.name,blob:a.blob})):[], saved:true };
     const sec=chrome({title:ex?t('nav.notes'):t('notes.new'),
-      actions:`<button class="icon-btn ${doc.pin?'on':''}" id="ed-pin" aria-label="${t(doc.pin?'notes.unpin':'notes.pin')}">${ic('pin')}</button>       <button class="btn btn-primary btn-sm" id="ed-save">${ic('check','ic-s')}<span>${t('common.save')}</span></button>`,
+      actions:`<button class="icon-btn ${doc.pin?'on':''}" id="ed-pin" aria-label="${t(doc.pin?'notes.unpin':'notes.pin')}">${ic('pin')}</button>
+      <button class="btn btn-primary btn-sm" id="ed-save">${ic('check','ic-s')}<span>${t('common.save')}</span></button>`,
       body:`
       <div class="ed">
         <input class="input ed-title" id="ed-title" placeholder="${t('notes.titlePh')}" value="${esc(doc.title)}" maxlength="120" aria-label="${t('notes.titlePh')}">
@@ -1109,9 +1121,14 @@ LAYERS.noteEditor={
       doc.tags=$('#ed-tags',sec).value.split(',').map(s=>s.trim()).filter(Boolean).slice(0,8);
       const rec={ id:doc.id,title:doc.title,body:doc.body,tags:doc.tags,
         createdAt:doc.createdAt,updatedAt:Date.now(),images:doc.images,audio:doc.audio,pin:!!doc.pin };
-       await saveNote(rec);
+      await saveNote(rec);
       doc.saved=true; Nav.invalidate('dashboard','notes'); toast(t('toast.saved')); };
-    $('#ed-save',sec).addEventListener('click',e=>{ pulse(e.currentTarget); save(); });     $('#ed-pin',sec).addEventListener('click',()=>{       doc.pin=!doc.pin;       const pb=$('#ed-pin',sec); pb.classList.toggle('on',doc.pin);       pb.setAttribute('aria-label',t(doc.pin?'notes.unpin':'notes.pin'));       mark(); });
+    $('#ed-save',sec).addEventListener('click',e=>{ pulse(e.currentTarget); save(); });
+    $('#ed-pin',sec).addEventListener('click',()=>{
+      doc.pin=!doc.pin;
+      const pb=$('#ed-pin',sec); pb.classList.toggle('on',doc.pin);
+      pb.setAttribute('aria-label',t(doc.pin?'notes.unpin':'notes.pin'));
+      mark(); });
     const delBtn=$('#ed-del',sec);
     if(delBtn) delBtn.addEventListener('click',()=>confirmModal({
       title:t('nav.notes'),msg:t('notes.deleteMsg'),
@@ -1402,7 +1419,7 @@ LAYERS.study={
           onOk:()=>{ state.quizzes=state.quizzes.filter(z=>z.id!==b.dataset.id); saveData(); drawQuizzes(); toast(t('toast.deleted')); } }); }));
       $$('[data-quiz]',pane).forEach(r=>{ r.addEventListener('click',()=>Nav.push('quizEdit',{quizId:r.dataset.quiz}));
         r.addEventListener('keydown',e=>{ if(e.key==='Enter') Nav.push('quizEdit',{quizId:r.dataset.quiz}); }); }); };
-      const drawFocus=()=>{
+    const drawFocus=()=>{
       const C=2*Math.PI*54;
       const full=(Focus.phase==='focus'?Focus.mins:Focus.breakMins)*60||1;
       const off=C*(1-Math.min(1,Focus.remaining/full));
@@ -1447,12 +1464,13 @@ LAYERS.study={
         Focus.mins=+b.dataset.m; if(Focus.phase==='focus') Focus.reset();
         Sound.play('click'); drawFocus(); });
     };
-     const draw=()=>{ addBtn.style.display=(tab==='focus')?'none':'';       (tab==='cards'?drawDecks:tab==='quiz'?drawQuizzes:drawFocus)(); };
+    const draw=()=>{ addBtn.style.display=(tab==='focus')?'none':'';
+      (tab==='cards'?drawDecks:tab==='quiz'?drawQuizzes:drawFocus)(); };
     $$('.seg button',sec).forEach(b=>b.addEventListener('click',()=>{
       tab=b.dataset.tab;
       $$('.seg button',sec).forEach(x=>{ x.classList.toggle('on',x===b);
         x.setAttribute('aria-selected',String(x===b)); }); draw(); }));
-        addBtn.addEventListener('click',()=>{
+    addBtn.addEventListener('click',()=>{
       if(tab==='focus') return;
       if(tab==='cards') openDeckModal(null,()=>drawDecks());
       else Nav.push('quizEdit',{}); });
@@ -1689,7 +1707,7 @@ LAYERS.settings={
         <button class="btn btn-primary" id="set-name-save">${t('common.save')}</button>
       </div>
     </div>
-   <div class="set-group card card-pad">
+    <div class="set-group card card-pad">
       <div class="set-h">${(s.theme==='dark'||s.theme==='oled')?ic('moon'):ic('sun')}<div><h2>${t('set.appearance')}</h2><p>${t('set.theme')}</p></div></div>
       <div class="swatches" id="set-theme" role="radiogroup" aria-label="${t('set.theme')}">
         ${[['dark','#0A1024','#22D3EE|#3B82F6|#8B5CF6'],['oled','#000000','#22D3EE|#3B82F6|#8B5CF6'],
@@ -1703,8 +1721,7 @@ LAYERS.settings={
             <span class="sw-name">${t('set.th.'+id)}</span>
           </button>`;}).join('')}
       </div>
-    </div>
-    </div>
+    </div> /* FIX 3: extra </div> removed */
     <div class="set-group card card-pad set-row">
       <div class="set-h">${ic('vol')}<div><h2>${t('set.sound')}</h2><p>${t('set.soundDesc')}</p></div></div>
       <button class="switch ${s.sound?'on':''}" id="set-sound" role="switch" aria-checked="${s.sound}" aria-label="${t('set.sound')}"></button>
@@ -1766,7 +1783,7 @@ function setTheme(th){ state.settings.theme=th; saveData(); applyTheme(); Nav.re
 async function wipeAll(){
   try{ await DB.clear('kv'); await DB.clear('notes'); }catch(e){}
   state.user={name:'Ubad'}; Object.assign(state.settings,{lang:'en',sound:true,theme:'dark'});
-  state.courses=[]; state.notes=[]; state.events=[]; state.tasks=[]; state.grades=[]; state.decks=[]; state.quizzes=[];
+  state.courses=[]; state.notes=[]; state.events=[]; state.tasks=[]; state.grades=[]; state.decks=[]; state.quizzes=[]; state.focus={day:'',done:0};
   try{ localStorage.removeItem(PREF_KEY); }catch(e){}
   applyLang(); applyTheme(); Nav.popTo(0,true); Nav.rerenderAll(); toast(t('set.cleared'));
 }
@@ -1838,7 +1855,7 @@ function buildResults(q,raw,actions){
 async function exportBackup(){
   try{
     const notes=await Promise.all(state.notes.map(async n=>({
-      id:n.id, title:n.title, body:n.body, tags:n.tags,
+      id:n.id, title:n.title, body:n.body, tags:n.tags, pin:!!n.pin,
       createdAt:n.createdAt, updatedAt:n.updatedAt,
       images:await Promise.all(n.images.map(async a=>({name:a.name,type:a.blob.type,data:await blobToDataURL(a.blob)}))),
       audio:await Promise.all(n.audio.map(async a=>({name:a.name,type:a.blob.type,data:await blobToDataURL(a.blob)})))
@@ -1846,7 +1863,7 @@ async function exportBackup(){
     const payload={ app:'ubad-academy-hub', version:1, exportedAt:new Date().toISOString(),
       data:{ user:state.user, settings:state.settings,
         courses:state.courses, events:state.events, tasks:state.tasks,
-        grades:state.grades, decks:state.decks,quizzes:state.quizzes, focus:state.focus, notes } };
+        grades:state.grades, decks:state.decks, quizzes:state.quizzes, focus:state.focus, notes } };
     const blob=new Blob([JSON.stringify(payload)],{type:'application/json'});
     const a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
@@ -1883,9 +1900,9 @@ async function importBackup(file){
             images:imgs, audio:auds }; }));
         try{ await DB.clear('notes'); }catch(e){}
         for(const rec of notes){ try{ await DB.put('notes',rec); }catch(e){} }
-        state.notes=notes.sort((a,b)=>b.updatedAt-a.updatedAt);
+        state.notes=notes.sort((a,b)=>(b.pin?1:0)-(a.pin?1:0)||b.updatedAt-a.updatedAt);
         hydrate({ user:d.user, settings:d.settings, courses:d.courses,
-          events:d.events, tasks:d.tasks, grades:d.grades, decks:d.decks, quizzes:d.quizzes });
+          events:d.events, tasks:d.tasks, grades:d.grades, decks:d.decks, quizzes:d.quizzes, focus:d.focus });
         saveData(); applyLang(); applyTheme();
         Nav.popTo(0,true); Nav.rerenderAll();
         toast(t('set.imported'));
@@ -1899,11 +1916,14 @@ async function boot(){
   applyLang();            /* 3. language before first paint of layers */
   applyTheme();           /* 4. theme */
   bindParallax();         /* 5. pointer engines */
-  bindTilt();   bindEdgeBack();   bindKeys();
+  bindTilt();
+  bindEdgeBack();
+  bindKeys();
   try{ await DB.open(); }catch(e){}          /* 6. IndexedDB (memory fallback ok) */
   try{ await Promise.all([loadData(),loadNotes()]); }catch(e){} /* 7. user data */
   Sound.init();           /* 8. audio manager (silent until gesture) */
-      Hist.init();   Nav.init('hub');        /* 9. render Main Hub — service worker is registered in index.html */        /* 9. render Main Hub — service worker is registered in index.html */
+  Hist.init();            /* 8.5 native back bridge */
+  Nav.init('hub');        /* 9. render Main Hub — FIX 1: no welcome reference */
 }
 boot().catch(()=>{ /* last-resort: never leave a blank screen */
   const s=document.getElementById('stage');

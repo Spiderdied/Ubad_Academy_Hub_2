@@ -122,6 +122,7 @@ en:{
  'focus.today':'Sessions today','focus.length':'Session length','focus.min':'min',
  'focus.doneMsg':'Focus session complete — take a break','focus.breakOver':'Break over — ready for another round?',
  'notes.pin':'Pin note','notes.unpin':'Unpin note','notes.pinned':'Pinned',
+ 'lb.open':'View image','lb.zoomIn':'Zoom in','lb.zoomOut':'Zoom out','lb.reset':'Original size',
 },
 ar:{
  'app.name':'أكاديمية عُبَدْ','hub.head':'ادخل إلى أكاديميتك',
@@ -213,6 +214,7 @@ ar:{
  'focus.today':'جلسات اليوم','focus.length':'مدة الجلسة','focus.min':'دقيقة',
  'focus.doneMsg':'انتهت جلسة التركيز — خذ قسطًا من الراحة','focus.breakOver':'انتهت الراحة — جاهز لجلسة أخرى؟',
  'notes.pin':'تثبيت الملاحظة','notes.unpin':'إلغاء التثبيت','notes.pinned':'مثبتة',
+ 'lb.open':'عرض الصورة','lb.zoomIn':'تكبير','lb.zoomOut':'تصغير','lb.reset':'الحجم الأصلي',
 }};
 const t=(k,vars)=>{ let s=(I18N[state.settings.lang]||I18N.en)[k]; if(s==null) s=I18N.en[k]||k;
   if(vars) for(const key in vars) s=s.split('{'+key+'}').join(vars[key]); return s; };
@@ -534,6 +536,122 @@ function confirmModal(opt){ openModal({ title:opt.title,
 const field=(label,inner,hint)=>`<label class="field"><span class="f-label">${label}</span>${inner}${hint?`<span class="f-hint">${hint}</span>`:''}</label>`;
 const inp=(id,ph,val,type)=>`<input class="input" id="${id}" type="${type||'text'}" placeholder="${esc(ph||'')}" value="${esc(val==null?'':val)}">`;
 
+/* ═══ 6.5 image lightbox — عارض صور الملاحظات (تكبير/تصغير/سحب) ═ */
+function openLightbox(src,name){
+  if(activeModal) activeModal.close(true);
+  const wrap=document.createElement('div'); wrap.className='lb-back';
+  wrap.setAttribute('role','dialog'); wrap.setAttribute('aria-modal','true');
+  wrap.setAttribute('aria-label',t('lb.open'));
+  wrap.innerHTML=`
+    <div class="lb-bar">
+      <span class="lb-name mono">${esc(name||'')}</span>
+      <div class="lb-tools">
+        <span class="lb-zoom mono" id="lb-zoom">100%</span>
+        <button class="icon-btn" id="lb-out" aria-label="${t('lb.zoomOut')}" title="${t('lb.zoomOut')}">−</button>
+        <button class="icon-btn" id="lb-in" aria-label="${t('lb.zoomIn')}" title="${t('lb.zoomIn')}">+</button>
+        <button class="icon-btn" id="lb-fit" aria-label="${t('lb.reset')}" title="${t('lb.reset')}">${ic('refresh')}</button>
+        <button class="icon-btn" id="lb-x" aria-label="${t('common.close')}" title="${t('common.close')}">${ic('x')}</button>
+      </div>
+    </div>
+    <div class="lb-stage" id="lb-stage">
+      <img class="lb-img" id="lb-img" src="${src}" alt="${esc(name||'')}" draggable="false">
+    </div>`;
+  $('#overlay-root').appendChild(wrap);
+  const img=$('#lb-img',wrap), stage=$('#lb-stage',wrap), zl=$('#lb-zoom',wrap);
+  let scale=1,tx=0,ty=0,dragging=false,moved=false,downOnImg=false,sx=0,sy=0,pinchD=0,closed=false;
+  let lastTapT=0,lastTapX=0,lastTapY=0,lastTouchZoom=0;
+  const MIN=1,MAX=6;
+  const apply=()=>{ img.style.transform=`translate(${tx}px,${ty}px) scale(${scale})`;
+    img.classList.toggle('zoomed',scale>MIN);
+    if(zl) zl.textContent=Math.round(scale*100)+'%'; };
+  const clampPan=()=>{ const r=stage.getBoundingClientRect();
+    const maxX=Math.max(0,(img.offsetWidth*scale-r.width)/2);
+    const maxY=Math.max(0,(img.offsetHeight*scale-r.height)/2);
+    tx=Math.min(maxX,Math.max(-maxX,tx));
+    ty=Math.min(maxY,Math.max(-maxY,ty)); };
+  /* الزووم يدور حول نقطة المؤشر/الإصبع (مش حوالين المنتصف بس) */
+  const zoom=(f,cx,cy)=>{ const old=scale;
+    scale=Math.min(MAX,Math.max(MIN,scale*f));
+    if(scale===old) return;
+    if(cx!=null){ const r=stage.getBoundingClientRect();
+      const dx=cx-(r.left+r.width/2), dy=cy-(r.top+r.height/2), k=scale/old;
+      tx=dx-(dx-tx)*k; ty=dy-(dy-ty)*k; }
+    if(scale===MIN){ tx=0; ty=0; }
+    clampPan(); apply(); };
+  const fit=()=>{ scale=MIN; tx=0; ty=0; apply(); };
+  const onKey=e=>{ if(e.key==='Escape'){ e.stopPropagation(); close(); return; }
+    if(e.key==='+'||e.key==='=') zoom(1.4);
+    else if(e.key==='-'||e.key==='_') zoom(1/1.4);
+    else if(e.key==='0') fit(); };
+  const cleanup=()=>{ document.removeEventListener('keydown',onKey,true); };
+  const close=()=>{ if(closed||!wrap.isConnected) return; closed=true;
+    wrap.classList.add('closing');
+    setTimeout(()=>{ wrap.remove(); cleanup();
+      if(activeModal===api) activeModal=null;
+      if(lastFocus&&lastFocus.focus) lastFocus.focus(); },180); };
+  const api={ close(instant){ if(closed||!wrap.isConnected) return;
+    if(instant){ closed=true; wrap.remove(); cleanup();
+      if(activeModal===api) activeModal=null;
+      if(lastFocus&&lastFocus.focus) lastFocus.focus(); return; }
+    close(); } };
+  /* محرك المؤشرات: سحب عند التكبير + قرص الأصابع (pinch) */
+  const ptrs=new Map();
+  const dist=()=>{ const a=[...ptrs.values()]; return Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y); };
+  const mid=()=>{ const a=[...ptrs.values()]; return {x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2}; };
+  stage.addEventListener('pointerdown',e=>{
+    if(e.pointerType==='mouse'&&e.button!==0) return;
+    ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    downOnImg=(e.target===img);
+    try{ stage.setPointerCapture(e.pointerId); }catch(err){}
+    img.classList.add('dragging');
+    if(ptrs.size===1){ dragging=true; moved=false; sx=e.clientX-tx; sy=e.clientY-ty; }
+    else if(ptrs.size===2){ dragging=false; pinchD=dist(); }
+  });
+  stage.addEventListener('pointermove',e=>{
+    if(!ptrs.has(e.pointerId)) return;
+    const p=ptrs.get(e.pointerId); p.x=e.clientX; p.y=e.clientY;
+    if(ptrs.size===1&&dragging&&scale>MIN){
+      const nx=e.clientX-sx, ny=e.clientY-sy;
+      if(Math.abs(nx-tx)>3||Math.abs(ny-ty)>3) moved=true;
+      tx=nx; ty=ny; clampPan(); apply();
+    } else if(ptrs.size===2&&pinchD>0){
+      const d=dist(), m=mid();
+      zoom(d/pinchD,m.x,m.y); pinchD=d; moved=true; }
+  });
+  const endPtr=e=>{ const touch=e.pointerType==='touch';
+    ptrs.delete(e.pointerId);
+    if(ptrs.size===1){ const a=[...ptrs.values()][0];
+      dragging=true; sx=a.x-tx; sy=a.y-ty; pinchD=0; }
+    else if(!ptrs.size){ dragging=false; }
+    img.classList.remove('dragging');
+    if(touch&&!moved&&!ptrs.size){
+      if(!downOnImg){ close(); return; }   /* تاب على الخلفية = إغلاق */
+      const now=Date.now();                 /* تاب على الصورة: دبل تاب = زووم */
+      if(now-lastTapT<320&&Math.abs(e.clientX-lastTapX)<30&&Math.abs(e.clientY-lastTapY)<30){
+        zoom(scale>MIN?MIN/scale:2.5/scale,e.clientX,e.clientY);
+        lastTapT=0; lastTouchZoom=now;
+      } else { lastTapT=now; lastTapX=e.clientX; lastTapY=e.clientY; } }
+  };
+  stage.addEventListener('pointerup',endPtr);
+  stage.addEventListener('pointercancel',endPtr);
+  stage.addEventListener('wheel',e=>{ e.preventDefault();
+    zoom(e.deltaY<0?1.15:1/1.15,e.clientX,e.clientY); },{passive:false});
+  stage.addEventListener('dblclick',e=>{ e.preventDefault();
+    if(Date.now()-lastTouchZoom<500) return; /* اللمس اتكفّل بيها */
+    if(downOnImg) zoom(scale>MIN?MIN/scale:2.5/scale,e.clientX,e.clientY); });
+  stage.addEventListener('click',e=>{ if(moved){ moved=false; return; }
+    if(!downOnImg) close(); });
+  $('#lb-x',wrap).addEventListener('click',()=>api.close());
+  $('#lb-in',wrap).addEventListener('click',()=>zoom(1.4));
+  $('#lb-out',wrap).addEventListener('click',()=>zoom(1/1.4));
+  $('#lb-fit',wrap).addEventListener('click',fit);
+  document.addEventListener('keydown',onKey,true);
+  activeModal=api; lastFocus=document.activeElement;
+  requestAnimationFrame(()=>{ wrap.classList.add('open'); $('#lb-x',wrap).focus(); });
+  apply();
+  return api;
+}
+
 /* ═══ 7. spatial navigation core ═════════════════════════════ */
 const stageEl=()=>document.getElementById('stage');
 const Nav={
@@ -605,7 +723,7 @@ const Nav={
       it.el.style.setProperty('--depth',String(n-1-i));
       it.el.classList.toggle('is-active',top);
       it.el.classList.toggle('is-behind',!top);
-      if(top) it.el.classList.remove('is-parked'); /* FIX: الطبقة العلوية لازم تظهر فورًا بعد الرجوع */
+      if(top) it.el.classList.remove('is-parked');
       it.el.setAttribute('aria-hidden',String(!top));
       try{ it.el.inert=!top; }catch(e){} }); },
   refreshTop(){ const top=this.stack[this.stack.length-1]; if(!top) return;
@@ -1094,8 +1212,15 @@ LAYERS.noteEditor={
     const mark=()=>{ doc.saved=false; };
     const drawImgs=()=>{ const box=$('#ed-imgs',sec);
       box.innerHTML=doc.images.map((a,i)=>`
-        <figure class="ed-thumb"><img src="${blobURL(a.blob)}" alt="${esc(a.name)}">
-          <button class="ed-rm" data-i="${i}" aria-label="${t('common.delete')}">${ic('x','ic-xs')}</button></figure>`).join('');
+        <figure class="ed-thumb">
+          <button class="ed-view" data-i="${i}" aria-label="${t('lb.open')}: ${esc(a.name||'')}" title="${esc(a.name||'')}">
+            <img src="${blobURL(a.blob)}" alt="${esc(a.name)}">
+          </button>
+          <button class="ed-rm" data-i="${i}" aria-label="${t('common.delete')}">${ic('x','ic-xs')}</button>
+        </figure>`).join('');
+      $$('.ed-view',box).forEach(b=>b.addEventListener('click',()=>{
+        const a=doc.images[+b.dataset.i];
+        if(a) openLightbox(blobURL(a.blob),a.name); }));
       $$('button.ed-rm',box).forEach(b=>b.addEventListener('click',()=>{
         doc.images.splice(+b.dataset.i,1); drawImgs(); mark(); })); };
     const drawAuds=()=>{ const box=$('#ed-auds',sec);

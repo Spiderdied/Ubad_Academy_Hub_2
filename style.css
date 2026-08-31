@@ -255,7 +255,7 @@ button.rowitem:hover{border-color:var(--line2);transform:translateY(-1px)}
 .mback.open{opacity:1}
 .mback.closing{opacity:0}
 .modal{width:100%;max-width:440px;
-  /* FIX (CSS-1): fallback vh قبل dvh — المتصفحات القديمة تحذف التصريح كله لوحده */
+  /* fallback vh قبل dvh — المتصفحات القديمة تحذف التصريح كله لوحده */
   max-height:min(86vh,760px);max-height:min(86dvh,760px);
   display:flex;flex-direction:column;
   background:var(--modalbg);border:1px solid var(--line2);border-radius:20px;
@@ -277,7 +277,7 @@ button.rowitem:hover{border-color:var(--line2);transform:translateY(-1px)}
   backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 [data-theme="light"] .search-wrap{background:rgba(40,52,90,.28)}
 .search-panel{width:min(600px,92vw);
-  /* FIX (CSS-1): fallback vh قبل dvh */
+  /* fallback vh قبل dvh */
   margin:9vh auto 0;margin:9dvh auto 0;
   background:var(--modalbg);
   border:1px solid var(--line2);border-radius:18px;box-shadow:0 30px 80px rgba(0,0,0,.45);
@@ -404,7 +404,7 @@ button.tile:hover{transform:translateY(-2px);border-color:var(--line2)}
 .cards-grid{display:grid;gap:14px;grid-template-columns:1fr}
 @media(min-width:700px){.cards-grid{grid-template-columns:1fr 1fr}}
 @media(min-width:1100px){.cards-grid{grid-template-columns:1fr 1fr 1fr}}
-/* FIX (CSS-2): تفعيل tilt على كارت المقرر — JS كان يحدّث --rx/--ry بلا مستهلك */
+/* تفعيل tilt على كارت المقرر — JS يحدّث --rx/--ry */
 .course-card{display:flex;flex-direction:column;gap:9px;padding:18px;text-align:start;
   transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
   transition:transform .2s var(--ease),border-color .2s}
@@ -426,7 +426,7 @@ button.tile:hover{transform:translateY(-2px);border-color:var(--line2)}
 .notes-grid{display:grid;gap:14px;grid-template-columns:1fr}
 @media(min-width:640px){.notes-grid{grid-template-columns:1fr 1fr}}
 @media(min-width:1080px){.notes-grid{grid-template-columns:1fr 1fr 1fr}}
-/* FIX (CSS-2): تفعيل tilt على كارت الملاحظة — نفس مشكلة الترابط */
+/* تفعيل tilt على كارت الملاحظة */
 .note-card{display:flex;flex-direction:column;gap:9px;padding:16px;min-height:120px;text-align:start;
   transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
   transition:transform .2s var(--ease),border-color .2s}
@@ -565,7 +565,7 @@ canvas.chart{width:100%;display:block}
   .flip-in{transition-duration:.2s}
 }
 
-/* ═══════════════ PERF PATCH v1 ═══════════════ */
+/* ═════════════════ PERF PATCH v1 ═══════════════ */
 
 /* 1) عتامة أعلى تعوّض غياب الضبابية (نفس الإحساس، بلا كلفة) */
 :root{
@@ -792,7 +792,7 @@ canvas.chart{width:100%;display:block}
 [data-theme="paper"] .btn-primary,[data-theme="sage"] .btn-primary{
   font-weight:700}
 
-/* ═══════════════ MISSING-FEATURE STYLES (مطلوبة للـ app.js الحالي) ═══════════════ */
+/* ═══════════════ MISSING-FEATURE STYLES ═══════════════ */
 
 /* 1) جزيئات الهب — إجباري: بدونها الكانفس يخرب التخطيط */
 .hub-stars{position:absolute;inset:0;z-index:0;pointer-events:none}
@@ -819,6 +819,44 @@ canvas.chart{width:100%;display:block}
 .focus-time{position:absolute;font-size:36px;font-weight:700;letter-spacing:.02em}
 .focus-ctl{display:flex;gap:10px}
 
-/* 6) اتساق: مدخلات الوضع الداكن — داكن/OLED فقط */
+/* 6) اتساق: مدخلات الوضع الداكن بعتمة البطاقات الجديدة
+      (data-theme="dark" وليس :root حتى لا تطغى على الثيمات الفاتحة) */
 [data-theme="dark"]{--in-bg:rgba(12,19,42,.80)}
 [data-theme="oled"]{--in-bg:rgba(8,10,22,.70)}
+
+/* ═══════════════ IMAGE LIGHTBOX — عارض صور الملاحظات ═══════════════ */
+
+/* زر عرض الصورة المصغرة داخل المحرر */
+.ed-view{display:block;width:100%;height:100%;padding:0;border-radius:12px;
+  overflow:hidden;cursor:zoom-in}
+.ed-view img{width:100%;height:100%;object-fit:cover;display:block;transition:filter .15s}
+.ed-view:hover img{filter:brightness(1.12)}
+
+/* الخلفية */
+.lb-back{position:fixed;inset:0;z-index:320;display:flex;flex-direction:column;
+  background:rgba(3,6,18,.94);opacity:0;transition:opacity .18s}
+[data-theme="oled"] .lb-back{background:rgba(0,0,0,.97)}
+[data-theme="light"] .lb-back,[data-theme="paper"] .lb-back,
+[data-theme="sage"] .lb-back,[data-theme="rose"] .lb-back{background:rgba(14,18,36,.93)}
+.lb-back.open{opacity:1}
+.lb-back.closing{opacity:0}
+
+/* الشريط العلوي */
+.lb-bar{flex:none;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:calc(10px + env(safe-area-inset-top)) 14px 10px}
+.lb-name{font-size:11.5px;color:var(--ink2);max-width:38vw;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-tools{display:flex;align-items:center;gap:6px}
+.lb-tools .icon-btn{font-size:17px;font-weight:700;line-height:1}
+.lb-zoom{font-size:11.5px;color:var(--ink2);min-width:48px;text-align:center;
+  padding:5px 6px;border:1px solid var(--line);border-radius:10px;background:var(--glass2)}
+
+/* منطقة العرض */
+.lb-stage{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  touch-action:none;user-select:none;-webkit-user-select:none}
+.lb-img{max-width:100%;max-height:100%;object-fit:contain;cursor:zoom-in;
+  transition:transform .18s var(--ease);will-change:transform}
+.lb-img.dragging{transition:none}
+.lb-img.zoomed{cursor:grab}
+.lb-img.zoomed:active{cursor:grabbing}
+@media(prefers-reduced-motion:reduce){.lb-img{transition:none!important}}

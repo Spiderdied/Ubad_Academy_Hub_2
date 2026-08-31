@@ -10,7 +10,18 @@
 <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
 <!-- Apply saved language/theme before first paint (no flash) -->
-<script>try{var p=JSON.parse(localStorage.getItem('ubad.prefs.v1')||'{}');if(p.theme)document.documentElement.dataset.theme=p.theme;if(p.lang){document.documentElement.lang=p.lang;document.documentElement.dir=p.lang==='ar'?'rtl':'ltr';}}catch(e){}</script>
+<!-- FIX (HTML-1): التحقق من القيم قبل تطبيقها — نفس فلسفة loadPrefs() في app.js -->
+<script>
+try{
+  var p=JSON.parse(localStorage.getItem('ubad.prefs.v1')||'{}');
+  var ubadThemes=['dark','oled','light','paper','sage','rose'];
+  if(p.theme&&ubadThemes.indexOf(p.theme)>-1)document.documentElement.dataset.theme=p.theme;
+  if(p.lang==='ar'||p.lang==='en'){
+    document.documentElement.lang=p.lang;
+    document.documentElement.dir=p.lang==='ar'?'rtl':'ltr';
+  }
+}catch(e){}
+</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -81,14 +92,20 @@
 
 <script src="app.js" defer></script>
 
-<!-- Register service worker only in a secure context (GitHub Pages etc.).
+<!-- Register service worker only in a secure context (GitHub Pages, localhost dev).
      Fails silently on file:// — the app still works fully offline via IndexedDB. -->
+<!-- FIX (HTML-2): localhost يُحتسب سياقًا آمنًا — التطوير المحلي يستفيد من الـ SW أيضًا -->
 <script>
-if ('serviceWorker' in navigator && location.protocol === 'https:') {
-  addEventListener('load', function () {
+(function(){
+  if(!('serviceWorker' in navigator)) return;
+  var secure=(location.protocol==='https:'
+    ||location.hostname==='localhost'
+    ||location.hostname==='127.0.0.1');
+  if(!secure) return;
+  addEventListener('load',function(){
     navigator.serviceWorker.register('sw.js').catch(function(){});
   });
-}
+})();
 </script>
 </body>
-                                                                                                                                                    </html>
+</html>

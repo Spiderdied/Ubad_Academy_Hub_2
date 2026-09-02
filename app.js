@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════
    UBAD ACADEMY HUB — application core
    state · storage (IndexedDB + localStorage) · spatial navigation
-   i18n (en/ar) · audio · UI · sections · backup · boot
+   i18n (en/ar) · audio · UI · sections · islam · backup · boot
    ═══════════════════════════════════════════════════════════════ */
 'use strict';
 (function(){
@@ -29,6 +29,7 @@ function blobToDataURL(b){return new Promise((res,rej)=>{const r=new FileReader(
 const urlCache=new WeakMap();
 const blobURL=b=>{ if(!urlCache.has(b)) urlCache.set(b,URL.createObjectURL(b)); return urlCache.get(b); };
 const emptyState=(icon,msg,hint,btn)=>`<div class="empty">${ic(icon)}<p class="e-t">${esc(msg)}</p>${hint?`<p class="e-h">${esc(hint)}</p>`:''}${btn?`<button class="btn btn-primary" id="es-cta">${esc(btn)}</button>`:''}</div>`;
+function buzz(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
 
 /* ═══ 2. i18n — hand-written EN / AR dictionary ══════════════ */
 const I18N={
@@ -36,15 +37,15 @@ en:{
  'app.name':'UBAD ACADEMY HUB','hub.head':'Enter your academy',
  'hub.foot':'Local · Offline · Private','nav.hub':'Hub',
  'nav.dashboard':'Dashboard','nav.courses':'Courses','nav.notes':'Notes','nav.calendar':'Calendar',
- 'nav.grades':'Grades & GPA','nav.analytics':'Analytics','nav.study':'Study Tools','nav.settings':'Settings',
+ 'nav.islam':'I am Muslim','nav.analytics':'Analytics','nav.study':'Study Tools','nav.settings':'Settings',
  'sub.dashboard':'Your day at a glance','sub.courses':'Your academic journey','sub.notes':'Ideas & study notes',
- 'sub.calendar':'Schedule & events','sub.grades':'Track your progress','sub.analytics':'Insights & statistics',
+ 'sub.calendar':'Schedule & events','sub.islam':'Prayers, adhkar & worship','sub.analytics':'Insights & statistics',
  'sub.study':'Flashcards & quizzes','sub.settings':'Personalize your hub',
  'common.add':'Add','common.save':'Save','common.cancel':'Cancel','common.delete':'Delete','common.edit':'Edit',
  'common.close':'Close','common.back':'Back','common.search':'Search','common.optional':'optional',
  'common.today':'Today','common.tomorrow':'Tomorrow','common.confirmDelete':'Delete this item? This cannot be undone.',
  'common.done':'Done','toast.saved':'Saved','toast.deleted':'Deleted','toast.error':'Something went wrong.',
- 'dash.greeting':'Hello, {name}','dash.stGpa':'GPA','dash.stCourses':'Courses','dash.stTasks':'Open tasks','dash.stNotes':'Notes',
+ 'dash.greeting':'Hello, {name}','dash.stPrayers':'Prayers','dash.stCourses':'Courses','dash.stTasks':'Open tasks','dash.stNotes':'Notes',
  'dash.tasks':'Tasks','dash.addTaskPh':'Add a quick task…','dash.newTask':'New task','dash.taskTitle':'Task title',
  'dash.taskDue':'Due date (optional)','dash.noTasks':'No open tasks — enjoy the calm.',
  'dash.upcoming':'Upcoming','dash.noEvents':'No upcoming events.','dash.recentNotes':'Recent notes','dash.noNotes':'No notes yet.',
@@ -66,17 +67,10 @@ en:{
  'cal.new':'New event','cal.edit':'Edit event','cal.eventTitle':'Event title','cal.desc':'Description',
  'cal.time':'Time','cal.date':'Date','cal.none':'No events for this day.','cal.deleteMsg':'Delete this event?',
  'cal.needTitle':'Title and date are required.','cal.prev':'Previous month','cal.next':'Next month',
- 'grades.gpa':'GPA','grades.credits':'Credits','grades.creditsLc':'cr','grades.entries':'Grade entries',
- 'grades.entriesLc':'entries','grades.new':'New entry','grades.edit':'Edit entry','grades.course':'Course',
- 'grades.coursePh':'Course name','grades.letter':'Letter grade','grades.term':'Term','grades.termPh':'e.g. Fall 2025',
- 'grades.empty':'No grades recorded yet.','grades.emptyHint':'Add grade entries to compute your GPA.',
- 'grades.target':'Target GPA planner','grades.targetGpa':'Target GPA','grades.extraCredits':'Additional credits planned',
- 'grades.need':'Required average','grades.reached':'Target already within reach.',
- 'grades.unreachable':'Not reachable on a 4.0 scale with these inputs.','grades.scaleNote':'standard 4.0 scale',
- 'grades.needName':'Course name and valid credits are required.',
  'ana.gpaTrend':'GPA trend','ana.courseProgress':'Course progress','ana.tasksDonut':'Task completion',
  'ana.notesActivity':'Notes activity','ana.noData':'Not enough data yet.','ana.done':'Done','ana.pending':'Pending',
- 'ana.stat.notes':'Notes','ana.stat.cards':'Flashcards','ana.stat.events':'Events','ana.stat.lessons':'Lessons done',
+ 'ana.stat.notes':'Notes','ana.stat.cards':'Flashcards','ana.stat.prayers':'Prayers today','ana.stat.quran':'Khatma progress',
+ 'ana.prayersTrend':'Prayer consistency (7 days)',
  'study.tabCards':'Flashcards','study.tabQuiz':'Quizzes','study.newDeck':'New deck','study.deckName':'Deck title',
  'study.noDecks':'No decks yet.','study.noDecksHint':'Create a deck and add flashcards to it.',
  'study.cardsLc':'cards','study.study':'Study','study.newCard':'Add card','study.front':'Front','study.back':'Back',
@@ -99,22 +93,21 @@ en:{
  'set.appearance':'Appearance','set.theme':'Theme','set.dark':'Dark','set.light':'Light',
  'set.th.dark':'Midnight','set.th.oled':'OLED Black','set.th.light':'Aurora',
  'set.th.paper':'Paper','set.th.sage':'Sage','set.th.rose':'Rose',
+ 'set.bg':'Theme backgrounds','set.bgDesc':'Upload your own background for each theme (max 5 MB). Stored offline on your device and shown softly behind the interface.',
+ 'set.bgUp':'Upload','set.bgRm':'Remove','set.bgApplied':'Background updated.','set.bgRemoved':'Background removed.',
  'set.sound':'Interface sounds','set.soundDesc':'Subtle feedback sounds. Falls back gracefully if audio files are not present.',
  'set.backup':'Backup & restore','set.backupDesc':'Export all of your data as a JSON file and restore it on any device. No account needed.',
  'set.export':'Export backup','set.import':'Import backup',
  'set.importConfirm':'Importing will replace ALL current data on this device. Continue?',
  'set.imported':'Backup restored successfully.','set.importFailed':'Invalid backup file.',
  'set.danger':'Danger zone',
- 'set.clearMsg':'This permanently deletes all courses, notes, events, grades and study content stored on this device.',
+ 'set.clearMsg':'This permanently deletes all courses, notes, events, worship records and study content stored on this device.',
  'set.clearAll':'Erase all data','set.cleared':'All data erased.',
  'set.about':'About','set.aboutBody':'A local-first academic hub. No account, no server — your data stays with you.',
  'set.version':'Version','set.nameSaved':'Name updated.','set.needName':'Please enter a name.',
  'set.exported':'Backup file downloaded.',
  'search.ph':'Search notes, courses, events…','search.none':'No results for “{q}”',
  'search.notes':'Notes','search.courses':'Courses','search.events':'Events','search.decks':'Flashcards','search.quizzes':'Quizzes',
- 'welcome.title':'Welcome to your academy',
- 'welcome.body':'Your personal academic space — courses, notes, schedule and study tools, all in one place and fully offline.',
- 'welcome.lang':'Language','welcome.name':'What should we call you?','welcome.enter':'Enter the academy',
  'dash.greet.morning':'Good morning, {name}','dash.greet.afternoon':'Good afternoon, {name}',
  'dash.greet.evening':'Good evening, {name}','dash.greet.night':'Burning the midnight oil, {name}',
  'focus.tab':'Focus','focus.session':'Focus session','focus.break':'Break',
@@ -123,20 +116,44 @@ en:{
  'focus.doneMsg':'Focus session complete — take a break','focus.breakOver':'Break over — ready for another round?',
  'notes.pin':'Pin note','notes.unpin':'Unpin note','notes.pinned':'Pinned',
  'lb.open':'View image','lb.zoomIn':'Zoom in','lb.zoomOut':'Zoom out','lb.reset':'Original size',
+ 'islam.peace':'Assalamu alaikum wa rahmatullah',
+ 'islam.prayers':'The five prayers','islam.p.fajr':'Fajr','islam.p.zuhr':'Dhuhr','islam.p.asr':'Asr',
+ 'islam.p.maghrib':'Maghrib','islam.p.isha':'Isha','islam.jamaah':'Congregation',
+ 'islam.prayersDone5':'All five prayers complete — may Allah accept them',
+ 'islam.rawatib':'Sunnah rawatib','islam.rak':'rak\'ahs',
+ 'islam.r.pf':'Fajr sunnah (2)','islam.r.bz':'Before Dhuhr (4)','islam.r.az':'After Dhuhr (2)',
+ 'islam.r.am':'After Maghrib (2)','islam.r.ai':'After Isha (2)',
+ 'islam.adhkar':'Morning & evening adhkar','islam.morning':'Morning','islam.evening':'Evening',
+ 'islam.m1':'Ayat Al-Kursi','islam.m2':'Al-Ikhlas & Al-Mu\'awwidhatayn (×3)','islam.m3':'Sayyid Al-Istighfar',
+ 'islam.m4':'Subhan Allah wa bihamdih (×100)','islam.m5':'Salawat upon the Prophet (×10)',
+ 'islam.m6':'La ilaha illa Allah wahdahu (×10)',
+ 'islam.e1':'Ayat Al-Kursi','islam.e2':'Al-Ikhlas & Al-Mu\'awwidhatayn (×3)','islam.e3':'Astaghfirullah (×100)',
+ 'islam.e4':'Subhan Allah wa bihamdih (×100)','islam.e5':'Salawat upon the Prophet (×10)',
+ 'islam.e6':'A\'udhu bikalimatillah (×3)',
+ 'islam.tasbih':'Digital tasbih','islam.t.sub':'Subhan Allah','islam.t.ham':'Alhamdulillah',
+ 'islam.t.akb':'Allahu Akbar','islam.t.ist':'Astaghfirullah','islam.t.saw':'Salawat',
+ 'islam.tasbihDone':'Completed {n} — tabarakallah','islam.tasbihTotal':'Lifetime total','islam.tasbihReset':'Reset count',
+ 'islam.quran':'Quran khatma','islam.qTarget':'Daily target','islam.qEta':'Estimated khatma',
+ 'islam.qDone':'Khatma complete — may Allah accept it','islam.qNew':'Start a new khatma',
+ 'islam.fasting':'Voluntary fasting','islam.fastToday':'Fasting today','islam.sunnahDay':'A recommended fast day',
+ 'islam.whiteDays':'The white days','islam.upcoming':'Upcoming fast days','islam.totalFasts':'recorded fasts',
+ 'islam.monday':'Monday','islam.thursday':'Thursday',
+ 'islam.ramadan':'Ramadan','islam.ramIn':'Ramadan begins in','islam.ramDays':'days',
+ 'islam.ramMubarak':'Ramadan Kareem','islam.ramLeft':'days of Ramadan remain',
 },
 ar:{
  'app.name':'أكاديمية عُبَدْ','hub.head':'ادخل إلى أكاديميتك',
  'hub.foot':'محلي · دون اتصال · خاص','nav.hub':'الرئيسية',
  'nav.dashboard':'لوحة التحكم','nav.courses':'المقررات','nav.notes':'الملاحظات','nav.calendar':'التقويم',
- 'nav.grades':'الدرجات والمعدل','nav.analytics':'التحليلات','nav.study':'أدوات الدراسة','nav.settings':'الإعدادات',
+ 'nav.islam':'أنا مسلم','nav.analytics':'التحليلات','nav.study':'أدوات الدراسة','nav.settings':'الإعدادات',
  'sub.dashboard':'يومك في لمحة','sub.courses':'رحلتك الأكاديمية','sub.notes':'ملاحظاتك الدراسية',
- 'sub.calendar':'الجدول والفعاليات','sub.grades':'تابع تقدمك','sub.analytics':'رؤى وإحصاءات',
+ 'sub.calendar':'الجدول والفعاليات','sub.islam':'عبادتي اليومية','sub.analytics':'رؤى وإحصاءات',
  'sub.study':'بطاقات واختبارات','sub.settings':'خصّص تجربتك',
  'common.add':'إضافة','common.save':'حفظ','common.cancel':'إلغاء','common.delete':'حذف','common.edit':'تعديل',
  'common.close':'إغلاق','common.back':'رجوع','common.search':'بحث','common.optional':'اختياري',
  'common.today':'اليوم','common.tomorrow':'غدًا','common.confirmDelete':'حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.',
  'common.done':'تم','toast.saved':'تم الحفظ','toast.deleted':'تم الحذف','toast.error':'حدث خطأ ما.',
- 'dash.greeting':'مرحبًا، {name}','dash.stGpa':'المعدل','dash.stCourses':'المقررات','dash.stTasks':'مهام مفتوحة','dash.stNotes':'الملاحظات',
+ 'dash.greeting':'مرحبًا، {name}','dash.stPrayers':'الصلوات','dash.stCourses':'المقررات','dash.stTasks':'مهام مفتوحة','dash.stNotes':'الملاحظات',
  'dash.tasks':'المهام','dash.addTaskPh':'أضف مهمة سريعة…','dash.newTask':'مهمة جديدة','dash.taskTitle':'عنوان المهمة',
  'dash.taskDue':'تاريخ الاستحقاق (اختياري)','dash.noTasks':'لا مهام مفتوحة — استمتع بالهدوء.',
  'dash.upcoming':'القادم','dash.noEvents':'لا فعاليات قادمة.','dash.recentNotes':'أحدث الملاحظات','dash.noNotes':'لا توجد ملاحظات بعد.',
@@ -158,17 +175,10 @@ ar:{
  'cal.new':'حدث جديد','cal.edit':'تعديل الحدث','cal.eventTitle':'عنوان الحدث','cal.desc':'الوصف',
  'cal.time':'الوقت','cal.date':'التاريخ','cal.none':'لا فعاليات في هذا اليوم.','cal.deleteMsg':'حذف هذا الحدث؟',
  'cal.needTitle':'العنوان والتاريخ مطلوبان.','cal.prev':'الشهر السابق','cal.next':'الشهر التالي',
- 'grades.gpa':'المعدل التراكمي','grades.credits':'الساعات المعتمدة','grades.creditsLc':'ساع','grades.entries':'سجلات الدرجات',
- 'grades.entriesLc':'سجل','grades.new':'سجل جديد','grades.edit':'تعديل السجل','grades.course':'المقرر',
- 'grades.coursePh':'اسم المقرر','grades.letter':'الدرجة','grades.term':'الفصل','grades.termPh':'مثال: خريف 2025',
- 'grades.empty':'لم تُسجَّل درجات بعد.','grades.emptyHint':'أضف سجلات الدرجات لحساب معدلك التراكمي.',
- 'grades.target':'مخطط المعدل المستهدف','grades.targetGpa':'المعدل المستهدف','grades.extraCredits':'ساعات إضافية مخططة',
- 'grades.need':'المعدل المطلوب','grades.reached':'الهدف ضمن متناولك بالفعل.',
- 'grades.unreachable':'غير قابل للتحقيق بمقياس 4.0 بهذه القيم.','grades.scaleNote':'مقياس 4.0 المعتمد',
- 'grades.needName':'اسم المقرر وساعات صحيحة مطلوبة.',
  'ana.gpaTrend':'تطور المعدل','ana.courseProgress':'تقدم المقررات','ana.tasksDonut':'إنجاز المهام',
  'ana.notesActivity':'نشاط الملاحظات','ana.noData':'البيانات غير كافية بعد.','ana.done':'منجزة','ana.pending':'قيد الانتظار',
- 'ana.stat.notes':'الملاحظات','ana.stat.cards':'البطاقات','ana.stat.events':'الفعاليات','ana.stat.lessons':'دروس مكتملة',
+ 'ana.stat.notes':'الملاحظات','ana.stat.cards':'البطاقات','ana.stat.prayers':'صلوات اليوم','ana.stat.quran':'تقدم الختمة',
+ 'ana.prayersTrend':'انتظام الصلاة (7 أيام)',
  'study.tabCards':'البطاقات','study.tabQuiz':'الاختبارات','study.newDeck':'مجموعة جديدة','study.deckName':'عنوان المجموعة',
  'study.noDecks':'لا مجموعات بعد.','study.noDecksHint':'أنشئ مجموعة وأضف إليها بطاقات المراجعة.',
  'study.cardsLc':'بطاقة','study.study':'دراسة','study.newCard':'إضافة بطاقة','study.front':'الوجه الأمامي','study.back':'الوجه الخلفي',
@@ -191,22 +201,21 @@ ar:{
  'set.appearance':'المظهر','set.theme':'السمة','set.dark':'داكنة','set.light':'فاتحة',
  'set.th.dark':'منتصف الليل','set.th.oled':'أسود نقي','set.th.light':'الشفق',
  'set.th.paper':'ورقي','set.th.sage':'نعناعي','set.th.rose':'وردي',
+ 'set.bg':'خلفيات الثيمات','set.bgDesc':'ارفع خلفية خاصة لكل ثيم (حتى 5 ميغابايت). تُحفظ على جهازك دون اتصال وتظهر بشفافية خلف الواجهة.',
+ 'set.bgUp':'رفع','set.bgRm':'إزالة','set.bgApplied':'تم تحديث الخلفية.','set.bgRemoved':'تمت إزالة الخلفية.',
  'set.sound':'أصوات الواجهة','set.soundDesc':'أصوات تفاعل خفيفة..',
  'set.backup':'النسخ الاحتياطي والاستعادة','set.backupDesc':'صدّر جميع بياناتك كملف JSON واستعدها على أي جهاز. بدون حساب.',
  'set.export':'تصدير نسخة احتياطية','set.import':'استيراد نسخة احتياطية',
  'set.importConfirm':'الاستيراد سيستبدل جميع البيانات الحالية على هذا الجهاز. هل تريد المتابعة؟',
  'set.imported':'تمت الاستعادة بنجاح.','set.importFailed':'ملف نسخة احتياطية غير صالح.',
  'set.danger':'منطقة الخطر',
- 'set.clearMsg':'سيحذف هذا نهائيًا كل المقررات والملاحظات والفعاليات والدرجات ومحتوى الدراسة المحفوظة على هذا الجهاز.',
+ 'set.clearMsg':'سيحذف هذا نهائيًا كل المقررات والملاحظات والفعاليات وسجلات العبادة ومحتوى الدراسة المحفوظة على هذا الجهاز.',
  'set.clearAll':'محو جميع البيانات','set.cleared':'تم محو جميع البيانات.',
  'set.about':'حول','set.aboutBody':'بيئة أكاديمية محلية بالكامل. بلا حساب ولا خادم — بياناتك تبقى معك.',
  'set.version':'الإصدار','set.nameSaved':'تم تحديث الاسم.','set.needName':'أدخل اسمًا من فضلك.',
  'set.exported':'تم تنزيل ملف النسخة الاحتياطية.',
  'search.ph':'ابحث في الملاحظات والمقررات والفعاليات…','search.none':'لا نتائج لـ «{q}»',
  'search.notes':'الملاحظات','search.courses':'المقررات','search.events':'الفعاليات','search.decks':'البطاقات','search.quizzes':'الاختبارات',
- 'welcome.title':'أهلًا بك في أكاديميتك',
- 'welcome.body':'مساحتك الأكاديمية الشخصية — مقررات وملاحظات وجدول وأدوات دراسة، في مكان واحد وبدون اتصال.',
- 'welcome.lang':'اللغة','welcome.name':'ماذا نناديك؟','welcome.enter':'ادخل الأكاديمية',
  'dash.greet.morning':'صباح الخير، {name}','dash.greet.afternoon':'مساء الخير، {name}',
  'dash.greet.evening':'مساء الخير، {name}','dash.greet.night':'طابت ليلتك، {name}',
  'focus.tab':'التركيز','focus.session':'جلسة تركيز','focus.break':'راحة',
@@ -215,16 +224,71 @@ ar:{
  'focus.doneMsg':'انتهت جلسة التركيز — خذ قسطًا من الراحة','focus.breakOver':'انتهت الراحة — جاهز لجلسة أخرى؟',
  'notes.pin':'تثبيت الملاحظة','notes.unpin':'إلغاء التثبيت','notes.pinned':'مثبتة',
  'lb.open':'عرض الصورة','lb.zoomIn':'تكبير','lb.zoomOut':'تصغير','lb.reset':'الحجم الأصلي',
+ 'islam.peace':'السلام عليكم ورحمة الله وبركاته',
+ 'islam.prayers':'الصلوات الخمس','islam.p.fajr':'الفجر','islam.p.zuhr':'الظهر','islam.p.asr':'العصر',
+ 'islam.p.maghrib':'المغرب','islam.p.isha':'العشاء','islam.jamaah':'جماعة',
+ 'islam.prayersDone5':'أتممت الصلوات الخمس — تقبل الله',
+ 'islam.rawatib':'السنن الرواتب','islam.rak':'ركعة',
+ 'islam.r.pf':'راتبة الفجر (2)','islam.r.bz':'قبل الظهر (4)','islam.r.az':'بعد الظهر (2)',
+ 'islam.r.am':'بعد المغرب (2)','islam.r.ai':'بعد العشاء (2)',
+ 'islam.adhkar':'أذكار الصباح والمساء','islam.morning':'الصباح','islam.evening':'المساء',
+ 'islam.m1':'آية الكرسي','islam.m2':'الإخلاص والمعوذتان (×3)','islam.m3':'سيد الاستغفار',
+ 'islam.m4':'سبحان الله وبحمده (×100)','islam.m5':'الصلاة على النبي ﷺ (×10)',
+ 'islam.m6':'لا إله إلا الله وحده لا شريك له (×10)',
+ 'islam.e1':'آية الكرسي','islam.e2':'الإخلاص والمعوذتان (×3)','islam.e3':'أستغفر الله وأتوب إليه (×100)',
+ 'islam.e4':'سبحان الله وبحمده (×100)','islam.e5':'الصلاة على النبي ﷺ (×10)',
+ 'islam.e6':'أعوذ بكلمات الله التامات (×3)',
+ 'islam.tasbih':'المسبحة الإلكترونية','islam.t.sub':'سبحان الله','islam.t.ham':'الحمد لله',
+ 'islam.t.akb':'الله أكبر','islam.t.ist':'أستغفر الله','islam.t.saw':'صلى الله عليه وسلم',
+ 'islam.tasbihDone':'أتممت {n} — تقبل الله','islam.tasbihTotal':'الإجمالي الكلي','islam.tasbihReset':'تصفير',
+ 'islam.quran':'ختمة القرآن','islam.qTarget':'الهدف اليومي','islam.qEta':'الختمة المتوقعة',
+ 'islam.qDone':'تمت الختمة — تقبل الله','islam.qNew':'ابدأ ختمة جديدة',
+ 'islam.fasting':'صيام التطوع','islam.fastToday':'صيام اليوم','islam.sunnahDay':'من أيام الصيام المستحبة',
+ 'islam.whiteDays':'الأيام البيض','islam.upcoming':'أيام الصيام القادمة','islam.totalFasts':'يومًا مسجلًا',
+ 'islam.monday':'الاثنين','islam.thursday':'الخميس',
+ 'islam.ramadan':'رمضان','islam.ramIn':'باقي على رمضان','islam.ramDays':'يوم',
+ 'islam.ramMubarak':'رمضان كريم','islam.ramLeft':'يومًا متبقيًا من رمضان',
 }};
 const t=(k,vars)=>{ let s=(I18N[state.settings.lang]||I18N.en)[k]; if(s==null) s=I18N.en[k]||k;
   if(vars) for(const key in vars) s=s.split('{'+key+'}').join(vars[key]); return s; };
+
+/* ═══ 2.5 islam tables (قبل الحالة حتى تُستخدم عند التهيئة) ══ */
+const PRAYER_KEYS=['fajr','zuhr','asr','maghrib','isha'];
+const RAWATIB_KEYS=['pf','bz','az','am','ai'];
+const RAWATIB_RAKA={pf:2,bz:4,az:2,am:2,ai:2};
+const MORNING_ADHKAR=['m1','m2','m3','m4','m5','m6'];
+const EVENING_ADHKAR=['e1','e2','e3','e4','e5','e6'];
+const TASBIH_MODES=['sub','ham','akb','ist','saw'];
+const TASBIH_TARGETS=[33,100,1000];
+function normIslam(x){ x=(x&&typeof x==='object')?x:{};
+  const day=/^\d{4}-\d{2}-\d{2}$/.test(String(x.day||''))?String(x.day):'';
+  const P=v=>clampNum(v,0,2,0), R=v=>clampNum(v,0,1,0);
+  const ids=a=>{ const o={}; normArr(a).forEach(k=>{ if(typeof k==='string'&&k.length<6) o[k]=true; }); return o; };
+  const hist={}; if(x.hist&&typeof x.hist==='object')
+    Object.keys(x.hist).forEach(k=>{ if(/^\d{4}-\d{2}-\d{2}$/.test(k)) hist[k]=clampNum(x.hist[k],0,5,0); });
+  return { day,
+    prayers:{ fajr:P(x.prayers&&x.prayers.fajr), zuhr:P(x.prayers&&x.prayers.zuhr),
+      asr:P(x.prayers&&x.prayers.asr), maghrib:P(x.prayers&&x.prayers.maghrib), isha:P(x.prayers&&x.prayers.isha) },
+    rawatib:{ pf:R(x.rawatib&&x.rawatib.pf), bz:R(x.rawatib&&x.rawatib.bz), az:R(x.rawatib&&x.rawatib.az),
+      am:R(x.rawatib&&x.rawatib.am), ai:R(x.rawatib&&x.rawatib.ai) },
+    morning:ids(x.morning), evening:ids(x.evening),
+    tasbih:{ mode:TASBIH_MODES.includes(x.tasbih&&x.tasbih.mode)?x.tasbih.mode:'sub',
+      count:clampNum(x.tasbih&&x.tasbih.count,0,1e6,0),
+      total:clampNum(x.tasbih&&x.tasbih.total,0,1e9,0),
+      target:TASBIH_TARGETS.includes(x.tasbih&&x.tasbih.target)?x.tasbih.target:33 },
+    quran:{ juz:clampNum(x.quran&&x.quran.juz,0,30,0),
+      target:clampNum(x.quran&&x.quran.target,1,10,1),
+      started:clampNum(x.quran&&x.quran.started,0,1e15,Date.now()) },
+    fasts:normArr(x.fasts).filter(d=>typeof d==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(d)).slice(0,1000),
+    hist }; }
 
 /* ═══ 3. state ═══════════════════════════════════════════════ */
 const state={
   user:{name:'Ubad'},
   settings:{lang:'en',sound:true,theme:'dark'},
-  courses:[], notes:[], events:[], tasks:[], grades:[], decks:[], quizzes:[],
-  focus:{day:'',done:0}
+  courses:[], notes:[], events:[], tasks:[], decks:[], quizzes:[],
+  focus:{day:'',done:0},
+  islam:normIslam({})
 };
 const PREF_KEY='ubad.prefs.v1';
 function savePrefs(){ try{ localStorage.setItem(PREF_KEY,JSON.stringify({
@@ -273,15 +337,13 @@ function hydrate(d){ if(!d||typeof d!=='object') return;
   if(THEMES.includes(s.theme)) state.settings.theme=s.theme;
   state.focus=(d.focus&&typeof d.focus==='object')?
     { day:normStr(d.focus.day,10), done:clampNum(d.focus.done,0,999,0) }:{ day:'',done:0 };
+  state.islam=normIslam(d.islam);
   state.courses=normArr(d.courses).map(normCourse).filter(Boolean);
   state.events=normArr(d.events).map(e=>({ id:normStr(e&&e.id,40)||uid(), title:normStr(e&&e.title,120,'Event'),
     desc:normStr(e&&e.desc,500), date:/^\d{4}-\d{2}-\d{2}$/.test((e&&e.date)||'')?e.date:today(),
     time:/^\d{2}:\d{2}$/.test((e&&e.time)||'')?e.time:'', createdAt:clampNum(e&&e.createdAt,0,1e15,Date.now()) }));
   state.tasks=normArr(d.tasks).map(x=>({ id:normStr(x&&x.id,40)||uid(), title:normStr(x&&x.title,120,'Task'),
     done:!!(x&&x.done), due:/^\d{4}-\d{2}-\d{2}$/.test((x&&x.due)||'')?x.due:'', createdAt:clampNum(x&&x.createdAt,0,1e15,Date.now()) }));
-  state.grades=normArr(d.grades).map(x=>({ id:normStr(x&&x.id,40)||uid(), courseName:normStr(x&&x.courseName,80,'Course'),
-    credits:clampNum(x&&x.credits,.5,60,3), letter:LETTERS.includes(x&&x.letter)?x.letter:'F',
-    term:normStr(x&&x.term,40), createdAt:clampNum(x&&x.createdAt,0,1e15,Date.now()) }));
   state.decks=normArr(d.decks).map(k=>({ id:normStr(k&&k.id,40)||uid(), title:normStr(k&&k.title,80,'Deck'),
     createdAt:clampNum(k&&k.createdAt,0,1e15,Date.now()),
     cards:normArr(k&&k.cards).map(c=>({ id:normStr(c&&c.id,40)||uid(), front:normStr(c&&c.front,300), back:normStr(c&&c.back,300) })) }));
@@ -307,8 +369,8 @@ async function saveNote(rec){ try{ await DB.put('notes',rec); }catch(e){}
   state.notes.sort((a,b)=>(b.pin?1:0)-(a.pin?1:0)||b.updatedAt-a.updatedAt); }
 function saveData(){ Nav.invalidate('dashboard','analytics'); savePrefs();
   DB.put('kv',{id:'appdata',data:{user:state.user,settings:state.settings,courses:state.courses,
-    events:state.events,tasks:state.tasks,grades:state.grades,decks:state.decks,quizzes:state.quizzes,
-    focus:state.focus}}).catch(()=>{}); }
+    events:state.events,tasks:state.tasks,decks:state.decks,quizzes:state.quizzes,
+    focus:state.focus,islam:state.islam}}).catch(()=>{}); }
 
 /* ═══ 5. audio manager — fails silently, never blocks ════════ */
 const Sound={ files:{click:'assets/audio/click.mp3',move:'assets/audio/3d-move.mp3',
@@ -569,7 +631,6 @@ function openLightbox(src,name){
     const maxY=Math.max(0,(img.offsetHeight*scale-r.height)/2);
     tx=Math.min(maxX,Math.max(-maxX,tx));
     ty=Math.min(maxY,Math.max(-maxY,ty)); };
-  /* الزووم يدور حول نقطة المؤشر/الإصبع (مش حوالين المنتصف بس) */
   const zoom=(f,cx,cy)=>{ const old=scale;
     scale=Math.min(MAX,Math.max(MIN,scale*f));
     if(scale===old) return;
@@ -594,7 +655,6 @@ function openLightbox(src,name){
       if(activeModal===api) activeModal=null;
       if(lastFocus&&lastFocus.focus) lastFocus.focus(); return; }
     close(); } };
-  /* محرك المؤشرات: سحب عند التكبير + قرص الأصابع (pinch) */
   const ptrs=new Map();
   const dist=()=>{ const a=[...ptrs.values()]; return Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y); };
   const mid=()=>{ const a=[...ptrs.values()]; return {x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2}; };
@@ -625,8 +685,8 @@ function openLightbox(src,name){
     else if(!ptrs.size){ dragging=false; }
     img.classList.remove('dragging');
     if(touch&&!moved&&!ptrs.size){
-      if(!downOnImg){ close(); return; }   /* تاب على الخلفية = إغلاق */
-      const now=Date.now();                 /* تاب على الصورة: دبل تاب = زووم */
+      if(!downOnImg){ close(); return; }
+      const now=Date.now();
       if(now-lastTapT<320&&Math.abs(e.clientX-lastTapX)<30&&Math.abs(e.clientY-lastTapY)<30){
         zoom(scale>MIN?MIN/scale:2.5/scale,e.clientX,e.clientY);
         lastTapT=0; lastTouchZoom=now;
@@ -637,7 +697,7 @@ function openLightbox(src,name){
   stage.addEventListener('wheel',e=>{ e.preventDefault();
     zoom(e.deltaY<0?1.15:1/1.15,e.clientX,e.clientY); },{passive:false});
   stage.addEventListener('dblclick',e=>{ e.preventDefault();
-    if(Date.now()-lastTouchZoom<500) return; /* اللمس اتكفّل بيها */
+    if(Date.now()-lastTouchZoom<500) return;
     if(downOnImg) zoom(scale>MIN?MIN/scale:2.5/scale,e.clientX,e.clientY); });
   stage.addEventListener('click',e=>{ if(moved){ moved=false; return; }
     if(!downOnImg) close(); });
@@ -790,12 +850,6 @@ function bindTilt(){ /* card-level 3D: subtle rotateX/rotateY + moving light */
 }
 
 /* ═══ 9. domain helpers ══════════════════════════════════════ */
-const LETTERS=['A','A-','B+','B','B-','C+','C','C-','D+','D','F'];
-const POINTS={'A':4,'A-':3.7,'B+':3.3,'B':3,'B-':2.7,'C+':2.3,'C':2,'C-':1.7,'D+':1.3,'D':1,'F':0};
-function calcGPA(list){ let cr=0,pts=0;
-  list.forEach(g=>{ const c=Number(g.credits)||0, p=POINTS[g.letter];
-    if(c>0&&p!=null){ cr+=c; pts+=p*c; } });
-  return cr>0?{gpa:pts/cr,credits:cr,count:list.length}:null; }
 const courseLessons=c=>c.units.flatMap(u=>u.lessons);
 function courseProgress(c){ const L=courseLessons(c); const done=L.filter(l=>l.done).length;
   const total=L.length; return {done,total,pct:total?Math.round(done/total*100):0}; }
@@ -811,6 +865,78 @@ function fmtDue(d){ if(!d) return ''; if(d===today()) return t('common.today');
 function weekdays(){ let h='';
   for(let i=0;i<7;i++) h+=`<span>${esc(fmtDate(new Date(2023,0,1+i),{weekday:'short'}))}</span>`;
   return h; }
+
+/* ── التقويم الهجري + حساب رمضان (أوفلاين بالكامل) ── */
+let HIJRI_FMT=null;
+try{ HIJRI_FMT=new Intl.DateTimeFormat('en-u-ca-islamic-umalqura',{day:'numeric',month:'numeric',year:'numeric'}); }
+catch(e){ try{ HIJRI_FMT=new Intl.DateTimeFormat('en-u-ca-islamic',{day:'numeric',month:'numeric',year:'numeric'}); }catch(e2){} }
+function hijriOf(d){ if(!HIJRI_FMT) return null;
+  try{ const o={};
+    HIJRI_FMT.formatToParts(d).forEach(p=>{
+      if(p.type==='day') o.day=parseInt(p.value,10);
+      else if(p.type==='month') o.month=parseInt(p.value,10);
+      else if(p.type==='year') o.year=parseInt(p.value,10); });
+    return (isFinite(o.day)&&isFinite(o.month))?o:null;
+  }catch(e){ return null; } }
+function hijriDateStr(){
+  const opts={weekday:'long',day:'numeric',month:'long',year:'numeric'};
+  try{ return new Intl.DateTimeFormat(loc()+'-u-ca-islamic-umalqura',opts).format(new Date()); }
+  catch(e){ try{ return new Intl.DateTimeFormat(loc()+'-u-ca-islamic',opts).format(new Date()); }
+    catch(e2){ return ''; } } }
+function ramadanInfo(){
+  if(!HIJRI_FMT) return null;
+  const base=new Date(); base.setHours(12,0,0,0);
+  const h=hijriOf(base);
+  if(!h) return null;
+  if(h.month===9){ /* نحن في رمضان — كم بقي حتى العيد (شوال 1) */
+    const d=new Date(base);
+    for(let i=1;i<=31;i++){ d.setDate(d.getDate()+1); const hh=hijriOf(d);
+      if(hh&&hh.month===10&&hh.day===1) return {phase:'during',days:i-1}; }
+    return {phase:'during',days:0}; }
+  const d=new Date(base);
+  for(let i=1;i<=400;i++){ d.setDate(d.getDate()+1); const hh=hijriOf(d);
+    if(hh&&hh.month===9&&hh.day===1) return {phase:'before',days:i}; }
+  return null; }
+function upcomingFasts(){ /* الاثنين/الخميس + الأيام البيض 13-14-15 هـ */
+  const list=[]; const base=new Date(); base.setHours(12,0,0,0);
+  for(let i=1;i<=60&&list.length<6;i++){ const d=new Date(base); d.setDate(base.getDate()+i);
+    const wd=d.getDay(), h=hijriOf(d);
+    if(wd===1) list.push({d,label:t('islam.monday')});
+    else if(wd===4) list.push({d,label:t('islam.thursday')});
+    if(h&&h.day>=13&&h.day<=15) list.push({d,label:t('islam.whiteDays')+' ('+h.day+')'}); }
+  return list; }
+
+/* ─ـ متتبع العبادة اليومي: تصفير تلقائي كل يوم ── */
+function islamDay(){ const isl=state.islam, td=today();
+  if(isl.day!==td){ isl.day=td;
+    isl.prayers={fajr:0,zuhr:0,asr:0,maghrib:0,isha:0};
+    isl.rawatib={pf:0,bz:0,az:0,am:0,ai:0};
+    isl.morning={}; isl.evening={}; }
+  return isl; }
+function recordPrayers(){ const isl=state.islam;
+  const done=PRAYER_KEYS.filter(k=>isl.prayers[k]>0).length;
+  isl.hist[today()]=done;
+  const keys=Object.keys(isl.hist).sort();
+  while(keys.length>60){ delete isl.hist[keys.shift()]; } }
+
+/* ── خلفيات الثيمات المخصصة (يرفعها المستخدم — محفوظة أوفلاين) ── */
+let bgUserEl=null,bgTok=0;
+async function bgApply(){
+  if(!bgUserEl){ bgUserEl=document.createElement('div'); bgUserEl.className='bg-user';
+    bgUserEl.setAttribute('aria-hidden','true'); document.body.prepend(bgUserEl); }
+  const tok=++bgTok, th=THEMES.includes(state.settings.theme)?state.settings.theme:'dark';
+  let url='';
+  try{ const rec=await DB.get('kv','bg-'+th); if(rec&&rec.blob instanceof Blob) url=blobURL(rec.blob); }catch(e){}
+  if(tok!==bgTok) return;
+  if(url){ bgUserEl.style.backgroundImage=`url("${url}")`; bgUserEl.classList.add('on'); }
+  else{ bgUserEl.style.backgroundImage=''; bgUserEl.classList.remove('on'); } }
+function uploadBg(th,file){
+  if(!/^image\//.test(file.type)){ toast(t('notes.badType'),'err'); return; }
+  if(file.size>5*1024*1024){ toast(t('notes.tooBig'),'err'); return; }
+  DB.put('kv',{id:'bg-'+th,blob:file}).then(()=>{ bgApply(); toast(t('set.bgApplied')); })
+    .catch(()=>toast(t('toast.error'),'err')); }
+async function removeBg(th){ try{ await DB.del('kv','bg-'+th); }catch(e){}
+  bgApply(); toast(t('set.bgRemoved')); }
 
 /* ═══ 10. charts — hand-drawn canvas, no libraries ═══════════ */
 function prepCanvas(c){ const w=c.clientWidth||300, h=parseInt(c.getAttribute('height'),10)||170;
@@ -838,10 +964,10 @@ function drawLine(c,labels,vals){ try{
   const step=Math.ceil(labels.length/8);
   labels.forEach((lb,i)=>{ if(i%step===0) x.fillText(lb,px(i),h-6); });
 }catch(e){} }
-function drawBars(c,labels,vals){ try{
+function drawBars(c,labels,vals,maxV){ try{
   const {x,w,h}=prepCanvas(c); const pl=6,pr=6,pt=10,pb=22,iw=w-pl-pr,ih=h-pt-pb;
   const ink3=cssVar('--ink3'),line=cssVar('--line2'),acc=cssVar('--acc-b');
-  const max=Math.max(1,...vals); const n=vals.length, bw=(iw/n)*.55;
+  const max=Math.max(1,maxV||0,...vals); const n=vals.length, bw=(iw/n)*.55;
   x.strokeStyle=line; x.beginPath(); x.moveTo(pl,pt+ih); x.lineTo(w-pr,pt+ih); x.stroke();
   x.fillStyle=acc;
   vals.forEach((v,i)=>{ const bh=(v/max)*ih, bx=pl+i*(iw/n)+((iw/n)-bw)/2, by=pt+ih-bh;
@@ -871,13 +997,13 @@ LAYERS.hub={
   render(){
     const sec=document.createElement('section'); sec.className='layer';
     sec.innerHTML='<canvas class="hub-stars" aria-hidden="true"></canvas>';
-    const gpa=calcGPA(state.grades);
+    const ram=ramadanInfo();
     const cards=[
       {id:'dashboard',icon:'grid',  acc:'acc-c',y:'8px', z:'10px',r:'7deg', fd:'7s',  fdel:'-1s'},
       {id:'courses',  icon:'book',  acc:'acc-v',y:'-10px',z:'46px',r:'4deg', fd:'9s',  fdel:'-3s'},
       {id:'notes',    icon:'note',  acc:'acc-b',y:'-18px',z:'64px',r:'0deg', fd:'8s',  fdel:'-2s'},
       {id:'calendar', icon:'cal',   acc:'acc-c',y:'-10px',z:'46px',r:'-4deg',fd:'10s', fdel:'-5s'},
-      {id:'grades',   icon:'cap',   acc:'acc-v',y:'10px', z:'34px',r:'6deg', fd:'7.5s',fdel:'-4s'},
+      {id:'islam',    icon:'mosque',acc:'acc-v',y:'10px', z:'34px',r:'6deg', fd:'7.5s',fdel:'-4s'},
       {id:'analytics',icon:'chart', acc:'acc-b',y:'-6px', z:'58px',r:'2deg', fd:'9.5s',fdel:'-1.5s'},
       {id:'study',    icon:'layers',acc:'acc-c',y:'4px',  z:'40px',r:'-3deg',fd:'8.5s',fdel:'-2.5s'},
       {id:'settings', icon:'sliders',acc:'acc-v',y:'12px',z:'12px',r:'-7deg',fd:'10.5s',fdel:'-6s'},
@@ -909,7 +1035,7 @@ LAYERS.hub={
             </span></span>
           </button>`).join('')}
         </div>
-        <button class="sat sat-gpa" data-nav="grades">${ic('cap','ic-s')}<span>GPA&nbsp;<b>${gpa?gpa.gpa.toFixed(2):'—'}</b></span></button>
+        ${ram?`<button class="sat sat-gpa" data-nav="islam">${ic('moon','ic-s')}<span>${t('islam.ramadan')} <b>${ram.days}</b></span></button>`:''}
       </div>
       <p class="hub-foot">${t('hub.foot')}</p>
     </div></div>`;
@@ -923,7 +1049,9 @@ LAYERS.hub={
 LAYERS.dashboard={
   title:()=>t('nav.dashboard'),
   render(){
-    const gpa=calcGPA(state.grades); const td=today();
+    const td=today();
+    const isl=islamDay();
+    const pDone=PRAYER_KEYS.filter(k=>isl.prayers[k]>0).length;
     const pendAll=()=>state.tasks.filter(x=>!x.done).length;
     const pend=state.tasks.filter(x=>!x.done)
       .sort((a,b)=>(a.due||'9999')<(b.due||'9999')?-1:1).slice(0,6);
@@ -951,7 +1079,7 @@ LAYERS.dashboard={
       <h1 class="dash-hi">${esc(t('dash.greet.'+greetKey(),{name:state.user.name}))}</h1>
     </div>
     <div class="tiles">
-      <button class="tile card" data-nav="grades"><span class="tile-ic">${ic('cap')}</span><b>${gpa?gpa.gpa.toFixed(2):'—'}</b><span class="lbl">${t('dash.stGpa')}</span></button>
+      <button class="tile card" data-nav="islam"><span class="tile-ic">${ic('mosque')}</span><b>${pDone}/5</b><span class="lbl">${t('dash.stPrayers')}</span></button>
       <button class="tile card" data-nav="courses"><span class="tile-ic">${ic('book')}</span><b>${state.courses.length}</b><span class="lbl">${t('dash.stCourses')}</span></button>
       <div class="tile card"><span class="tile-ic">${ic('check')}</span><b>${pendAll()}</b><span class="lbl">${t('dash.stTasks')}</span></div>
       <button class="tile card" data-nav="notes"><span class="tile-ic">${ic('note')}</span><b>${state.notes.length}</b><span class="lbl">${t('dash.stNotes')}</span></button>
@@ -979,7 +1107,7 @@ LAYERS.dashboard={
         <div class="sect-h"><h2>${t('dash.quick')}</h2></div>
         <div class="qa-grid">
           <button class="btn" data-nav="noteEditor">${ic('note','ic-s')}<span>${t('dash.newNote')}</span></button>
-          <button class="btn" id="qa-task">${ic('check','ic-s')}<span>${t('dash.newTask')}</span></button>
+          <button class="btn" data-nav="islam">${ic('mosque','ic-s')}<span>${t('nav.islam')}</span></button>
           <button class="btn" id="qa-event">${ic('cal','ic-s')}<span>${t('dash.newEvent')}</span></button>
           <button class="btn" data-nav="study">${ic('layers','ic-s')}<span>${t('dash.goStudy')}</span></button>
         </div>
@@ -1001,7 +1129,6 @@ LAYERS.dashboard={
       onOk:()=>{ state.tasks=state.tasks.filter(y=>y.id!==b.dataset.id); saveData(); refresh(); toast(t('toast.deleted')); } })));
     $('#q-event',sec).addEventListener('click',()=>openEventModal(null,{date:today()},refresh));
     $('#qa-event',sec).addEventListener('click',()=>openEventModal(null,{date:today()},refresh));
-    $('#qa-task',sec).addEventListener('click',()=>openTaskModal(refresh));
     return sec;
   }
 };
@@ -1375,87 +1502,228 @@ function openTaskModal(cb){
       saveData(); close(); if(cb)cb(); toast(t('toast.saved')); }}]});
 }
 
-/* ── GRADES / GPA (standard 4.0 scale, exact math) ────────── */
-LAYERS.grades={
-  title:()=>t('nav.grades'),
+/* ── ANA MUSLIM — القسم الإسلامي الكامل ─────────────────── */
+LAYERS.islam={
+  title:()=>t('nav.islam'),
   render(){
-    const g=calcGPA(state.grades);
+    const isl=islamDay();
+    const ram=ramadanInfo();
+    const hij=hijriDateStr();
+    const pDone=PRAYER_KEYS.filter(k=>isl.prayers[k]>0).length;
+    const rDone=RAWATIB_KEYS.filter(k=>isl.rawatib[k]>0).length;
+    const rakah=RAWATIB_KEYS.reduce((a,k)=>a+(isl.rawatib[k]?RAWATIB_RAK[k]:0),0);
+    const mDone=MORNING_ADHKAR.filter(k=>isl.morning[k]).length;
+    const eDone=EVENING_ADHKAR.filter(k=>isl.evening[k]).length;
+    const td=today();
+    const hNow=hijriOf(new Date());
+    const isMonThu=(()=>{ const w=new Date().getDay(); return w===1||w===4; })();
+    const isWhite=!!(hNow&&hNow.day>=13&&hNow.day<=15);
+    const fastingToday=isl.fasts.includes(td);
+    const upcoming=upcomingFasts();
+    const prayerRow=k=>{ const v=isl.prayers[k];
+      return `<li class="rowitem p-row">
+        <button class="tick p-tick ${v>0?'on':''}" data-p="${k}" role="checkbox" aria-checked="${v>0}" aria-label="${t('islam.p.'+k)}">${ic('check','ic-xs')}</button>
+        <span class="row-main"><span class="row-title">${t('islam.p.'+k)}</span></span>
+        <button class="chip p-jam ${v===2?'chip-ok':''}" data-p="${k}" role="checkbox" aria-checked="${v===2}" aria-label="${t('islam.jamaah')}">${ic('mosque','ic-xs')}<span>${t('islam.jamaah')}</span></button>
+      </li>`; };
+    const rawRow=k=>`<li class="rowitem">
+        <button class="tick r-tick ${isl.rawatib[k]?'on':''}" data-r="${k}" role="checkbox" aria-checked="${isl.rawatib[k]}" aria-label="${t('islam.r.'+k)}">${ic('check','ic-xs')}</button>
+        <span class="row-main"><span class="row-title">${t('islam.r.'+k)}</span></span>
+      </li>`;
+    const adhRow=(k,which)=>`<li class="rowitem adh-row">
+        <button class="tick a-tick ${isl[which][k]?'on':''}" data-w="${which}" data-a="${k}" role="checkbox" aria-checked="${isl[which][k]}" aria-label="${t('islam.'+k)}">${ic('check','ic-xs')}</button>
+        <span class="row-main"><span class="row-title adh-name">${t('islam.'+k)}</span></span>
+      </li>`;
     const body=`
-    <div class="card card-pad gpa-hero">
-      <div><span class="gpa-num mono">${g?g.gpa.toFixed(2):'—'}</span>
-        <span class="gpa-lbl">${t('grades.gpa')} · ${t('grades.scaleNote')}</span></div>
-      <div class="gpa-meta mono"><span>${g?g.credits.toFixed(1):'0'} ${t('grades.credits')}</span>
-        <span>${state.grades.length} ${t('grades.entriesLc')}</span></div>
-    </div>
-    <div class="card card-pad" style="margin-top:14px;max-width:760px">
-      <div class="sect-h"><h2>${t('grades.target')}</h2></div>
-      <div class="f-2col">
-        ${field(t('grades.targetGpa'),`<input class="input mono" id="tg-v" type="number" min="0" max="4" step="0.01" value="${g?Math.min(4,g.gpa+0.2).toFixed(2):'3.50'}">`)}
-        ${field(t('grades.extraCredits'),`<input class="input mono" id="tg-c" type="number" min="0" step="1" value="15">`)}
+    <div class="card card-pad ram-hero">
+      <div class="ram-info">
+        <p class="ram-peace">${t('islam.peace')}</p>
+        ${hij?`<p class="eyebrow" style="margin-top:10px">${esc(hij)}</p>`:''}
+        <p class="ram-greg mono">${esc(fmtDateLong(new Date()))}</p>
       </div>
-      <p class="f-hint" id="tg-out"></p>
+      ${ram?`<div class="ram-count">
+        <p class="ram-cap">${t(ram.phase==='during'?'islam.ramMubarak':'islam.ramIn')}</p>
+        <b class="ram-num mono">${ram.days}</b>
+        <span class="ram-days">${t(ram.phase==='during'?'islam.ramLeft':'islam.ramDays')}</span>
+      </div>`:''}
     </div>
-    <div class="sect-h" style="margin-top:20px"><h2>${t('grades.entries')}</h2>
-      <button class="btn btn-primary btn-sm" id="g-add">${ic('plus','ic-s')}<span>${t('grades.new')}</span></button></div>
-    ${state.grades.length?`<ul class="list" style="max-width:760px">${state.grades.slice().sort((a,b)=>b.createdAt-a.createdAt).map(gr=>`
-      <li class="rowitem"><span class="gbadge ${gbClass(gr.letter)}">${esc(gr.letter)}</span>
-        <span class="row-main"><span class="row-title">${esc(gr.courseName)}</span>
-          <span class="row-sub">${esc(gr.term||'')}${gr.term?' · ':''}${gr.credits} ${t('grades.creditsLc')}</span></span>
-        <button class="icon-btn icon-btn-sm gr-edit" data-id="${gr.id}" aria-label="${t('common.edit')}">${ic('pen','ic-s')}</button>
-        <button class="icon-btn icon-btn-sm gr-del" data-id="${gr.id}" aria-label="${t('common.delete')}">${ic('trash','ic-s')}</button>
-      </li>`).join('')}</ul>`
-      :emptyState('cap',t('grades.empty'),t('grades.emptyHint'))}`;
-    const sec=chrome({title:t('nav.grades'),body});
-    function updTarget(){ const out=$('#tg-out',sec);
-      if(!g){ out.textContent=t('grades.emptyHint'); return; }
-      const tv=parseFloat($('#tg-v',sec).value), rc=parseFloat($('#tg-c',sec).value);
-      if(!(tv>0)||!(rc>0)){ out.textContent=t('grades.need'); return; }
-      const need=((tv*(g.credits+rc))-(g.gpa*g.credits))/rc;
-      out.textContent=(tv<=g.gpa)?t('grades.reached')
-        :(need>4?t('grades.unreachable'):`${t('grades.need')}: ${need.toFixed(2)} / 4.00`); }
-    $('#tg-v',sec).addEventListener('input',updTarget);
-    $('#tg-c',sec).addEventListener('input',updTarget); updTarget();
-    $('#g-add',sec).addEventListener('click',()=>openGradeModal(null,()=>Nav.refreshTop()));
-    $$('.gr-edit',sec).forEach(b=>b.addEventListener('click',()=>
-      openGradeModal(state.grades.find(x=>x.id===b.dataset.id),()=>Nav.refreshTop())));
-    $$('.gr-del',sec).forEach(b=>b.addEventListener('click',()=>confirmModal({
-      title:t('grades.entries'),msg:t('common.confirmDelete'),
-      onOk:()=>{ state.grades=state.grades.filter(x=>x.id!==b.dataset.id); saveData(); Nav.refreshTop(); toast(t('toast.deleted')); } })));
+    <div class="card card-pad islam-card">
+      <div class="sect-h"><h2>${t('islam.prayers')}</h2><span class="chip mono" id="pr-stat">${pDone} / 5</span></div>
+      <ul class="list">${PRAYER_KEYS.map(prayerRow).join('')}</ul>
+      <div class="progress" style="margin-top:14px"><i id="pr-bar" style="width:${pDone/5*100}%;background:var(--acc-c)"></i></div>
+    </div>
+    <div class="card card-pad islam-card">
+      <div class="sect-h"><h2>${t('islam.rawatib')}</h2><span class="chip mono" id="rw-stat">${rDone} / 5 · ${rakah} / 12 ${t('islam.rak')}</span></div>
+      <ul class="list">${RAWATIB_KEYS.map(rawRow).join('')}</ul>
+      <div class="progress" style="margin-top:14px"><i id="rw-bar" style="width:${rDone/5*100}%;background:var(--acc-v)"></i></div>
+    </div>
+    <div class="sect-h islam-head"><h2>${t('islam.adhkar')}</h2></div>
+    <div class="adh-grid">
+      <div class="card card-pad adh-card">
+        <div class="sect-h"><h2>${ic('sun','ic-s')} ${t('islam.morning')}</h2><span class="chip mono" id="ad-m-stat">${mDone} / 6</span></div>
+        <ul class="list">${MORNING_ADHKAR.map(k=>adhRow(k,'morning')).join('')}</ul>
+      </div>
+      <div class="card card-pad adh-card">
+        <div class="sect-h"><h2>${ic('moon','ic-s')} ${t('islam.evening')}</h2><span class="chip mono" id="ad-e-stat">${eDone} / 6</span></div>
+        <ul class="list">${EVENING_ADHKAR.map(k=>adhRow(k,'evening')).join('')}</ul>
+      </div>
+    </div>
+    <div class="card card-pad islam-card">
+      <div class="sect-h"><h2>${t('islam.tasbih')}</h2>
+        <button class="btn btn-sm" id="tas-reset">${ic('refresh','ic-s')}<span>${t('islam.tasbihReset')}</span></button></div>
+      <div class="pillrow tas-modes">
+        ${TASBIH_MODES.map(m=>`<button class="pill tas-mode ${isl.tasbih.mode===m?'on':''}" data-m="${m}">${t('islam.t.'+m)}</button>`).join('')}
+      </div>
+      <button class="tas-tap" id="tas-tap" aria-label="${t('islam.t.'+isl.tasbih.mode)}">
+        <b class="mono" id="tas-count">${isl.tasbih.count}</b>
+        <span class="mono" id="tas-goal">/ ${isl.tasbih.target}</span>
+      </button>
+      <div class="pillrow" style="justify-content:center">
+        ${TASBIH_TARGETS.map(g=>`<button class="pill tas-goal ${isl.tasbih.target===g?'on':''}" data-g="${g}">${g}</button>`).join('')}
+      </div>
+      <p class="tas-total mono">${t('islam.tasbihTotal')}: <b id="tas-total">${isl.tasbih.total}</b></p>
+    </div>
+    <div class="card card-pad islam-card">
+      <div class="sect-h"><h2>${t('islam.quran')}</h2><span class="chip mono" id="qz-stat">${isl.quran.juz} / 30</span></div>
+      <div class="progress"><i id="qz-bar" style="width:${isl.quran.juz/30*100}%;background:var(--acc-b)"></i></div>
+      <div class="qz-ctl">
+        <button class="icon-btn" id="qz-sub" aria-label="−1">−</button>
+        <button class="icon-btn" id="qz-add" aria-label="+1">+</button>
+        <div class="pillrow">
+          ${[1,2,3].map(g=>`<button class="pill qz-goal ${isl.quran.target===g?'on':''}" data-g="${g}">${g} / ${t('common.today')}</button>`).join('')}
+        </div>
+      </div>
+      <p class="f-hint" id="qz-eta"></p>
+      <button class="btn btn-primary btn-sm" id="qz-new" style="display:none;margin-top:8px">${ic('refresh','ic-s')}<span>${t('islam.qNew')}</span></button>
+    </div>
+    <div class="card card-pad islam-card">
+      <div class="sect-h"><h2>${t('islam.fasting')}</h2><span class="chip mono">${isl.fasts.length} ${t('islam.totalFasts')}</span></div>
+      <div class="rowitem fast-row">
+        <span class="row-main"><span class="row-title">${t('islam.fastToday')}</span>
+          ${(isMonThu||isWhite)?`<span class="row-sub">${t(isWhite?'islam.whiteDays':'islam.sunnahDay')}</span>`:''}</span>
+        <button class="switch ${fastingToday?'on':''}" id="fs-today" role="switch" aria-checked="${fastingToday}" aria-label="${t('islam.fastToday')}"></button>
+      </div>
+      <div class="sect-h islam-head"><h2>${t('islam.upcoming')}</h2></div>
+      ${upcoming.length?`<div class="list">${upcoming.map(u=>`
+        <div class="rowitem fs-up-row">
+          <span class="chip mono">${esc(fmtDate(u.d,{weekday:'short',day:'numeric',month:'short'}))}</span>
+          <span class="row-main"><span class="row-title">${esc(u.label)}</span></span>
+        </div>`).join('')}</div>`:`<div class="empty empty-sm">${ic('cal')}<p>${t('ana.noData')}</p></div>`}
+    </div>`;
+    const sec=chrome({title:t('nav.islam'),body});
+    /* ── الصلوات: تحديث في المكان (بدون فقدان مكان السكرول) ── */
+    const syncPrayers=()=>{ const done=PRAYER_KEYS.filter(k=>state.islam.prayers[k]>0).length;
+      const st=$('#pr-stat',sec); if(st) st.textContent=done+' / 5';
+      const bar=$('#pr-bar',sec); if(bar) bar.style.width=(done/5*100)+'%';
+      PRAYER_KEYS.forEach(k=>{ const v=state.islam.prayers[k];
+        const tk=$(`.p-tick[data-p="${k}"]`,sec);
+        if(tk){ tk.classList.toggle('on',v>0); tk.setAttribute('aria-checked',String(v>0)); }
+        const jm=$(`.p-jam[data-p="${k}"]`,sec);
+        if(jm){ jm.classList.toggle('chip-ok',v===2); jm.setAttribute('aria-checked',String(v===2)); } }); };
+    $$('.p-tick',sec).forEach(b=>b.addEventListener('click',()=>{
+      const k=b.dataset.p, before=PRAYER_KEYS.filter(x=>state.islam.prayers[x]>0).length;
+      state.islam.prayers[k]=state.islam.prayers[k]===1?0:1;
+      recordPrayers(); saveData(); syncPrayers();
+      const after=PRAYER_KEYS.filter(x=>state.islam.prayers[x]>0).length;
+      if(after===5&&before<5){ FX.confetti(); toast(t('islam.prayersDone5')); } }));
+    $$('.p-jam',sec).forEach(b=>b.addEventListener('click',()=>{
+      const k=b.dataset.p;
+      state.islam.prayers[k]=state.islam.prayers[k]===2?1:2;
+      recordPrayers(); saveData(); syncPrayers();
+      if(PRAYER_KEYS.every(x=>state.islam.prayers[x]>0)) FX.confetti(); }));
+    /* ── الرواتب ── */
+    const syncRaw=()=>{ const done=RAWATIB_KEYS.filter(k=>state.islam.rawatib[k]>0).length;
+      const rk=RAWATIB_KEYS.reduce((a,k)=>a+(state.islam.rawatib[k]?RAWATIB_RAK[k]:0),0);
+      const st=$('#rw-stat',sec); if(st) st.textContent=done+' / 5 · '+rk+' / 12 '+t('islam.rak');
+      const bar=$('#rw-bar',sec); if(bar) bar.style.width=(done/5*100)+'%';
+      $$('.r-tick',sec).forEach(b=>{ const on=state.islam.rawatib[b.dataset.r];
+        b.classList.toggle('on',on); b.setAttribute('aria-checked',String(on)); }); };
+    $$('.r-tick',sec).forEach(b=>b.addEventListener('click',()=>{
+      const k=b.dataset.r; state.islam.rawatib[k]=state.islam.rawatib[k]?0:1;
+      saveData(); syncRaw();
+      if(RAWATIB_KEYS.every(x=>state.islam.rawatib[x])) FX.confetti(); }));
+    /* ── الأذكار ── */
+    const syncAdh=()=>{ const m=MORNING_ADHKAR.filter(k=>state.islam.morning[k]).length;
+      const e=EVENING_ADHKAR.filter(k=>state.islam.evening[k]).length;
+      const ms=$('#ad-m-stat',sec); if(ms) ms.textContent=m+' / 6';
+      const es=$('#ad-e-stat',sec); if(es) es.textContent=e+' / 6';
+      $$('.a-tick',sec).forEach(b=>{ const on=state.islam[b.dataset.w][b.dataset.a];
+        b.classList.toggle('on',on); b.setAttribute('aria-checked',String(on)); }); };
+    $$('.a-tick',sec).forEach(b=>b.addEventListener('click',()=>{
+      const w=b.dataset.w, k=b.dataset.a;
+      state.islam[w][k]=!state.islam[w][k];
+      saveData(); syncAdh();
+      if(MORNING_ADHKAR.every(x=>state.islam.morning[x])&&w==='morning') FX.confetti();
+      if(EVENING_ADHKAR.every(x=>state.islam.evening[x])&&w==='evening') FX.confetti(); }));
+    /* ── المسبحة ── */
+    const tasCount=$('#tas-count',sec), tasGoal=$('#tas-goal',sec), tasTotal=$('#tas-total',sec);
+    const tasSync=()=>{ const T=state.islam.tasbih;
+      tasCount.textContent=T.count; tasGoal.textContent='/ '+T.target; tasTotal.textContent=T.total;
+      $$('.tas-mode',sec).forEach(x=>x.classList.toggle('on',x.dataset.m===T.mode));
+      $$('.tas-goal',sec).forEach(x=>x.classList.toggle('on',+x.dataset.g===T.target)); };
+    $('#tas-tap',sec).addEventListener('click',()=>{
+      const T=state.islam.tasbih;
+      T.count++; T.total++; buzz(12);
+      if(T.count>=T.target){ toast(t('islam.tasbihDone',{n:T.target})); FX.confetti(); T.count=0; }
+      saveData(); tasSync(); });
+    $$('.tas-mode',sec).forEach(b=>b.addEventListener('click',()=>{
+      state.islam.tasbih.mode=b.dataset.m; state.islam.tasbih.count=0;
+      saveData(); tasSync(); }));
+    $$('.tas-goal',sec).forEach(b=>b.addEventListener('click',()=>{
+      state.islam.tasbih.target=+b.dataset.g; state.islam.tasbih.count=0;
+      saveData(); tasSync(); }));
+    $('#tas-reset',sec).addEventListener('click',()=>{
+      state.islam.tasbih.count=0; saveData(); tasSync(); });
+    /* ── الختمة ── */
+    const qzSync=()=>{ const q=state.islam.quran;
+      const st=$('#qz-stat',sec); if(st) st.textContent=q.juz+' / 30';
+      const bar=$('#qz-bar',sec); if(bar) bar.style.width=(q.juz/30*100)+'%';
+      const eta=$('#qz-eta',sec), nw=$('#qz-new',sec);
+      const left=30-q.juz;
+      if(left<=0){ eta.textContent=t('islam.qDone'); if(nw) nw.style.display=''; }
+      else{ const days=Math.ceil(left/q.target); const d=new Date(); d.setDate(d.getDate()+days);
+        eta.textContent=t('islam.qEta')+': '+fmtDate(d,{day:'numeric',month:'short',year:'numeric'})+' ('+days+' '+t('islam.ramDays')+')';
+        if(nw) nw.style.display='none'; }
+      $$('.qz-goal',sec).forEach(x=>x.classList.toggle('on',+x.dataset.g===q.target)); };
+    $('#qz-add',sec).addEventListener('click',()=>{
+      const q=state.islam.quran;
+      if(q.juz>=30) return;
+      q.juz++; if(q.juz===30){ FX.confetti(); toast(t('islam.qDone')); }
+      saveData(); qzSync(); });
+    $('#qz-sub',sec).addEventListener('click',()=>{
+      const q=state.islam.quran; if(q.juz<=0) return;
+      q.juz--; saveData(); qzSync(); });
+    $$('.qz-goal',sec).forEach(b=>b.addEventListener('click',()=>{
+      state.islam.quran.target=+b.dataset.g; saveData(); qzSync(); }));
+    $('#qz-new',sec).addEventListener('click',()=>{
+      state.islam.quran.juz=0; state.islam.quran.started=Date.now();
+      saveData(); qzSync(); });
+    /* ── الصيام ── */
+    $('#fs-today',sec).addEventListener('click',()=>{
+      const isl2=state.islam, td2=today();
+      const i=isl2.fasts.indexOf(td2);
+      if(i>-1) isl2.fasts.splice(i,1); else isl2.fasts.push(td2);
+      saveData();
+      const sw=$('#fs-today',sec), on=isl2.fasts.includes(td2);
+      sw.classList.toggle('on',on); sw.setAttribute('aria-checked',String(on)); });
+    qzSync();
     return sec;
   }
 };
-function gbClass(l){ return l[0]==='A'?'gb-a':l[0]==='B'?'gb-b':l[0]==='C'?'gb-c':'gb-f'; }
-function openGradeModal(gr,cb){
-  openModal({title:gr?t('grades.edit'):t('grades.new'),
-    body:`
-    ${field(t('grades.course'),`<input class="input" id="g-name" list="dl-courses" placeholder="${esc(t('grades.coursePh'))}" value="${esc(gr?gr.courseName:'')}">`)}
-    <datalist id="dl-courses">${state.courses.map(c=>`<option value="${esc(c.name)}"></option>`).join('')}</datalist>
-    <div class="f-2col">
-      ${field(t('grades.credits'),inp('g-cred',null,gr?gr.credits:3,'number'))}
-      ${field(t('grades.letter'),`<select class="input" id="g-letter">${LETTERS.map(l=>
-        `<option value="${l}" ${gr&&gr.letter===l?'selected':''}>${l} — ${POINTS[l].toFixed(1)}</option>`).join('')}</select>`)}
-    </div>
-    ${field(t('grades.term')+' ('+t('common.optional')+')',inp('g-term',t('grades.termPh'),gr?gr.term:''))}`,
-    actions:[{label:t('common.cancel')},{label:t('common.save'),cls:'btn-primary',onClick:close=>{
-      const name=$('#g-name').value.trim(), credits=clampNum($('#g-cred').value,.5,60,0);
-      if(!name||!credits){ toast(t('grades.needName'),'err'); return; }
-      const data={courseName:name.slice(0,80),credits,letter:$('#g-letter').value,term:$('#g-term').value.trim().slice(0,40)};
-      if(gr) Object.assign(gr,data);
-      else state.grades.push(Object.assign({id:uid(),createdAt:Date.now()},data));
-      saveData(); close(); if(cb)cb(); toast(t('toast.saved')); }}]});
-}
 
 /* ── ANALYTICS ────────────────────────────────────────────── */
 LAYERS.analytics={
   title:()=>t('nav.analytics'),
   render(){
+    const isl=islamDay();
+    const pDone=PRAYER_KEYS.filter(k=>isl.prayers[k]>0).length;
     const lessons=state.courses.flatMap(c=>courseLessons(c));
     const lDone=lessons.filter(l=>l.done).length;
     const doneT=state.tasks.filter(x=>x.done).length, pendT=state.tasks.length-doneT;
-    const series=[]; let cr=0,pts=0;
-    state.grades.slice().sort((a,b)=>a.createdAt-b.createdAt).forEach(gr=>{
-      const c=Number(gr.credits)||0,p=POINTS[gr.letter];
-      if(c>0&&p!=null){ cr+=c; pts+=p*c; series.push(+(pts/cr).toFixed(3)); } });
+    const pLabels=[], pDays=[];
+    for(let i=6;i>=0;i--){ const d=new Date(); d.setDate(d.getDate()-i);
+      pLabels.push(fmtDate(d,{weekday:'short'}));
+      pDays.push(state.islam.hist[ymd(d)]||0); }
     const now=new Date(), months=[], counts=[];
     for(let i=5;i>=0;i--){ const d1=new Date(now.getFullYear(),now.getMonth()-i,1);
       const d2=new Date(now.getFullYear(),now.getMonth()-i+1,1);
@@ -1463,16 +1731,16 @@ LAYERS.analytics={
       counts.push(state.notes.filter(n=>n.createdAt>=d1.getTime()&&n.createdAt<d2.getTime()).length); }
     const tiles=[['note',state.notes.length,t('ana.stat.notes')],
       ['layers',state.decks.reduce((a,d)=>a+d.cards.length,0),t('ana.stat.cards')],
-      ['cal',state.events.length,t('ana.stat.events')],
-      ['check',`${lDone}/${lessons.length}`,t('ana.stat.lessons')]];
+      ['mosque',`${pDone}/5`,t('ana.stat.prayers')],
+      ['book',`${isl.quran.juz}/30`,t('ana.stat.quran')]];
     const noData=()=>`<div class="empty empty-sm">${ic('chart')}<p>${t('ana.noData')}</p></div>`;
     const body=`
     <div class="tiles">${tiles.map(x=>`
       <div class="tile card"><span class="tile-ic">${ic(x[0])}</span>
         <b class="mono">${esc(String(x[1]))}</b><span class="lbl">${x[2]}</span></div>`).join('')}</div>
     <div class="ana-grid">
-      <div class="card card-pad"><div class="sect-h"><h2>${t('ana.gpaTrend')}</h2></div>
-        ${series.length?`<canvas class="chart" id="ch-gpa" height="170"></canvas>`:noData()}</div>
+      <div class="card card-pad"><div class="sect-h"><h2>${t('ana.prayersTrend')}</h2></div>
+        <canvas class="chart" id="ch-prayers" height="170"></canvas></div>
       <div class="card card-pad"><div class="sect-h"><h2>${t('ana.tasksDonut')}</h2></div>
         ${state.tasks.length?`<div class="donut-wrap"><canvas id="ch-tasks" width="150" height="150" role="img"
           aria-label="${t('ana.tasksDonut')}"></canvas>
@@ -1489,7 +1757,7 @@ LAYERS.analytics={
     const sec=chrome({title:t('nav.analytics'),body});
     /* draw once the layer is in the DOM (canvas needs layout) */
     requestAnimationFrame(()=>{
-      if(series.length) drawLine($('#ch-gpa',sec),series.map((_,i)=>String(i+1)),series);
+      drawBars($('#ch-prayers',sec),pLabels,pDays,5);
       if(state.notes.length) drawBars($('#ch-notes',sec),months,counts);
       if(state.tasks.length) drawDonut($('#ch-tasks',sec),doneT,pendT); });
     return sec;
@@ -1578,7 +1846,6 @@ LAYERS.study={
           </div>
         </div>
       </div>`;
-      /* ندور على العناصر في المستند كله حتى يظل التحديث شغالًا بعد أي إعادة رسم */
       const rr=()=>{ const tm=document.getElementById('fr-time'), arc=document.getElementById('fr-arc');
         if(!tm) return;
         const f2=(Focus.phase==='focus'?Focus.mins:Focus.breakMins)*60||1;
@@ -1662,7 +1929,6 @@ LAYERS.deck={
       $('#c-shuf',view).addEventListener('click',()=>{
         for(let i=order.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [order[i],order[j]]=[order[j],order[i]]; }
         p.order=order; pos=0; flipped=false; drawView(); });
-      /* contextual swipe: card navigation ONLY — flip stays a tap */
       let sx=0,sy=0;
       flip.addEventListener('touchstart',e=>{ sx=e.touches[0].clientX; sy=e.touches[0].clientY; },{passive:true});
       flip.addEventListener('touchend',e=>{
@@ -1857,6 +2123,21 @@ LAYERS.settings={
           </button>`;}).join('')}
       </div>
     </div>
+    <div class="set-group card card-pad">
+      <div class="set-h">${ic('img')}<div><h2>${t('set.bg')}</h2><p>${t('set.bgDesc')}</p></div></div>
+      <div class="bg-cells">
+        ${THEMES.map(th=>`
+        <div class="bg-cell">
+          <span class="bg-prev" style="background:${THEME_META[th]||'#050816'}"></span>
+          <span class="bg-name">${t('set.th.'+th)}</span>
+          <div class="bg-acts">
+            <button class="btn btn-sm bg-up" data-th="${th}">${ic('ul','ic-s')}<span>${t('set.bgUp')}</span></button>
+            <button class="icon-btn icon-btn-sm bg-rm" data-th="${th}" aria-label="${t('set.bgRm')}" title="${t('set.bgRm')}">${ic('x','ic-s')}</button>
+          </div>
+        </div>`).join('')}
+      </div>
+      <input type="file" id="bg-file" accept="image/*" hidden>
+    </div>
     <div class="set-group card card-pad set-row">
       <div class="set-h">${ic('vol')}<div><h2>${t('set.sound')}</h2><p>${t('set.soundDesc')}</p></div></div>
       <button class="switch ${s.sound?'on':''}" id="set-sound" role="switch" aria-checked="${s.sound}" aria-label="${t('set.sound')}"></button>
@@ -1883,6 +2164,13 @@ LAYERS.settings={
       const b=e.target.closest('[data-l]'); if(b) setLang(b.dataset.l); });
     $('#set-theme',sec).addEventListener('click',e=>{
       const b=e.target.closest('[data-th]'); if(b) setTheme(b.dataset.th); });
+    let pendBg='dark';
+    $$('.bg-up',sec).forEach(b=>b.addEventListener('click',()=>{
+      pendBg=b.dataset.th; $('#bg-file',sec).click(); }));
+    $('#bg-file',sec).addEventListener('change',e=>{
+      const f=e.target.files[0]; e.target.value='';
+      if(f) uploadBg(pendBg,f); });
+    $$('.bg-rm',sec).forEach(b=>b.addEventListener('click',()=>removeBg(b.dataset.th)));
     $('#set-name-save',sec).addEventListener('click',()=>{
       const v=$('#set-name',sec).value.trim();
       if(!v){ toast(t('set.needName'),'err'); return; }
@@ -1911,16 +2199,19 @@ function applyTheme(){ const th=THEMES.includes(state.settings.theme)?state.sett
   state.settings.theme=th;
   document.documentElement.dataset.theme=th;
   const m=document.querySelector('meta[name=theme-color]');
-  if(m) m.content=THEME_META[th]||'#050816'; }
+  if(m) m.content=THEME_META[th]||'#050816';
+  try{ bgApply(); }catch(e){} }
 function setLang(l){ state.settings.lang=l; saveData(); applyLang();
   Sound.play('transition'); Nav.rerenderAll(); }
 function setTheme(th){ state.settings.theme=th; saveData(); applyTheme(); Nav.rerenderAll(); }
 async function wipeAll(){
   try{ await DB.clear('kv'); await DB.clear('notes'); }catch(e){}
+  for(const th of THEMES){ try{ await DB.del('kv','bg-'+th); }catch(e){} }
   state.user={name:'Ubad'}; Object.assign(state.settings,{lang:'en',sound:true,theme:'dark'});
-  state.courses=[]; state.notes=[]; state.events=[]; state.tasks=[]; state.grades=[]; state.decks=[]; state.quizzes=[]; state.focus={day:'',done:0};
+  state.courses=[]; state.notes=[]; state.events=[]; state.tasks=[]; state.decks=[]; state.quizzes=[];
+  state.focus={day:'',done:0}; state.islam=normIslam({});
   try{ localStorage.removeItem(PREF_KEY); }catch(e){}
-  applyLang(); applyTheme(); Nav.popTo(0,true); Nav.rerenderAll(); toast(t('set.cleared'));
+  applyLang(); applyTheme(); bgApply(); Nav.popTo(0,true); Nav.rerenderAll(); toast(t('set.cleared'));
 }
 
 /* ═══ 12. search overlay (compact icon → popup) ══════════════ */
@@ -1995,10 +2286,14 @@ async function exportBackup(){
       images:await Promise.all(n.images.map(async a=>({name:a.name,type:a.blob.type,data:await blobToDataURL(a.blob)}))),
       audio:await Promise.all(n.audio.map(async a=>({name:a.name,type:a.blob.type,data:await blobToDataURL(a.blob)})))
     })));
+    const backgrounds={};
+    for(const th of THEMES){ try{ const r=await DB.get('kv','bg-'+th);
+      if(r&&r.blob instanceof Blob) backgrounds[th]={type:r.blob.type,data:await blobToDataURL(r.blob)}; }catch(e){} }
     const payload={ app:'ubad-academy-hub', version:1, exportedAt:new Date().toISOString(),
       data:{ user:state.user, settings:state.settings,
         courses:state.courses, events:state.events, tasks:state.tasks,
-        grades:state.grades, decks:state.decks, quizzes:state.quizzes, focus:state.focus, notes } };
+        decks:state.decks, quizzes:state.quizzes, focus:state.focus,
+        islam:state.islam, notes, backgrounds } };
     const blob=new Blob([JSON.stringify(payload)],{type:'application/json'});
     const a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
@@ -2036,9 +2331,16 @@ async function importBackup(file){
         try{ await DB.clear('notes'); }catch(e){}
         for(const rec of notes){ try{ await DB.put('notes',rec); }catch(e){} }
         state.notes=notes.sort((a,b)=>(b.pin?1:0)-(a.pin?1:0)||b.updatedAt-a.updatedAt);
+        /* الخلفيات المخصصة */
+        const bgs=(d.backgrounds&&typeof d.backgrounds==='object')?d.backgrounds:{};
+        for(const th of THEMES){ const b=bgs[th];
+          if(b&&typeof b.data==='string'&&b.data.startsWith('data:')){
+            try{ const bl=await (await fetch(b.data)).blob();
+              await DB.put('kv',{id:'bg-'+th,blob:bl}); }catch(e){} } }
         hydrate({ user:d.user, settings:d.settings, courses:d.courses,
-          events:d.events, tasks:d.tasks, grades:d.grades, decks:d.decks, quizzes:d.quizzes, focus:d.focus });
-        saveData(); applyLang(); applyTheme();
+          events:d.events, tasks:d.tasks, decks:d.decks, quizzes:d.quizzes,
+          focus:d.focus, islam:d.islam });
+        saveData(); applyLang(); applyTheme(); bgApply();
         Nav.popTo(0,true); Nav.rerenderAll();
         toast(t('set.imported'));
       }catch(err){ toast(t('set.importFailed'),'err'); }
@@ -2049,13 +2351,14 @@ async function importBackup(file){
 async function boot(){
   loadPrefs();            /* 1-2. preferences + storage flags */
   applyLang();            /* 3. language before first paint of layers */
-  applyTheme();           /* 4. theme */
+  applyTheme();           /* 4. theme (+ prepares bg layer element) */
   bindParallax();         /* 5. pointer engines */
   bindTilt();
   bindEdgeBack();
   bindKeys();
   try{ await DB.open(); }catch(e){}          /* 6. IndexedDB (memory fallback ok) */
   try{ await Promise.all([loadData(),loadNotes()]); }catch(e){} /* 7. user data */
+  try{ await bgApply(); }catch(e){}          /* 7.5 custom theme background */
   Sound.init();           /* 8. audio manager (silent until gesture) */
   Hist.init();            /* 8.5 native back bridge */
   Nav.init('hub');        /* 9. render Main Hub */

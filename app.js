@@ -39,7 +39,7 @@ en:{
  'nav.dashboard':'Dashboard','nav.courses':'Courses','nav.notes':'Notes','nav.calendar':'Calendar',
  'nav.islam':'I am Muslim','nav.analytics':'Analytics','nav.study':'Study Tools','nav.settings':'Settings',
  'sub.dashboard':'Your day at a glance','sub.courses':'Your academic journey','sub.notes':'Ideas & study notes',
- 'sub.calendar':'Schedule & events','sub.islam':'Prayers, adhkar & worship','sub.analytics':'Insights & statistics',
+ 'sub.calendar':'Schedule & events','sub.islam':'Prayers & worship','sub.analytics':'Insights & statistics',
  'sub.study':'Flashcards & quizzes','sub.settings':'Personalize your hub',
  'common.add':'Add','common.save':'Save','common.cancel':'Cancel','common.delete':'Delete','common.edit':'Edit',
  'common.close':'Close','common.back':'Back','common.search':'Search','common.optional':'optional',
@@ -69,7 +69,7 @@ en:{
  'cal.needTitle':'Title and date are required.','cal.prev':'Previous month','cal.next':'Next month',
  'ana.gpaTrend':'GPA trend','ana.courseProgress':'Course progress','ana.tasksDonut':'Task completion',
  'ana.notesActivity':'Notes activity','ana.noData':'Not enough data yet.','ana.done':'Done','ana.pending':'Pending',
- 'ana.stat.notes':'Notes','ana.stat.cards':'Flashcards','ana.stat.prayers':'Prayers today','ana.stat.quran':'Khatma progress',
+ 'ana.stat.notes':'Notes','ana.stat.cards':'Flashcards','ana.stat.prayers':'Prayers today','ana.stat.fasts':'fast days recorded',
  'ana.prayersTrend':'Prayer consistency (7 days)',
  'study.tabCards':'Flashcards','study.tabQuiz':'Quizzes','study.newDeck':'New deck','study.deckName':'Deck title',
  'study.noDecks':'No decks yet.','study.noDecksHint':'Create a deck and add flashcards to it.',
@@ -120,21 +120,14 @@ en:{
  'islam.prayers':'The five prayers','islam.p.fajr':'Fajr','islam.p.zuhr':'Dhuhr','islam.p.asr':'Asr',
  'islam.p.maghrib':'Maghrib','islam.p.isha':'Isha','islam.jamaah':'Congregation',
  'islam.prayersDone5':'All five prayers complete — may Allah accept them',
- 'islam.rawatib':'Sunnah rawatib','islam.rak':'rak\'ahs',
- 'islam.r.pf':'Fajr sunnah (2)','islam.r.bz':'Before Dhuhr (4)','islam.r.az':'After Dhuhr (2)',
- 'islam.r.am':'After Maghrib (2)','islam.r.ai':'After Isha (2)',
- 'islam.adhkar':'Morning & evening adhkar','islam.morning':'Morning','islam.evening':'Evening',
- 'islam.m1':'Ayat Al-Kursi','islam.m2':'Al-Ikhlas & Al-Mu\'awwidhatayn (×3)','islam.m3':'Sayyid Al-Istighfar',
- 'islam.m4':'Subhan Allah wa bihamdih (×100)','islam.m5':'Salawat upon the Prophet (×10)',
- 'islam.m6':'La ilaha illa Allah wahdahu (×10)',
- 'islam.e1':'Ayat Al-Kursi','islam.e2':'Al-Ikhlas & Al-Mu\'awwidhatayn (×3)','islam.e3':'Astaghfirullah (×100)',
- 'islam.e4':'Subhan Allah wa bihamdih (×100)','islam.e5':'Salawat upon the Prophet (×10)',
- 'islam.e6':'A\'udhu bikalimatillah (×3)',
+ 'islam.rawatib':'Sunnah & nawafil',
+ 'islam.r.pf':'Fajr sunnah (2)','islam.r.duha':'Duha prayer (2)','islam.r.bz':'Before Dhuhr (4)',
+ 'islam.r.az':'After Dhuhr (2)','islam.r.am':'After Maghrib (2)','islam.r.ai':'After Isha (2)',
+ 'islam.r.qiyam':'Night prayer (Qiyam)','islam.r.shaf':'Ash-Shaf\' (2)','islam.r.witr':'Al-Witr',
+ 'islam.duhaHint':'even just two rak\'ahs',
  'islam.tasbih':'Digital tasbih','islam.t.sub':'Subhan Allah','islam.t.ham':'Alhamdulillah',
  'islam.t.akb':'Allahu Akbar','islam.t.ist':'Astaghfirullah','islam.t.saw':'Salawat',
  'islam.tasbihDone':'Completed {n} — tabarakallah','islam.tasbihTotal':'Lifetime total','islam.tasbihReset':'Reset count',
- 'islam.quran':'Quran khatma','islam.qTarget':'Daily target','islam.qEta':'Estimated khatma',
- 'islam.qDone':'Khatma complete — may Allah accept it','islam.qNew':'Start a new khatma',
  'islam.fasting':'Voluntary fasting','islam.fastToday':'Fasting today','islam.sunnahDay':'A recommended fast day',
  'islam.whiteDays':'The white days','islam.upcoming':'Upcoming fast days','islam.totalFasts':'recorded fasts',
  'islam.monday':'Monday','islam.thursday':'Thursday',
@@ -177,7 +170,7 @@ ar:{
  'cal.needTitle':'العنوان والتاريخ مطلوبان.','cal.prev':'الشهر السابق','cal.next':'الشهر التالي',
  'ana.gpaTrend':'تطور المعدل','ana.courseProgress':'تقدم المقررات','ana.tasksDonut':'إنجاز المهام',
  'ana.notesActivity':'نشاط الملاحظات','ana.noData':'البيانات غير كافية بعد.','ana.done':'منجزة','ana.pending':'قيد الانتظار',
- 'ana.stat.notes':'الملاحظات','ana.stat.cards':'البطاقات','ana.stat.prayers':'صلوات اليوم','ana.stat.quran':'تقدم الختمة',
+ 'ana.stat.notes':'الملاحظات','ana.stat.cards':'البطاقات','ana.stat.prayers':'صلوات اليوم','ana.stat.fasts':'يوم صيام مسجل',
  'ana.prayersTrend':'انتظام الصلاة (7 أيام)',
  'study.tabCards':'البطاقات','study.tabQuiz':'الاختبارات','study.newDeck':'مجموعة جديدة','study.deckName':'عنوان المجموعة',
  'study.noDecks':'لا مجموعات بعد.','study.noDecksHint':'أنشئ مجموعة وأضف إليها بطاقات المراجعة.',
@@ -228,21 +221,14 @@ ar:{
  'islam.prayers':'الصلوات الخمس','islam.p.fajr':'الفجر','islam.p.zuhr':'الظهر','islam.p.asr':'العصر',
  'islam.p.maghrib':'المغرب','islam.p.isha':'العشاء','islam.jamaah':'جماعة',
  'islam.prayersDone5':'أتممت الصلوات الخمس — تقبل الله',
- 'islam.rawatib':'السنن الرواتب','islam.rak':'ركعة',
- 'islam.r.pf':'راتبة الفجر (2)','islam.r.bz':'قبل الظهر (4)','islam.r.az':'بعد الظهر (2)',
- 'islam.r.am':'بعد المغرب (2)','islam.r.ai':'بعد العشاء (2)',
- 'islam.adhkar':'أذكار الصباح والمساء','islam.morning':'الصباح','islam.evening':'المساء',
- 'islam.m1':'آية الكرسي','islam.m2':'الإخلاص والمعوذتان (×3)','islam.m3':'سيد الاستغفار',
- 'islam.m4':'سبحان الله وبحمده (×100)','islam.m5':'الصلاة على النبي ﷺ (×10)',
- 'islam.m6':'لا إله إلا الله وحده لا شريك له (×10)',
- 'islam.e1':'آية الكرسي','islam.e2':'الإخلاص والمعوذتان (×3)','islam.e3':'أستغفر الله وأتوب إليه (×100)',
- 'islam.e4':'سبحان الله وبحمده (×100)','islam.e5':'الصلاة على النبي ﷺ (×10)',
- 'islam.e6':'أعوذ بكلمات الله التامات (×3)',
+ 'islam.rawatib':'السنن والنوافل',
+ 'islam.r.pf':'راتبة الفجر (2)','islam.r.duha':'ركعتا الضحى','islam.r.bz':'قبل الظهر (4)',
+ 'islam.r.az':'بعد الظهر (2)','islam.r.am':'بعد المغرب (2)','islam.r.ai':'بعد العشاء (2)',
+ 'islam.r.qiyam':'قيام الليل','islam.r.shaf':'الشفع (2)','islam.r.witr':'الوتر',
+ 'islam.duhaHint':'حتى لو ركعتين',
  'islam.tasbih':'المسبحة الإلكترونية','islam.t.sub':'سبحان الله','islam.t.ham':'الحمد لله',
  'islam.t.akb':'الله أكبر','islam.t.ist':'أستغفر الله','islam.t.saw':'صلى الله عليه وسلم',
  'islam.tasbihDone':'أتممت {n} — تقبل الله','islam.tasbihTotal':'الإجمالي الكلي','islam.tasbihReset':'تصفير',
- 'islam.quran':'ختمة القرآن','islam.qTarget':'الهدف اليومي','islam.qEta':'الختمة المتوقعة',
- 'islam.qDone':'تمت الختمة — تقبل الله','islam.qNew':'ابدأ ختمة جديدة',
  'islam.fasting':'صيام التطوع','islam.fastToday':'صيام اليوم','islam.sunnahDay':'من أيام الصيام المستحبة',
  'islam.whiteDays':'الأيام البيض','islam.upcoming':'أيام الصيام القادمة','islam.totalFasts':'يومًا مسجلًا',
  'islam.monday':'الاثنين','islam.thursday':'الخميس',
@@ -254,31 +240,23 @@ const t=(k,vars)=>{ let s=(I18N[state.settings.lang]||I18N.en)[k]; if(s==null) s
 
 /* ═══ 2.5 islam tables (قبل الحالة حتى تُستخدم عند التهيئة) ══ */
 const PRAYER_KEYS=['fajr','zuhr','asr','maghrib','isha'];
-const RAWATIB_KEYS=['pf','bz','az','am','ai'];
-const RAWATIB_RAKA={pf:2,bz:4,az:2,am:2,ai:2};
-const MORNING_ADHKAR=['m1','m2','m3','m4','m5','m6'];
-const EVENING_ADHKAR=['e1','e2','e3','e4','e5','e6'];
+const RAWATIB_KEYS=['pf','duha','bz','az','am','ai','qiyam','shaf','witr'];
 const TASBIH_MODES=['sub','ham','akb','ist','saw'];
 const TASBIH_TARGETS=[33,100,1000];
 function normIslam(x){ x=(x&&typeof x==='object')?x:{};
   const day=/^\d{4}-\d{2}-\d{2}$/.test(String(x.day||''))?String(x.day):'';
   const P=v=>clampNum(v,0,2,0), R=v=>clampNum(v,0,1,0);
-  const ids=a=>{ const o={}; normArr(a).forEach(k=>{ if(typeof k==='string'&&k.length<6) o[k]=true; }); return o; };
+  const rawatib={}; RAWATIB_KEYS.forEach(k=>rawatib[k]=R(x.rawatib&&x.rawatib[k]));
   const hist={}; if(x.hist&&typeof x.hist==='object')
     Object.keys(x.hist).forEach(k=>{ if(/^\d{4}-\d{2}-\d{2}$/.test(k)) hist[k]=clampNum(x.hist[k],0,5,0); });
   return { day,
     prayers:{ fajr:P(x.prayers&&x.prayers.fajr), zuhr:P(x.prayers&&x.prayers.zuhr),
       asr:P(x.prayers&&x.prayers.asr), maghrib:P(x.prayers&&x.prayers.maghrib), isha:P(x.prayers&&x.prayers.isha) },
-    rawatib:{ pf:R(x.rawatib&&x.rawatib.pf), bz:R(x.rawatib&&x.rawatib.bz), az:R(x.rawatib&&x.rawatib.az),
-      am:R(x.rawatib&&x.rawatib.am), ai:R(x.rawatib&&x.rawatib.ai) },
-    morning:ids(x.morning), evening:ids(x.evening),
+    rawatib,
     tasbih:{ mode:TASBIH_MODES.includes(x.tasbih&&x.tasbih.mode)?x.tasbih.mode:'sub',
       count:clampNum(x.tasbih&&x.tasbih.count,0,1e6,0),
       total:clampNum(x.tasbih&&x.tasbih.total,0,1e9,0),
       target:TASBIH_TARGETS.includes(x.tasbih&&x.tasbih.target)?x.tasbih.target:33 },
-    quran:{ juz:clampNum(x.quran&&x.quran.juz,0,30,0),
-      target:clampNum(x.quran&&x.quran.target,1,10,1),
-      started:clampNum(x.quran&&x.quran.started,0,1e15,Date.now()) },
     fasts:normArr(x.fasts).filter(d=>typeof d==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(d)).slice(0,1000),
     hist }; }
 
@@ -910,8 +888,7 @@ function upcomingFasts(){ /* الاثنين/الخميس + الأيام البي
 function islamDay(){ const isl=state.islam, td=today();
   if(isl.day!==td){ isl.day=td;
     isl.prayers={fajr:0,zuhr:0,asr:0,maghrib:0,isha:0};
-    isl.rawatib={pf:0,bz:0,az:0,am:0,ai:0};
-    isl.morning={}; isl.evening={}; }
+    isl.rawatib={pf:0,duha:0,bz:0,az:0,am:0,ai:0,qiyam:0,shaf:0,witr:0}; }
   return isl; }
 function recordPrayers(){ const isl=state.islam;
   const done=PRAYER_KEYS.filter(k=>isl.prayers[k]>0).length;
@@ -944,26 +921,6 @@ function prepCanvas(c){ const w=c.clientWidth||300, h=parseInt(c.getAttribute('h
   c.width=w*dpr; c.height=h*dpr; c.style.height=h+'px';
   const x=c.getContext('2d'); x.setTransform(dpr,0,0,dpr,0,0);
   return {x,w,h}; }
-function drawLine(c,labels,vals){ try{
-  const {x,w,h}=prepCanvas(c); const pl=34,pr=10,pt=12,pb=22,iw=w-pl-pr,ih=h-pt-pb;
-  const ink3=cssVar('--ink3'),line=cssVar('--line2'),acc=cssVar('--acc-c');
-  x.font='10px '+MONO; x.strokeStyle=line; x.textAlign='right';
-  for(let i=0;i<=4;i++){ const y=pt+ih-(i/4)*ih;
-    x.globalAlpha=.5; x.beginPath(); x.moveTo(pl,y); x.lineTo(w-pr,y); x.stroke(); x.globalAlpha=1;
-    x.fillStyle=ink3; x.fillText(String(i),pl-8,y+3); }
-  const px=i=>pl+(vals.length===1?iw/2:(i/(vals.length-1))*iw);
-  const py=v=>pt+ih-(v/4)*ih;
-  x.beginPath(); x.moveTo(px(0),py(vals[0]));
-  vals.forEach((v,i)=>x.lineTo(px(i),py(v)));
-  x.lineTo(px(vals.length-1),pt+ih); x.lineTo(px(0),pt+ih); x.closePath();
-  x.globalAlpha=.12; x.fillStyle=acc; x.fill(); x.globalAlpha=1;
-  x.beginPath(); vals.forEach((v,i)=>i?x.lineTo(px(i),py(v)):x.moveTo(px(i),py(v)));
-  x.strokeStyle=acc; x.lineWidth=2.2; x.lineJoin='round'; x.lineCap='round'; x.stroke();
-  vals.forEach((v,i)=>{ x.beginPath(); x.arc(px(i),py(v),3,0,7); x.fillStyle=acc; x.fill(); });
-  x.fillStyle=ink3; x.textAlign='center';
-  const step=Math.ceil(labels.length/8);
-  labels.forEach((lb,i)=>{ if(i%step===0) x.fillText(lb,px(i),h-6); });
-}catch(e){} }
 function drawBars(c,labels,vals,maxV){ try{
   const {x,w,h}=prepCanvas(c); const pl=6,pr=6,pt=10,pb=22,iw=w-pl-pr,ih=h-pt-pb;
   const ink3=cssVar('--ink3'),line=cssVar('--line2'),acc=cssVar('--acc-b');
@@ -1492,17 +1449,8 @@ function openEventModal(ev,dflt,cb){
         desc:$('#ev-desc').value.trim().slice(0,500),createdAt:Date.now()});
       saveData(); close(); if(cb)cb(); toast(t('toast.saved')); }}]});
 }
-function openTaskModal(cb){
-  openModal({title:t('dash.newTask'),
-    body:`${field(t('dash.taskTitle'),inp('tk-title','',''))}
-      ${field(t('dash.taskDue'),`<input class="input" id="tk-due" type="date" value="${today()}">`)}`,
-    actions:[{label:t('common.cancel')},{label:t('common.add'),cls:'btn-primary',onClick:close=>{
-      const v=$('#tk-title').value.trim(); if(!v) return;
-      state.tasks.unshift({id:uid(),title:v.slice(0,120),done:false,due:$('#tk-due').value||'',createdAt:Date.now()});
-      saveData(); close(); if(cb)cb(); toast(t('toast.saved')); }}]});
-}
 
-/* ── ANA MUSLIM — القسم الإسلامي الكامل ─────────────────── */
+/* ── ANA MUSLIM — القسم الإسلامي ─────────────────────────── */
 LAYERS.islam={
   title:()=>t('nav.islam'),
   render(){
@@ -1511,9 +1459,7 @@ LAYERS.islam={
     const hij=hijriDateStr();
     const pDone=PRAYER_KEYS.filter(k=>isl.prayers[k]>0).length;
     const rDone=RAWATIB_KEYS.filter(k=>isl.rawatib[k]>0).length;
-    const rakah=RAWATIB_KEYS.reduce((a,k)=>a+(isl.rawatib[k]?RAWATIB_RAK[k]:0),0);
-    const mDone=MORNING_ADHKAR.filter(k=>isl.morning[k]).length;
-    const eDone=EVENING_ADHKAR.filter(k=>isl.evening[k]).length;
+    const rTotal=RAWATIB_KEYS.length;
     const td=today();
     const hNow=hijriOf(new Date());
     const isMonThu=(()=>{ const w=new Date().getDay(); return w===1||w===4; })();
@@ -1528,11 +1474,7 @@ LAYERS.islam={
       </li>`; };
     const rawRow=k=>`<li class="rowitem">
         <button class="tick r-tick ${isl.rawatib[k]?'on':''}" data-r="${k}" role="checkbox" aria-checked="${isl.rawatib[k]}" aria-label="${t('islam.r.'+k)}">${ic('check','ic-xs')}</button>
-        <span class="row-main"><span class="row-title">${t('islam.r.'+k)}</span></span>
-      </li>`;
-    const adhRow=(k,which)=>`<li class="rowitem adh-row">
-        <button class="tick a-tick ${isl[which][k]?'on':''}" data-w="${which}" data-a="${k}" role="checkbox" aria-checked="${isl[which][k]}" aria-label="${t('islam.'+k)}">${ic('check','ic-xs')}</button>
-        <span class="row-main"><span class="row-title adh-name">${t('islam.'+k)}</span></span>
+        <span class="row-main"><span class="row-title">${t('islam.r.'+k)}</span>${k==='duha'?`<span class="row-sub rw-hint">${esc(t('islam.duhaHint'))}</span>`:''}</span>
       </li>`;
     const body=`
     <div class="card card-pad ram-hero">
@@ -1553,20 +1495,9 @@ LAYERS.islam={
       <div class="progress" style="margin-top:14px"><i id="pr-bar" style="width:${pDone/5*100}%;background:var(--acc-c)"></i></div>
     </div>
     <div class="card card-pad islam-card">
-      <div class="sect-h"><h2>${t('islam.rawatib')}</h2><span class="chip mono" id="rw-stat">${rDone} / 5 · ${rakah} / 12 ${t('islam.rak')}</span></div>
+      <div class="sect-h"><h2>${t('islam.rawatib')}</h2><span class="chip mono" id="rw-stat">${rDone} / ${rTotal}</span></div>
       <ul class="list">${RAWATIB_KEYS.map(rawRow).join('')}</ul>
-      <div class="progress" style="margin-top:14px"><i id="rw-bar" style="width:${rDone/5*100}%;background:var(--acc-v)"></i></div>
-    </div>
-    <div class="sect-h islam-head"><h2>${t('islam.adhkar')}</h2></div>
-    <div class="adh-grid">
-      <div class="card card-pad adh-card">
-        <div class="sect-h"><h2>${ic('sun','ic-s')} ${t('islam.morning')}</h2><span class="chip mono" id="ad-m-stat">${mDone} / 6</span></div>
-        <ul class="list">${MORNING_ADHKAR.map(k=>adhRow(k,'morning')).join('')}</ul>
-      </div>
-      <div class="card card-pad adh-card">
-        <div class="sect-h"><h2>${ic('moon','ic-s')} ${t('islam.evening')}</h2><span class="chip mono" id="ad-e-stat">${eDone} / 6</span></div>
-        <ul class="list">${EVENING_ADHKAR.map(k=>adhRow(k,'evening')).join('')}</ul>
-      </div>
+      <div class="progress" style="margin-top:14px"><i id="rw-bar" style="width:${rDone/rTotal*100}%;background:var(--acc-v)"></i></div>
     </div>
     <div class="card card-pad islam-card">
       <div class="sect-h"><h2>${t('islam.tasbih')}</h2>
@@ -1584,19 +1515,6 @@ LAYERS.islam={
       <p class="tas-total mono">${t('islam.tasbihTotal')}: <b id="tas-total">${isl.tasbih.total}</b></p>
     </div>
     <div class="card card-pad islam-card">
-      <div class="sect-h"><h2>${t('islam.quran')}</h2><span class="chip mono" id="qz-stat">${isl.quran.juz} / 30</span></div>
-      <div class="progress"><i id="qz-bar" style="width:${isl.quran.juz/30*100}%;background:var(--acc-b)"></i></div>
-      <div class="qz-ctl">
-        <button class="icon-btn" id="qz-sub" aria-label="−1">−</button>
-        <button class="icon-btn" id="qz-add" aria-label="+1">+</button>
-        <div class="pillrow">
-          ${[1,2,3].map(g=>`<button class="pill qz-goal ${isl.quran.target===g?'on':''}" data-g="${g}">${g} / ${t('common.today')}</button>`).join('')}
-        </div>
-      </div>
-      <p class="f-hint" id="qz-eta"></p>
-      <button class="btn btn-primary btn-sm" id="qz-new" style="display:none;margin-top:8px">${ic('refresh','ic-s')}<span>${t('islam.qNew')}</span></button>
-    </div>
-    <div class="card card-pad islam-card">
       <div class="sect-h"><h2>${t('islam.fasting')}</h2><span class="chip mono">${isl.fasts.length} ${t('islam.totalFasts')}</span></div>
       <div class="rowitem fast-row">
         <span class="row-main"><span class="row-title">${t('islam.fastToday')}</span>
@@ -1611,7 +1529,7 @@ LAYERS.islam={
         </div>`).join('')}</div>`:`<div class="empty empty-sm">${ic('cal')}<p>${t('ana.noData')}</p></div>`}
     </div>`;
     const sec=chrome({title:t('nav.islam'),body});
-    /* ── الصلوات: تحديث في المكان (بدون فقدان مكان السكرول) ── */
+    /* ── الصلوات: تحديث في المكان ── */
     const syncPrayers=()=>{ const done=PRAYER_KEYS.filter(k=>state.islam.prayers[k]>0).length;
       const st=$('#pr-stat',sec); if(st) st.textContent=done+' / 5';
       const bar=$('#pr-bar',sec); if(bar) bar.style.width=(done/5*100)+'%';
@@ -1631,30 +1549,16 @@ LAYERS.islam={
       state.islam.prayers[k]=state.islam.prayers[k]===2?1:2;
       recordPrayers(); saveData(); syncPrayers();
       if(PRAYER_KEYS.every(x=>state.islam.prayers[x]>0)) FX.confetti(); }));
-    /* ── الرواتب ── */
+    /* ── السنن والنوافل ── */
     const syncRaw=()=>{ const done=RAWATIB_KEYS.filter(k=>state.islam.rawatib[k]>0).length;
-      const rk=RAWATIB_KEYS.reduce((a,k)=>a+(state.islam.rawatib[k]?RAWATIB_RAK[k]:0),0);
-      const st=$('#rw-stat',sec); if(st) st.textContent=done+' / 5 · '+rk+' / 12 '+t('islam.rak');
-      const bar=$('#rw-bar',sec); if(bar) bar.style.width=(done/5*100)+'%';
+      const st=$('#rw-stat',sec); if(st) st.textContent=done+' / '+RAWATIB_KEYS.length;
+      const bar=$('#rw-bar',sec); if(bar) bar.style.width=(done/RAWATIB_KEYS.length*100)+'%';
       $$('.r-tick',sec).forEach(b=>{ const on=state.islam.rawatib[b.dataset.r];
         b.classList.toggle('on',on); b.setAttribute('aria-checked',String(on)); }); };
     $$('.r-tick',sec).forEach(b=>b.addEventListener('click',()=>{
       const k=b.dataset.r; state.islam.rawatib[k]=state.islam.rawatib[k]?0:1;
       saveData(); syncRaw();
       if(RAWATIB_KEYS.every(x=>state.islam.rawatib[x])) FX.confetti(); }));
-    /* ── الأذكار ── */
-    const syncAdh=()=>{ const m=MORNING_ADHKAR.filter(k=>state.islam.morning[k]).length;
-      const e=EVENING_ADHKAR.filter(k=>state.islam.evening[k]).length;
-      const ms=$('#ad-m-stat',sec); if(ms) ms.textContent=m+' / 6';
-      const es=$('#ad-e-stat',sec); if(es) es.textContent=e+' / 6';
-      $$('.a-tick',sec).forEach(b=>{ const on=state.islam[b.dataset.w][b.dataset.a];
-        b.classList.toggle('on',on); b.setAttribute('aria-checked',String(on)); }); };
-    $$('.a-tick',sec).forEach(b=>b.addEventListener('click',()=>{
-      const w=b.dataset.w, k=b.dataset.a;
-      state.islam[w][k]=!state.islam[w][k];
-      saveData(); syncAdh();
-      if(MORNING_ADHKAR.every(x=>state.islam.morning[x])&&w==='morning') FX.confetti();
-      if(EVENING_ADHKAR.every(x=>state.islam.evening[x])&&w==='evening') FX.confetti(); }));
     /* ── المسبحة ── */
     const tasCount=$('#tas-count',sec), tasGoal=$('#tas-goal',sec), tasTotal=$('#tas-total',sec);
     const tasSync=()=>{ const T=state.islam.tasbih;
@@ -1674,30 +1578,6 @@ LAYERS.islam={
       saveData(); tasSync(); }));
     $('#tas-reset',sec).addEventListener('click',()=>{
       state.islam.tasbih.count=0; saveData(); tasSync(); });
-    /* ── الختمة ── */
-    const qzSync=()=>{ const q=state.islam.quran;
-      const st=$('#qz-stat',sec); if(st) st.textContent=q.juz+' / 30';
-      const bar=$('#qz-bar',sec); if(bar) bar.style.width=(q.juz/30*100)+'%';
-      const eta=$('#qz-eta',sec), nw=$('#qz-new',sec);
-      const left=30-q.juz;
-      if(left<=0){ eta.textContent=t('islam.qDone'); if(nw) nw.style.display=''; }
-      else{ const days=Math.ceil(left/q.target); const d=new Date(); d.setDate(d.getDate()+days);
-        eta.textContent=t('islam.qEta')+': '+fmtDate(d,{day:'numeric',month:'short',year:'numeric'})+' ('+days+' '+t('islam.ramDays')+')';
-        if(nw) nw.style.display='none'; }
-      $$('.qz-goal',sec).forEach(x=>x.classList.toggle('on',+x.dataset.g===q.target)); };
-    $('#qz-add',sec).addEventListener('click',()=>{
-      const q=state.islam.quran;
-      if(q.juz>=30) return;
-      q.juz++; if(q.juz===30){ FX.confetti(); toast(t('islam.qDone')); }
-      saveData(); qzSync(); });
-    $('#qz-sub',sec).addEventListener('click',()=>{
-      const q=state.islam.quran; if(q.juz<=0) return;
-      q.juz--; saveData(); qzSync(); });
-    $$('.qz-goal',sec).forEach(b=>b.addEventListener('click',()=>{
-      state.islam.quran.target=+b.dataset.g; saveData(); qzSync(); }));
-    $('#qz-new',sec).addEventListener('click',()=>{
-      state.islam.quran.juz=0; state.islam.quran.started=Date.now();
-      saveData(); qzSync(); });
     /* ── الصيام ── */
     $('#fs-today',sec).addEventListener('click',()=>{
       const isl2=state.islam, td2=today();
@@ -1706,7 +1586,6 @@ LAYERS.islam={
       saveData();
       const sw=$('#fs-today',sec), on=isl2.fasts.includes(td2);
       sw.classList.toggle('on',on); sw.setAttribute('aria-checked',String(on)); });
-    qzSync();
     return sec;
   }
 };
@@ -1732,7 +1611,7 @@ LAYERS.analytics={
     const tiles=[['note',state.notes.length,t('ana.stat.notes')],
       ['layers',state.decks.reduce((a,d)=>a+d.cards.length,0),t('ana.stat.cards')],
       ['mosque',`${pDone}/5`,t('ana.stat.prayers')],
-      ['book',`${isl.quran.juz}/30`,t('ana.stat.quran')]];
+      ['cal',state.islam.fasts.length,t('ana.stat.fasts')]];
     const noData=()=>`<div class="empty empty-sm">${ic('chart')}<p>${t('ana.noData')}</p></div>`;
     const body=`
     <div class="tiles">${tiles.map(x=>`
@@ -1755,7 +1634,6 @@ LAYERS.analytics={
             <span class="pb-val mono">${s.pct}%</span></div>`;}).join(''):noData()}</div>
     </div>`;
     const sec=chrome({title:t('nav.analytics'),body});
-    /* draw once the layer is in the DOM (canvas needs layout) */
     requestAnimationFrame(()=>{
       drawBars($('#ch-prayers',sec),pLabels,pDays,5);
       if(state.notes.length) drawBars($('#ch-notes',sec),months,counts);

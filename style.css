@@ -1,6 +1,7 @@
 /* ═══════════════════════════════════════════════════════════
    UBAD ACADEMY HUB — design system
    dark spatial academic environment / glass / depth
+   + ANA MUSLIM section + custom theme backgrounds
    ═══════════════════════════════════════════════════════════ */
 
 :root{
@@ -89,6 +90,18 @@ html[lang="ar"] .mono{letter-spacing:0!important}
   -webkit-mask-image:radial-gradient(1200px 760px at 50% 18%,#000 25%,transparent 74%);
   mask-image:radial-gradient(1200px 760px at 50% 18%,#000 25%,transparent 74%)}
 
+/* ── خلفية المستخدم المخصصة لكل ثيم ──────────────────────── */
+.bg-user{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-size:cover;background-position:center;background-repeat:no-repeat;
+  opacity:0;transition:opacity .5s ease}
+.bg-user.on{opacity:.18}
+[data-theme="oled"] .bg-user.on{opacity:.12}
+[data-theme="light"] .bg-user.on,[data-theme="paper"] .bg-user.on,
+[data-theme="sage"] .bg-user.on,[data-theme="rose"] .bg-user.on{opacity:.10}
+body:not(.has-bg) .bg-grid{opacity:1}
+body.has-bg .bg-grid{opacity:.55}
+body.has-bg .bg-glow-a,body.has-bg .bg-glow-b{opacity:.35}
+
 /* ── spatial stage & layers (navigation-level 3D) ─────────── */
 #stage{position:fixed;inset:0;z-index:1;perspective:var(--persp);overflow:hidden}
 .layer{
@@ -163,7 +176,7 @@ html[lang="ar"] .mono{letter-spacing:0!important}
 [data-theme="light"] .card::before{background:linear-gradient(90deg,transparent,rgba(255,255,255,.9),transparent)}
 .card-pad{padding:clamp(14px,2.5vw,20px)}
 
-.chip{display:inline-flex;align-items:center;font-family:var(--mono);font-size:11px;
+.chip{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:11px;
   padding:2px 8px;border-radius:8px;background:var(--glass2);border:1px solid var(--line);color:var(--ink2)}
 .chip-ok{background:rgba(52,211,153,.13);border-color:rgba(52,211,153,.45);color:var(--ok)}
 .chip-no{background:rgba(248,113,113,.13);border-color:rgba(248,113,113,.45);color:var(--no)}
@@ -255,7 +268,6 @@ button.rowitem:hover{border-color:var(--line2);transform:translateY(-1px)}
 .mback.open{opacity:1}
 .mback.closing{opacity:0}
 .modal{width:100%;max-width:440px;
-  /* fallback vh قبل dvh — المتصفحات القديمة تحذف التصريح كله لوحده */
   max-height:min(86vh,760px);max-height:min(86dvh,760px);
   display:flex;flex-direction:column;
   background:var(--modalbg);border:1px solid var(--line2);border-radius:20px;
@@ -277,7 +289,6 @@ button.rowitem:hover{border-color:var(--line2);transform:translateY(-1px)}
   backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 [data-theme="light"] .search-wrap{background:rgba(40,52,90,.28)}
 .search-panel{width:min(600px,92vw);
-  /* fallback vh قبل dvh */
   margin:9vh auto 0;margin:9dvh auto 0;
   background:var(--modalbg);
   border:1px solid var(--line2);border-radius:18px;box-shadow:0 30px 80px rgba(0,0,0,.45);
@@ -337,6 +348,7 @@ html[lang="ar"] .eyebrow{letter-spacing:.02em;text-transform:none;font-family:va
   border-radius:var(--r-lg);background:var(--cardbg);border:1px solid var(--line);
   box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   overflow:hidden;transform-style:preserve-3d;
+  transform:scope(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
   transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
   transition:transform .22s var(--ease),border-color .25s,box-shadow .25s;
 }
@@ -404,7 +416,6 @@ button.tile:hover{transform:translateY(-2px);border-color:var(--line2)}
 .cards-grid{display:grid;gap:14px;grid-template-columns:1fr}
 @media(min-width:700px){.cards-grid{grid-template-columns:1fr 1fr}}
 @media(min-width:1100px){.cards-grid{grid-template-columns:1fr 1fr 1fr}}
-/* تفعيل tilt على كارت المقرر — JS يحدّث --rx/--ry */
 .course-card{display:flex;flex-direction:column;gap:9px;padding:18px;text-align:start;
   transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
   transition:transform .2s var(--ease),border-color .2s}
@@ -426,7 +437,6 @@ button.tile:hover{transform:translateY(-2px);border-color:var(--line2)}
 .notes-grid{display:grid;gap:14px;grid-template-columns:1fr}
 @media(min-width:640px){.notes-grid{grid-template-columns:1fr 1fr}}
 @media(min-width:1080px){.notes-grid{grid-template-columns:1fr 1fr 1fr}}
-/* تفعيل tilt على كارت الملاحظة */
 .note-card{display:flex;flex-direction:column;gap:9px;padding:16px;min-height:120px;text-align:start;
   transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
   transition:transform .2s var(--ease),border-color .2s}
@@ -469,17 +479,67 @@ html[lang="ar"] .cal-dow span{letter-spacing:0;text-transform:none;font-size:11p
 .cal-side{margin-top:16px}
 .cal-dayhead{font-size:13.5px;font-weight:700;margin-bottom:12px;color:var(--ink2)}
 
-/* ── grades ───────────────────────────────────────────────── */
-.gpa-hero{display:flex;flex-wrap:wrap;align-items:center;gap:18px 34px;max-width:760px}
-.gpa-num{font-size:clamp(42px,7vw,58px);font-weight:750;line-height:1;letter-spacing:-.02em}
-.gpa-lbl{display:block;font-size:12px;color:var(--ink3);margin-top:8px}
-.gpa-meta{display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:var(--ink2)}
-.gbadge{width:44px;height:44px;flex:none;border-radius:12px;display:grid;place-items:center;
-  font-weight:800;font-family:var(--mono);font-size:15px;border:1px solid}
-.gb-a{color:var(--acc-c);background:rgba(34,211,238,.11);border-color:rgba(34,211,238,.35)}
-.gb-b{color:var(--acc-b);background:rgba(59,130,246,.11);border-color:rgba(59,130,246,.35)}
-.gb-c{color:var(--acc-v);background:rgba(139,92,246,.11);border-color:rgba(139,92,246,.35)}
-.gb-f{color:var(--no);background:rgba(248,113,113,.11);border-color:rgba(248,113,113,.35)}
+/* ═══ ANA MUSLIM — القسم الإسلامي ═════════════════════════ */
+
+/* بطاقة رمضان / السلام */
+.ram-hero{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px 28px;
+  max-width:760px;margin-inline:auto}
+.ram-peace{font-size:17px;font-weight:700;letter-spacing:.01em}
+.ram-greg{font-size:12px;color:var(--ink3);margin-top:6px}
+.ram-count{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
+.ram-cap{font-size:12px;font-weight:600;color:var(--ink2)}
+.ram-num{font-size:clamp(34px,6vw,46px);font-weight:750;line-height:1;color:var(--acc-c);
+  text-shadow:0 0 24px rgba(34,211,238,.25)}
+.ram-days{font-size:11px;color:var(--ink3)}
+
+/* بطاقات القسم */
+.islam-card{max-width:760px;margin-inline:auto;margin-bottom:14px}
+.islam-head{max-width:760px;margin:22px auto 12px}
+.islam-head h2{font-size:16px}
+
+/* صف الصلاة */
+.p-row .row-main{max-width:none}
+.p-row{gap:10px}
+.p-jam{cursor:pointer;user-select:none}
+.p-jam .ic{color:inherit}
+.p-jam.chip-ok{cursor:pointer}
+.p-jam:hover{border-color:var(--line2)}
+
+/* شبكة الأذكار */
+.adh-grid{display:grid;gap:14px;grid-template-columns:1fr;margin-bottom:14px}
+@media(min-width:880px){.adh-grid{grid-template-columns:1fr 1fr}}
+.adh-card{max-width:760px}
+.adh-name{white-space:normal;font-size:13.5px;line-height:1.4}
+
+/* المسبحة */
+.tas-modes{margin-bottom:14px;justify-content:center}
+.tas-modes .pill{font-size:12.5px;padding:0 12px}
+.tas-tap{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  width:min(240px,64vw);aspect-ratio:1;margin:6px auto 14px;
+  border-radius:50%;border:1px solid var(--line2);background:var(--glass);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.12);
+  cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;
+  transition:transform .12s var(--ease),border-color .2s,box-shadow .2s;
+}
+.tas-tap:hover{border-color:var(--acc-c)}
+.tas-tap:active{transform:scale(.955)}
+.tas-tap b{font-size:clamp(40px,8vw,54px);font-weight:750;line-height:1;color:var(--ink)}
+.tas-tap span{font-size:14px;color:var(--ink3)}
+.tas-total{font-size:12px;color:var(--ink3);text-align:center}
+.tas-total b{color:var(--ink2)}
+
+/* الختمة */
+.qz-ctl{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:14px}
+.qz-ctl .icon-btn{font-size:17px;font-weight:700;line-height:1}
+.qz-ctl .pillrow{flex:1;justify-content:center}
+.qz-ctl .pill{height:32px;font-size:12px;padding:0 12px}
+#qz-eta{margin-top:10px}
+
+/* الصيام */
+.fast-row{margin-bottom:4px}
+.fs-up-row .chip{width:110px;justify-content:center}
 
 /* ── analytics ────────────────────────────────────────────── */
 .ana-grid{display:grid;gap:14px;grid-template-columns:1fr}
@@ -547,12 +607,27 @@ canvas.chart{width:100%;display:block}
 .about h2{font-size:15px;letter-spacing:.06em}
 .about p{font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.6}
 
+/* ── خلفيات الثيمات (خلايا الرفع) ────────────────────────── */
+.bg-cells{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:640px){.bg-cells{grid-template-columns:repeat(3,1fr)}}
+.bg-cell{display:flex;flex-direction:column;gap:8px;padding:12px;
+  border:1px solid var(--line);border-radius:14px;background:var(--glass2)}
+.bg-prev{width:100%;aspect-ratio:16/9;border-radius:9px;
+  border:1px solid rgba(0,0,0,.18);background-size:cover;background-position:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.15)}
+.bg-name{font-size:11.5px;font-weight:600;color:var(--ink2);text-align:center}
+.bg-acts{display:flex;gap:8px;justify-content:center}
+.bg-acts .btn-sm{flex:1;justify-content:center;height:30px;font-size:12px}
+.bg-acts .icon-btn-sm{width:30px;height:30px}
+
 @media(max-width:719px){
   .lhead-crumbs{display:none}
   .lhead-title{font-size:16px}
 }
 @media(max-width:479px){
   .btn .btn-hide-s{display:none}
+  .ram-hero{flex-direction:column;align-items:flex-start}
+  .ram-count{align-items:flex-start}
 }
 
 /* ── reduced motion ───────────────────────────────────────── */
@@ -563,9 +638,10 @@ canvas.chart{width:100%;display:block}
   .hub-stage{transform:none!important}
   .layer{transition:opacity .2s ease}
   .flip-in{transition-duration:.2s}
+  .bg-user{transition:none!important}
 }
 
-/* ═════════════════ PERF PATCH v1 ═══════════════ */
+/* ═══════════════ PERF PATCH v1 ═══════════════ */
 
 /* 1) عتامة أعلى تعوّض غياب الضبابية (نفس الإحساس، بلا كلفة) */
 :root{

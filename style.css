@@ -936,3 +936,5 @@ canvas.chart{width:100%;display:block}
 .lb-img.zoomed{cursor:grab}
 .lb-img.zoomed:active{cursor:grabbing}
 @media(prefers-reduced-motion:reduce){.lb-img{transition:none!important}}
+/* تلميح ركعتي الضحى — يسمح باللف */
+.rw-hint{white-space:normal;font-size:11.5px;margin-top:1px}

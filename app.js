@@ -96,7 +96,7 @@ en:{
  'set.bg':'Theme backgrounds','set.bgDesc':'Upload your own background for each theme (max 5 MB). Stored offline on your device and shown softly behind the interface.',
  'set.bgUp':'Upload','set.bgRm':'Remove','set.bgApplied':'Background updated.','set.bgRemoved':'Background removed.',
  'set.sound':'Interface sounds','set.soundDesc':'Subtle feedback sounds. Falls back gracefully if audio files are not present.',
- 'set.backup':'Backup & restore','set.backupDesc':'Export all of your data as a JSON file and restore it on any device. No account needed.',
+ 'set.backup':'Backup & restore','set.backupDesc':'Restore your saved data from a JSON backup file. No account needed.',
  'set.export':'Export backup','set.import':'Import backup',
  'set.importConfirm':'Importing will replace ALL current data on this device. Continue?',
  'set.imported':'Backup restored successfully.','set.importFailed':'Invalid backup file.',
@@ -104,6 +104,7 @@ en:{
  'set.clearMsg':'This permanently deletes all courses, notes, events, worship records and study content stored on this device.',
  'set.clearAll':'Erase all data','set.cleared':'All data erased.',
  'set.about':'About','set.aboutBody':'A local-first academic hub. No account, no server — your data stays with you.',
+ 'set.support':'Developer Support','set.supportDesc':'If UBAD Academy Hub has helped you, you can support the developer.','set.vodafone':'Vodafone Cash','set.paypal':'PayPal','set.copy':'Copy','set.copied':'Copied.',
  'set.version':'Version','set.nameSaved':'Name updated.','set.needName':'Please enter a name.',
  'set.exported':'Backup file downloaded.',
  'search.ph':'Search notes, courses, events…','search.none':'No results for “{q}”',
@@ -127,7 +128,7 @@ en:{
  'islam.duhaHint':'even just two rak\'ahs',
  'islam.tasbih':'Digital tasbih','islam.t.sub':'Subhan Allah','islam.t.ham':'Alhamdulillah',
  'islam.t.akb':'Allahu Akbar','islam.t.ist':'Astaghfirullah','islam.t.saw':'Salawat',
- 'islam.tasbihDone':'Completed {n} — tabarakallah','islam.tasbihTotal':'Lifetime total','islam.tasbihReset':'Reset count',
+ 'islam.tasbihDone':'Completed {n} — tabarakallah','islam.tasbihTotal':'Lifetime total','islam.tasbihReset':'Reset count','islam.tasbihAdd':'Add dhikr','islam.tasbihEdit':'Edit dhikr','islam.tasbihText':'Dhikr text','islam.tasbihTextPh':'Enter your dhikr…','islam.tasbihDelete':'Delete dhikr','islam.tasbihDeleteMsg':'Delete this dhikr from your tasbih list?','islam.tasbihResetText':'Reset text','islam.tabPrayers':'Prayers','islam.tabSunnah':'Sunnah','islam.tabFasting':'Fasting','islam.tabTasbih':'Tasbih',
  'islam.fasting':'Voluntary fasting','islam.fastToday':'Fasting today','islam.sunnahDay':'A recommended fast day',
  'islam.whiteDays':'The white days','islam.upcoming':'Upcoming fast days','islam.totalFasts':'recorded fasts',
  'islam.monday':'Monday','islam.thursday':'Thursday',
@@ -197,7 +198,7 @@ ar:{
  'set.bg':'خلفيات الثيمات','set.bgDesc':'ارفع خلفية خاصة لكل ثيم (حتى 5 ميغابايت). تُحفظ على جهازك دون اتصال وتظهر بشفافية خلف الواجهة.',
  'set.bgUp':'رفع','set.bgRm':'إزالة','set.bgApplied':'تم تحديث الخلفية.','set.bgRemoved':'تمت إزالة الخلفية.',
  'set.sound':'أصوات الواجهة','set.soundDesc':'أصوات تفاعل خفيفة..',
- 'set.backup':'النسخ الاحتياطي والاستعادة','set.backupDesc':'صدّر جميع بياناتك كملف JSON واستعدها على أي جهاز. بدون حساب.',
+ 'set.backup':'النسخ الاحتياطي والاستعادة','set.backupDesc':'استعد بياناتك من ملف نسخة احتياطية بصيغة JSON. بدون حساب.',
  'set.export':'تصدير نسخة احتياطية','set.import':'استيراد نسخة احتياطية',
  'set.importConfirm':'الاستيراد سيستبدل جميع البيانات الحالية على هذا الجهاز. هل تريد المتابعة؟',
  'set.imported':'تمت الاستعادة بنجاح.','set.importFailed':'ملف نسخة احتياطية غير صالح.',
@@ -205,6 +206,7 @@ ar:{
  'set.clearMsg':'سيحذف هذا نهائيًا كل المقررات والملاحظات والفعاليات وسجلات العبادة ومحتوى الدراسة المحفوظة على هذا الجهاز.',
  'set.clearAll':'محو جميع البيانات','set.cleared':'تم محو جميع البيانات.',
  'set.about':'حول','set.aboutBody':'بيئة أكاديمية محلية بالكامل. بلا حساب ولا خادم — بياناتك تبقى معك.',
+ 'set.support':'دعم المطور','set.supportDesc':'إذا ساعدتك أكاديمية عُبَدْ، يمكنك دعم المطور عبر الطرق التالية.','set.vodafone':'فودافون كاش','set.paypal':'PayPal','set.copy':'نسخ','set.copied':'تم النسخ.',
  'set.version':'الإصدار','set.nameSaved':'تم تحديث الاسم.','set.needName':'أدخل اسمًا من فضلك.',
  'set.exported':'تم تنزيل ملف النسخة الاحتياطية.',
  'search.ph':'ابحث في الملاحظات والمقررات والفعاليات…','search.none':'لا نتائج لـ «{q}»',
@@ -228,7 +230,7 @@ ar:{
  'islam.duhaHint':'حتى لو ركعتين',
  'islam.tasbih':'المسبحة الإلكترونية','islam.t.sub':'سبحان الله','islam.t.ham':'الحمد لله',
  'islam.t.akb':'الله أكبر','islam.t.ist':'أستغفر الله','islam.t.saw':'صلى الله عليه وسلم',
- 'islam.tasbihDone':'أتممت {n} — تقبل الله','islam.tasbihTotal':'الإجمالي الكلي','islam.tasbihReset':'تصفير',
+ 'islam.tasbihDone':'أتممت {n} — تقبل الله','islam.tasbihTotal':'الإجمالي الكلي','islam.tasbihReset':'تصفير','islam.tasbihAdd':'إضافة ذكر','islam.tasbihEdit':'تعديل الذكر','islam.tasbihText':'نص الذكر','islam.tasbihTextPh':'اكتب الذكر هنا…','islam.tasbihDelete':'حذف الذكر','islam.tasbihDeleteMsg':'هل تريد حذف هذا الذكر من قائمة المسبحة؟','islam.tasbihResetText':'استعادة النص','islam.tabPrayers':'الصلوات','islam.tabSunnah':'التطوع','islam.tabFasting':'الصيام','islam.tabTasbih':'المسبحة',
  'islam.fasting':'صيام التطوع','islam.fastToday':'صيام اليوم','islam.sunnahDay':'من أيام الصيام المستحبة',
  'islam.whiteDays':'الأيام البيض','islam.upcoming':'أيام الصيام القادمة','islam.totalFasts':'يومًا مسجلًا',
  'islam.monday':'الاثنين','islam.thursday':'الخميس',
@@ -243,20 +245,30 @@ const PRAYER_KEYS=['fajr','zuhr','asr','maghrib','isha'];
 const RAWATIB_KEYS=['pf','duha','bz','az','am','ai','qiyam','shaf','witr'];
 const TASBIH_MODES=['sub','ham','akb','ist','saw'];
 const TASBIH_TARGETS=[33,100,1000];
+const TASBIH_DEFAULTS=[
+  {id:'sub',en:'Subhan Allah',ar:'سبحان الله'},
+  {id:'ham',en:'Alhamdulillah',ar:'الحمد لله'},
+  {id:'akb',en:'Allahu Akbar',ar:'الله أكبر'},
+  {id:'ist',en:'Astaghfirullah',ar:'أستغفر الله'},
+  {id:'saw',en:'Salawat',ar:'صلى الله عليه وسلم'}
+];
 function normIslam(x){ x=(x&&typeof x==='object')?x:{};
   const day=/^\d{4}-\d{2}-\d{2}$/.test(String(x.day||''))?String(x.day):'';
   const P=v=>clampNum(v,0,2,0), R=v=>clampNum(v,0,1,0);
   const rawatib={}; RAWATIB_KEYS.forEach(k=>rawatib[k]=R(x.rawatib&&x.rawatib[k]));
   const hist={}; if(x.hist&&typeof x.hist==='object')
     Object.keys(x.hist).forEach(k=>{ if(/^\d{4}-\d{2}-\d{2}$/.test(k)) hist[k]=clampNum(x.hist[k],0,5,0); });
+  const oldT=x.tasbih&&typeof x.tasbih==='object'?x.tasbih:{};
+  const savedItems=normArr(oldT.adhkar).filter(a=>a&&typeof a==='object'&&typeof a.id==='string');
+  const adhkar=TASBIH_DEFAULTS.map(d=>{ const a=savedItems.find(v=>v.id===d.id); return {id:d.id,text:typeof a?.text==='string'?a.text.slice(0,120):'',builtin:true}; });
+  savedItems.filter(a=>!TASBIH_DEFAULTS.some(d=>d.id===a.id)).slice(0,30).forEach(a=>adhkar.push({id:a.id.slice(0,60),text:typeof a.text==='string'?a.text.slice(0,120):'',builtin:false}));
+  const modeCandidate=typeof oldT.mode==='string'?oldT.mode:'sub';
+  const modeValid=adhkar.some(a=>a.id===modeCandidate);
   return { day,
     prayers:{ fajr:P(x.prayers&&x.prayers.fajr), zuhr:P(x.prayers&&x.prayers.zuhr),
       asr:P(x.prayers&&x.prayers.asr), maghrib:P(x.prayers&&x.prayers.maghrib), isha:P(x.prayers&&x.prayers.isha) },
     rawatib,
-    tasbih:{ mode:TASBIH_MODES.includes(x.tasbih&&x.tasbih.mode)?x.tasbih.mode:'sub',
-      count:clampNum(x.tasbih&&x.tasbih.count,0,1e6,0),
-      total:clampNum(x.tasbih&&x.tasbih.total,0,1e9,0),
-      target:TASBIH_TARGETS.includes(x.tasbih&&x.tasbih.target)?x.tasbih.target:33 },
+    tasbih:{ mode:modeValid?modeCandidate:'sub', count:clampNum(oldT.count,0,1e6,0), total:clampNum(oldT.total,0,1e9,0), target:TASBIH_TARGETS.includes(oldT.target)?oldT.target:33, adhkar },
     fasts:normArr(x.fasts).filter(d=>typeof d==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(d)).slice(0,1000),
     hist }; }
 
@@ -387,7 +399,13 @@ const Sound={ files:{click:'assets/audio/click.mp3',move:'assets/audio/3d-move.m
 const Hist={
   ready:false,
   depth(){ return Nav.stack.length-1; },
-  init(){ try{ history.replaceState({d:0},''); }catch(e){}
+  init(){
+    try{
+      /* Keep a same-document root sentinel so Android WebView can hand the
+         hardware Back action to popstate even while the Hub is at depth 0. */
+      history.replaceState({d:0,ubad:'initial'},'');
+      history.pushState({d:0,ubad:'root'},'');
+    }catch(e){}
     this.ready=true;
     window.addEventListener('popstate',e=>this.onPop(e)); },
   pushDepth(){ try{ history.pushState({d:this.depth()},''); }catch(e){} },
@@ -398,6 +416,17 @@ const Hist={
     const cur=this.depth();
     if(d<cur) Nav._histBack(cur-d);
     else if(d>cur) this.sync();
+    else if(d===0&&cur===0){
+      /* We reached the entry immediately before the Hub sentinel. In html2app
+         a native bridge may provide exitApp(); use it when available. */
+      try{
+        const WV=window.WebView||window.webview;
+        if(WV&&typeof WV.exitApp==='function'){ WV.exitApp(); return; }
+      }catch(err){}
+      /* If the bridge is unavailable, restore the sentinel so the web version
+         remains on the Hub instead of navigating away from the site. */
+      try{ history.forward(); }catch(err){}
+    }
   }
 };
 
@@ -1454,139 +1483,24 @@ function openEventModal(ev,dflt,cb){
 LAYERS.islam={
   title:()=>t('nav.islam'),
   render(){
-    const isl=islamDay();
-    const ram=ramadanInfo();
-    const hij=hijriDateStr();
-    const pDone=PRAYER_KEYS.filter(k=>isl.prayers[k]>0).length;
-    const rDone=RAWATIB_KEYS.filter(k=>isl.rawatib[k]>0).length;
-    const rTotal=RAWATIB_KEYS.length;
-    const td=today();
-    const hNow=hijriOf(new Date());
-    const isMonThu=(()=>{ const w=new Date().getDay(); return w===1||w===4; })();
-    const isWhite=!!(hNow&&hNow.day>=13&&hNow.day<=15);
-    const fastingToday=isl.fasts.includes(td);
-    const upcoming=upcomingFasts();
-    const prayerRow=k=>{ const v=isl.prayers[k];
-      return `<li class="rowitem p-row">
-        <button class="tick p-tick ${v>0?'on':''}" data-p="${k}" role="checkbox" aria-checked="${v>0}" aria-label="${t('islam.p.'+k)}">${ic('check','ic-xs')}</button>
-        <span class="row-main"><span class="row-title">${t('islam.p.'+k)}</span></span>
-        <button class="chip p-jam ${v===2?'chip-ok':''}" data-p="${k}" role="checkbox" aria-checked="${v===2}" aria-label="${t('islam.jamaah')}">${ic('mosque','ic-xs')}<span>${t('islam.jamaah')}</span></button>
-      </li>`; };
-    const rawRow=k=>`<li class="rowitem">
-        <button class="tick r-tick ${isl.rawatib[k]?'on':''}" data-r="${k}" role="checkbox" aria-checked="${isl.rawatib[k]}" aria-label="${t('islam.r.'+k)}">${ic('check','ic-xs')}</button>
-        <span class="row-main"><span class="row-title">${t('islam.r.'+k)}</span>${k==='duha'?`<span class="row-sub rw-hint">${esc(t('islam.duhaHint'))}</span>`:''}</span>
-      </li>`;
-    const body=`
-    <div class="card card-pad ram-hero">
-      <div class="ram-info">
-        <p class="ram-peace">${t('islam.peace')}</p>
-        ${hij?`<p class="eyebrow" style="margin-top:10px">${esc(hij)}</p>`:''}
-        <p class="ram-greg mono">${esc(fmtDateLong(new Date()))}</p>
-      </div>
-      ${ram?`<div class="ram-count">
-        <p class="ram-cap">${t(ram.phase==='during'?'islam.ramMubarak':'islam.ramIn')}</p>
-        <b class="ram-num mono">${ram.days}</b>
-        <span class="ram-days">${t(ram.phase==='during'?'islam.ramLeft':'islam.ramDays')}</span>
-      </div>`:''}
-    </div>
-    <div class="card card-pad islam-card">
-      <div class="sect-h"><h2>${t('islam.prayers')}</h2><span class="chip mono" id="pr-stat">${pDone} / 5</span></div>
-      <ul class="list">${PRAYER_KEYS.map(prayerRow).join('')}</ul>
-      <div class="progress" style="margin-top:14px"><i id="pr-bar" style="width:${pDone/5*100}%;background:var(--acc-c)"></i></div>
-    </div>
-    <div class="card card-pad islam-card">
-      <div class="sect-h"><h2>${t('islam.rawatib')}</h2><span class="chip mono" id="rw-stat">${rDone} / ${rTotal}</span></div>
-      <ul class="list">${RAWATIB_KEYS.map(rawRow).join('')}</ul>
-      <div class="progress" style="margin-top:14px"><i id="rw-bar" style="width:${rDone/rTotal*100}%;background:var(--acc-v)"></i></div>
-    </div>
-    <div class="card card-pad islam-card">
-      <div class="sect-h"><h2>${t('islam.tasbih')}</h2>
-        <button class="btn btn-sm" id="tas-reset">${ic('refresh','ic-s')}<span>${t('islam.tasbihReset')}</span></button></div>
-      <div class="pillrow tas-modes">
-        ${TASBIH_MODES.map(m=>`<button class="pill tas-mode ${isl.tasbih.mode===m?'on':''}" data-m="${m}">${t('islam.t.'+m)}</button>`).join('')}
-      </div>
-      <button class="tas-tap" id="tas-tap" aria-label="${t('islam.t.'+isl.tasbih.mode)}">
-        <b class="mono" id="tas-count">${isl.tasbih.count}</b>
-        <span class="mono" id="tas-goal">/ ${isl.tasbih.target}</span>
-      </button>
-      <div class="pillrow" style="justify-content:center">
-        ${TASBIH_TARGETS.map(g=>`<button class="pill tas-goal ${isl.tasbih.target===g?'on':''}" data-g="${g}">${g}</button>`).join('')}
-      </div>
-      <p class="tas-total mono">${t('islam.tasbihTotal')}: <b id="tas-total">${isl.tasbih.total}</b></p>
-    </div>
-    <div class="card card-pad islam-card">
-      <div class="sect-h"><h2>${t('islam.fasting')}</h2><span class="chip mono">${isl.fasts.length} ${t('islam.totalFasts')}</span></div>
-      <div class="rowitem fast-row">
-        <span class="row-main"><span class="row-title">${t('islam.fastToday')}</span>
-          ${(isMonThu||isWhite)?`<span class="row-sub">${t(isWhite?'islam.whiteDays':'islam.sunnahDay')}</span>`:''}</span>
-        <button class="switch ${fastingToday?'on':''}" id="fs-today" role="switch" aria-checked="${fastingToday}" aria-label="${t('islam.fastToday')}"></button>
-      </div>
-      <div class="sect-h islam-head"><h2>${t('islam.upcoming')}</h2></div>
-      ${upcoming.length?`<div class="list">${upcoming.map(u=>`
-        <div class="rowitem fs-up-row">
-          <span class="chip mono">${esc(fmtDate(u.d,{weekday:'short',day:'numeric',month:'short'}))}</span>
-          <span class="row-main"><span class="row-title">${esc(u.label)}</span></span>
-        </div>`).join('')}</div>`:`<div class="empty empty-sm">${ic('cal')}<p>${t('ana.noData')}</p></div>`}
-    </div>`;
-    const sec=chrome({title:t('nav.islam'),body});
-    /* ── الصلوات: تحديث في المكان ── */
-    const syncPrayers=()=>{ const done=PRAYER_KEYS.filter(k=>state.islam.prayers[k]>0).length;
-      const st=$('#pr-stat',sec); if(st) st.textContent=done+' / 5';
-      const bar=$('#pr-bar',sec); if(bar) bar.style.width=(done/5*100)+'%';
-      PRAYER_KEYS.forEach(k=>{ const v=state.islam.prayers[k];
-        const tk=$(`.p-tick[data-p="${k}"]`,sec);
-        if(tk){ tk.classList.toggle('on',v>0); tk.setAttribute('aria-checked',String(v>0)); }
-        const jm=$(`.p-jam[data-p="${k}"]`,sec);
-        if(jm){ jm.classList.toggle('chip-ok',v===2); jm.setAttribute('aria-checked',String(v===2)); } }); };
-    $$('.p-tick',sec).forEach(b=>b.addEventListener('click',()=>{
-      const k=b.dataset.p, before=PRAYER_KEYS.filter(x=>state.islam.prayers[x]>0).length;
-      state.islam.prayers[k]=state.islam.prayers[k]===1?0:1;
-      recordPrayers(); saveData(); syncPrayers();
-      const after=PRAYER_KEYS.filter(x=>state.islam.prayers[x]>0).length;
-      if(after===5&&before<5){ FX.confetti(); toast(t('islam.prayersDone5')); } }));
-    $$('.p-jam',sec).forEach(b=>b.addEventListener('click',()=>{
-      const k=b.dataset.p;
-      state.islam.prayers[k]=state.islam.prayers[k]===2?1:2;
-      recordPrayers(); saveData(); syncPrayers();
-      if(PRAYER_KEYS.every(x=>state.islam.prayers[x]>0)) FX.confetti(); }));
-    /* ── السنن والنوافل ── */
-    const syncRaw=()=>{ const done=RAWATIB_KEYS.filter(k=>state.islam.rawatib[k]>0).length;
-      const st=$('#rw-stat',sec); if(st) st.textContent=done+' / '+RAWATIB_KEYS.length;
-      const bar=$('#rw-bar',sec); if(bar) bar.style.width=(done/RAWATIB_KEYS.length*100)+'%';
-      $$('.r-tick',sec).forEach(b=>{ const on=state.islam.rawatib[b.dataset.r];
-        b.classList.toggle('on',on); b.setAttribute('aria-checked',String(on)); }); };
-    $$('.r-tick',sec).forEach(b=>b.addEventListener('click',()=>{
-      const k=b.dataset.r; state.islam.rawatib[k]=state.islam.rawatib[k]?0:1;
-      saveData(); syncRaw();
-      if(RAWATIB_KEYS.every(x=>state.islam.rawatib[x])) FX.confetti(); }));
-    /* ── المسبحة ── */
-    const tasCount=$('#tas-count',sec), tasGoal=$('#tas-goal',sec), tasTotal=$('#tas-total',sec);
-    const tasSync=()=>{ const T=state.islam.tasbih;
-      tasCount.textContent=T.count; tasGoal.textContent='/ '+T.target; tasTotal.textContent=T.total;
-      $$('.tas-mode',sec).forEach(x=>x.classList.toggle('on',x.dataset.m===T.mode));
-      $$('.tas-goal',sec).forEach(x=>x.classList.toggle('on',+x.dataset.g===T.target)); };
-    $('#tas-tap',sec).addEventListener('click',()=>{
-      const T=state.islam.tasbih;
-      T.count++; T.total++; buzz(12);
-      if(T.count>=T.target){ toast(t('islam.tasbihDone',{n:T.target})); FX.confetti(); T.count=0; }
-      saveData(); tasSync(); });
-    $$('.tas-mode',sec).forEach(b=>b.addEventListener('click',()=>{
-      state.islam.tasbih.mode=b.dataset.m; state.islam.tasbih.count=0;
-      saveData(); tasSync(); }));
-    $$('.tas-goal',sec).forEach(b=>b.addEventListener('click',()=>{
-      state.islam.tasbih.target=+b.dataset.g; state.islam.tasbih.count=0;
-      saveData(); tasSync(); }));
-    $('#tas-reset',sec).addEventListener('click',()=>{
-      state.islam.tasbih.count=0; saveData(); tasSync(); });
-    /* ── الصيام ── */
-    $('#fs-today',sec).addEventListener('click',()=>{
-      const isl2=state.islam, td2=today();
-      const i=isl2.fasts.indexOf(td2);
-      if(i>-1) isl2.fasts.splice(i,1); else isl2.fasts.push(td2);
-      saveData();
-      const sw=$('#fs-today',sec), on=isl2.fasts.includes(td2);
-      sw.classList.toggle('on',on); sw.setAttribute('aria-checked',String(on)); });
-    return sec;
+    const isl=islamDay(), ram=ramadanInfo(), hij=hijriDateStr();
+    const pDone=PRAYER_KEYS.filter(k=>isl.prayers[k]>0).length, rDone=RAWATIB_KEYS.filter(k=>isl.rawatib[k]>0).length, rTotal=RAWATIB_KEYS.length;
+    const td=today(), hNow=hijriOf(new Date()), isMonThu=(()=>{const w=new Date().getDay();return w===1||w===4;})(), isWhite=!!(hNow&&hNow.day>=13&&hNow.day<=15), fastingToday=isl.fasts.includes(td), upcoming=upcomingFasts();
+    const tasItems=isl.tasbih.adhkar||[];
+    const tasLabel=item=>item.text||t('islam.t.'+item.id);
+    const tasIsBuiltin=id=>TASBIH_DEFAULTS.some(x=>x.id===id);
+    const prayerRow=k=>{const v=isl.prayers[k];return `<li class="rowitem p-row"><button class="tick p-tick ${v>0?'on':''}" data-p="${k}" role="checkbox" aria-checked="${v>0}" aria-label="${t('islam.p.'+k)}">${ic('check','ic-xs')}</button><span class="row-main"><span class="row-title">${t('islam.p.'+k)}</span></span><button class="chip p-jam ${v===2?'chip-ok':''}" data-p="${k}" role="checkbox" aria-checked="${v===2}" aria-label="${t('islam.jamaah')}">${ic('mosque','ic-xs')}<span>${t('islam.jamaah')}</span></button></li>`};
+    const rawRow=k=>`<li class="rowitem"><button class="tick r-tick ${isl.rawatib[k]?'on':''}" data-r="${k}" role="checkbox" aria-checked="${isl.rawatib[k]}" aria-label="${t('islam.r.'+k)}">${ic('check','ic-xs')}</button><span class="row-main"><span class="row-title">${t('islam.r.'+k)}</span>${k==='duha'?`<span class="row-sub rw-hint">${esc(t('islam.duhaHint'))}</span>`:''}</span></li>`;
+    const body=`<div class="card card-pad ram-hero"><div class="ram-info"><p class="ram-peace">${t('islam.peace')}</p>${hij?`<p class="eyebrow" style="margin-top:10px">${esc(hij)}</p>`:''}<p class="ram-greg mono">${esc(fmtDateLong(new Date()))}</p></div>${ram?`<div class="ram-count"><p class="ram-cap">${t(ram.phase==='during'?'islam.ramMubarak':'islam.ramIn')}</p><b class="ram-num mono">${ram.days}</b><span class="ram-days">${t(ram.phase==='during'?'islam.ramLeft':'islam.ramDays')}</span></div>`:''}</div>
+    <div class="seg islam-tabs" id="islam-tabs" role="tablist"><button class="${islamTab==='prayers'?'on':''}" data-itab="prayers" role="tab" aria-selected="${islamTab==='prayers'}">${ic('mosque','ic-s')}<span>${t('islam.tabPrayers')}</span></button><button class="${islamTab==='sunnah'?'on':''}" data-itab="sunnah" role="tab" aria-selected="${islamTab==='sunnah'}">${ic('vol','ic-s')}<span>${t('islam.tabSunnah')}</span></button><button class="${islamTab==='fasting'?'on':''}" data-itab="fasting" role="tab" aria-selected="${islamTab==='fasting'}">${ic('moon','ic-s')}<span>${t('islam.tabFasting')}</span></button><button class="${islamTab==='tasbih'?'on':''}" data-itab="tasbih" role="tab" aria-selected="${islamTab==='tasbih'}">${ic('beads','ic-s')}<span>${t('islam.tabTasbih')}</span></button></div><div class="islam-pane" id="islam-pane"></div>`;
+    const sec=chrome({title:t('nav.islam'),body}), pane=$('#islam-pane',sec);
+    const drawPrayers=()=>{pane.innerHTML=`<div class="card card-pad islam-card"><div class="sect-h"><h2>${t('islam.prayers')}</h2><span class="chip mono" id="pr-stat">${pDone} / 5</span></div><ul class="list">${PRAYER_KEYS.map(prayerRow).join('')}</ul><div class="progress" style="margin-top:14px"><i id="pr-bar" style="width:${pDone/5*100}%;background:var(--acc-c)"></i></div></div>`;const sync=()=>{const done=PRAYER_KEYS.filter(k=>state.islam.prayers[k]>0).length;$('#pr-stat',sec).textContent=done+' / 5';$('#pr-bar',sec).style.width=(done/5*100)+'%';PRAYER_KEYS.forEach(k=>{const v=state.islam.prayers[k],tk=$(`.p-tick[data-p="${k}"]`,sec),jm=$(`.p-jam[data-p="${k}"]`,sec);if(tk){tk.classList.toggle('on',v>0);tk.setAttribute('aria-checked',String(v>0));}if(jm){jm.classList.toggle('chip-ok',v===2);jm.setAttribute('aria-checked',String(v===2));}})};$$('.p-tick',sec).forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.p,before=PRAYER_KEYS.filter(x=>state.islam.prayers[x]>0).length;state.islam.prayers[k]=state.islam.prayers[k]===1?0:1;recordPrayers();saveData();sync();const after=PRAYER_KEYS.filter(x=>state.islam.prayers[x]>0).length;if(after===5&&before<5){FX.confetti();toast(t('islam.prayersDone5'));}}));$$('.p-jam',sec).forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.p;state.islam.prayers[k]=state.islam.prayers[k]===2?1:2;recordPrayers();saveData();sync();if(PRAYER_KEYS.every(x=>state.islam.prayers[x]>0))FX.confetti();}));};
+    const drawSunnah=()=>{pane.innerHTML=`<div class="card card-pad islam-card"><div class="sect-h"><h2>${t('islam.rawatib')}</h2><span class="chip mono" id="rw-stat">${rDone} / ${rTotal}</span></div><ul class="list">${RAWATIB_KEYS.map(rawRow).join('')}</ul><div class="progress" style="margin-top:14px"><i id="rw-bar" style="width:${rDone/rTotal*100}%;background:var(--acc-v)"></i></div></div>`;const sync=()=>{const done=RAWATIB_KEYS.filter(k=>state.islam.rawatib[k]>0).length;$('#rw-stat',sec).textContent=done+' / '+RAWATIB_KEYS.length;$('#rw-bar',sec).style.width=(done/RAWATIB_KEYS.length*100)+'%';$$('.r-tick',sec).forEach(b=>{const on=state.islam.rawatib[b.dataset.r];b.classList.toggle('on',on);b.setAttribute('aria-checked',String(on));});};$$('.r-tick',sec).forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.r;state.islam.rawatib[k]=state.islam.rawatib[k]?0:1;saveData();sync();if(RAWATIB_KEYS.every(x=>state.islam.rawatib[x]))FX.confetti();}));};
+    const drawFasting=()=>{pane.innerHTML=`<div class="card card-pad islam-card"><div class="sect-h"><h2>${t('islam.fasting')}</h2><span class="chip mono">${isl.fasts.length} ${t('islam.totalFasts')}</span></div><div class="rowitem fast-row"><span class="row-main"><span class="row-title">${t('islam.fastToday')}</span>${(isMonThu||isWhite)?`<span class="row-sub">${t(isWhite?'islam.whiteDays':'islam.sunnahDay')}</span>`:''}</span><button class="switch ${fastingToday?'on':''}" id="fs-today" role="switch" aria-checked="${fastingToday}" aria-label="${t('islam.fastToday')}"></button></div><div class="sect-h islam-head"><h2>${t('islam.upcoming')}</h2></div>${upcoming.length?`<div class="list">${upcoming.map(u=>`<div class="rowitem fs-up-row"><span class="chip mono">${esc(fmtDate(u.d,{weekday:'short',day:'numeric',month:'short'}))}</span><span class="row-main"><span class="row-title">${esc(u.label)}</span></span></div>`).join('')}</div>`:`<div class="empty empty-sm">${ic('cal')}<p>${t('ana.noData')}</p></div>`}</div>`;$('#fs-today',sec).addEventListener('click',()=>{const isl2=state.islam,td2=today(),i=isl2.fasts.indexOf(td2);if(i>-1)isl2.fasts.splice(i,1);else isl2.fasts.push(td2);saveData();const sw=$('#fs-today',sec),on=isl2.fasts.includes(td2);sw.classList.toggle('on',on);sw.setAttribute('aria-checked',String(on));});};
+    const openTasModal=item=>{const isNew=!item,target=item||{id:'',text:'',builtin:false};const api=openModal({title:isNew?t('islam.tasbihAdd'):t('islam.tasbihEdit'),body:field(t('islam.tasbihText'),inp('tas-edit-text',t('islam.tasbihTextPh'),target.text||(!isNew&&tasIsBuiltin(target.id)?t('islam.t.'+target.id):''))),actions:[{label:t('common.cancel')},{label:t('common.save'),cls:'btn-primary',onClick:close=>{const v=$('#tas-edit-text').value.trim().slice(0,120);if(!v)return;if(isNew){target.id='custom_'+uid();target.text=v;target.builtin=false;state.islam.tasbih.adhkar.push(target);state.islam.tasbih.mode=target.id;}else target.text=v;saveData();close();drawTasbih();toast(t('toast.saved'));}}]});if(!isNew&&tasIsBuiltin(target.id)){const reset=document.createElement('button');reset.className='btn btn-sm';reset.type='button';reset.innerHTML=`${ic('refresh','ic-s')}<span>${t('islam.tasbihResetText')}</span>`;reset.addEventListener('click',()=>{$('#tas-edit-text',api.root).value=t('islam.t.'+target.id);});$('.mbody',api.root).appendChild(reset);}};
+    const drawTasbih=()=>{const T=state.islam.tasbih,items=T.adhkar||[];const current=items.find(a=>a.id===T.mode)||items[0];if(current&&!items.find(a=>a.id===T.mode))T.mode=current.id;pane.innerHTML=`<div class="card card-pad islam-card tasbih-card"><div class="sect-h"><h2>${t('islam.tasbih')}</h2><div style="display:flex;gap:8px;align-items:center"><button class="btn btn-primary btn-sm" id="tas-add">${ic('plus','ic-s')}<span>${t('islam.tasbihAdd')}</span></button><button class="btn btn-sm" id="tas-reset">${ic('refresh','ic-s')}<span>${t('islam.tasbihReset')}</span></button></div></div><div class="tasbih-list">${items.map(item=>`<div class="tasbih-choice ${T.mode===item.id?'on':''}" data-tas-id="${esc(item.id)}"><button class="tas-mode-main" type="button"><span>${esc(tasLabel(item))}</span></button><button class="icon-btn icon-btn-sm tas-edit" data-tas-edit="${esc(item.id)}" aria-label="${t('islam.tasbihEdit')}">${ic('pen','ic-s')}</button>${!tasIsBuiltin(item.id)?`<button class="icon-btn icon-btn-sm tas-delete" data-tas-del="${esc(item.id)}" aria-label="${t('islam.tasbihDelete')}">${ic('trash','ic-s')}</button>`:''}</div>`).join('')}</div><button class="tas-tap" id="tas-tap" aria-label="${esc(tasLabel(current))}"><b class="mono" id="tas-count">${T.count}</b><span class="mono" id="tas-goal">/ ${T.target}</span></button><div class="pillrow" style="justify-content:center">${TASBIH_TARGETS.map(g=>`<button class="pill tas-goal ${T.target===g?'on':''}" data-g="${g}">${g}</button>`).join('')}</div><p class="tas-total mono">${t('islam.tasbihTotal')}: <b id="tas-total">${T.total}</b></p></div>`;const tasSync=()=>{const X=state.islam.tasbih;$('#tas-count',sec).textContent=X.count;$('#tas-goal',sec).textContent='/ '+X.target;$('#tas-total',sec).textContent=X.total;$$('.tasbih-choice',sec).forEach(x=>x.classList.toggle('on',x.dataset.tasId===X.mode));};$$('.tas-mode-main',sec).forEach(b=>b.addEventListener('click',()=>{const item=b.closest('[data-tas-id]');state.islam.tasbih.mode=item.dataset.tasId;state.islam.tasbih.count=0;saveData();tasSync();}));$$('.tas-edit',sec).forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();const item=state.islam.tasbih.adhkar.find(x=>x.id===b.dataset.tasEdit);if(item)openTasModal(item);}));$$('.tas-delete',sec).forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();const id=b.dataset.tasDel;confirmModal({title:t('islam.tasbihDelete'),msg:t('islam.tasbihDeleteMsg'),onOk:()=>{state.islam.tasbih.adhkar=state.islam.tasbih.adhkar.filter(x=>x.id!==id);if(state.islam.tasbih.mode===id)state.islam.tasbih.mode=state.islam.tasbih.adhkar[0]?.id||'sub';saveData();drawTasbih();}});}));$('#tas-add',sec).addEventListener('click',()=>openTasModal(null));$('#tas-tap',sec).addEventListener('click',()=>{const X=state.islam.tasbih;X.count++;X.total++;buzz(12);if(X.count>=X.target){toast(t('islam.tasbihDone',{n:X.target}));FX.confetti();X.count=0;}saveData();tasSync();});$$('.tas-goal',sec).forEach(b=>b.addEventListener('click',()=>{state.islam.tasbih.target=+b.dataset.g;state.islam.tasbih.count=0;saveData();tasSync();}));$('#tas-reset',sec).addEventListener('click',()=>{state.islam.tasbih.count=0;saveData();tasSync();});};
+    const draw=()=>{if(islamTab==='prayers')drawPrayers();else if(islamTab==='sunnah')drawSunnah();else if(islamTab==='fasting')drawFasting();else drawTasbih();};
+    $$('.islam-tabs button',sec).forEach(b=>b.addEventListener('click',()=>{islamTab=b.dataset.itab;$$('.islam-tabs button',sec).forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-selected',String(x===b));});draw();}));draw();return sec;
   }
 };
 
@@ -1644,6 +1558,7 @@ LAYERS.analytics={
 
 /* ── STUDY TOOLS ──────────────────────────────────────────── */
 let studyTab='cards'; /* يحفظ التاب النشط عبر إعادة الرسم */
+let islamTab='prayers';
 LAYERS.study={
   title:()=>t('nav.study'),
   render(){
@@ -2023,10 +1938,24 @@ LAYERS.settings={
     <div class="set-group card card-pad">
       <div class="set-h">${ic('dl')}<div><h2>${t('set.backup')}</h2><p>${t('set.backupDesc')}</p></div></div>
       <div class="pillrow">
-        <button class="btn" id="set-export">${ic('dl','ic-s')}<span>${t('set.export')}</span></button>
         <button class="btn" id="set-import">${ic('ul','ic-s')}<span>${t('set.import')}</span></button>
       </div>
       <input type="file" id="set-file" accept="application/json,.json" hidden>
+    </div>
+    <div class="set-group card card-pad">
+      <div class="set-h">${ic('heart','support-heart')}<div><h2>${t('set.support')}</h2><p>${t('set.supportDesc')}</p></div></div>
+      <div class="support-list">
+        <div class="support-item">
+          <span class="support-icon vodafone-icon">${ic('vodafone')}</span>
+          <div class="support-info"><strong>${t('set.vodafone')}</strong><span dir="ltr" class="mono">01093557071</span></div>
+          <button class="btn btn-sm support-copy" data-copy="01093557071">${ic('copy','ic-s')}<span>${t('set.copy')}</span></button>
+        </div>
+        <div class="support-item">
+          <span class="support-icon paypal-icon">${ic('paypal')}</span>
+          <div class="support-info"><strong>${t('set.paypal')}</strong><span dir="ltr" class="mono">abdalla.toaila34@gmail.com</span></div>
+          <button class="btn btn-sm support-copy" data-copy="abdalla.toaila34@gmail.com">${ic('copy','ic-s')}<span>${t('set.copy')}</span></button>
+        </div>
+      </div>
     </div>
     <div class="set-group card card-pad">
       <div class="set-h">${ic('alert')}<div><h2>${t('set.danger')}</h2><p>${t('set.clearMsg')}</p></div></div>
@@ -2034,8 +1963,7 @@ LAYERS.settings={
     </div>
     <div class="set-group card card-pad about">
       ${ic('logo','about-logo')}
-      <div><h2>UBAD ACADEMY HUB</h2><p>${t('set.aboutBody')}</p>
-        <p class="mono" style="font-size:11px;color:var(--ink3);margin-top:6px">${t('set.version')} 1.0.0</p></div>
+      <div><h2>UBAD ACADEMY HUB</h2><p>${t('set.aboutBody')}</p></div>
     </div>`;
     const sec=chrome({title:t('nav.settings'),body});
     $('#set-lang',sec).addEventListener('click',e=>{
@@ -2059,10 +1987,17 @@ LAYERS.settings={
       sw.classList.toggle('on',state.settings.sound);
       sw.setAttribute('aria-checked',String(state.settings.sound));
       if(state.settings.sound) Sound.play('click'); });
-    $('#set-export',sec).addEventListener('click',exportBackup);
     $('#set-import',sec).addEventListener('click',()=>$('#set-file',sec).click());
     $('#set-file',sec).addEventListener('change',e=>{
       const f=e.target.files[0]; e.target.value=''; if(f) importBackup(f); });
+    $$('.support-copy',sec).forEach(b=>b.addEventListener('click',async()=>{
+      const value=b.dataset.copy||'';
+      try{
+        if(navigator.clipboard&&window.isSecureContext) await navigator.clipboard.writeText(value);
+        else { const ta=document.createElement('textarea'); ta.value=value; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+        toast(t('set.copied'));
+      }catch(e){ toast(value); }
+    }));
     $('#set-wipe',sec).addEventListener('click',()=>confirmModal({
       title:t('set.clearAll'),msg:t('set.clearMsg'),okLabel:t('set.clearAll'),onOk:wipeAll }));
     return sec;
@@ -2071,13 +2006,14 @@ LAYERS.settings={
 function applyLang(){ const l=state.settings.lang==='ar'?'ar':'en';
   document.documentElement.lang=l; document.documentElement.dir=l==='ar'?'rtl':'ltr'; }
 const THEMES=['dark','oled','light','paper','sage','rose'];
-const THEME_META={'dark':'#050816','oled':'#000000','light':'#EDF1FB',
+const THEME_META={'dark':'#0B0F14','oled':'#000000','light':'#EDF1FB',
   'paper':'#F6EFE6','sage':'#EDF5EF','rose':'#F9EFF2'};
 function applyTheme(){ const th=THEMES.includes(state.settings.theme)?state.settings.theme:'dark';
   state.settings.theme=th;
   document.documentElement.dataset.theme=th;
   const m=document.querySelector('meta[name=theme-color]');
-  if(m) m.content=THEME_META[th]||'#050816';
+  if(m) m.content=THEME_META[th]||'#0B0F14';
+  try{ const WV=window.WebView||window.webview; if(WV&&WV.statusBar&&typeof WV.statusBar.setColor==='function'){ const bar=th==='rose'?'#F6C1D9':(th==='light'?'#E8EDF8':(th==='paper'?'#E9DCC8':(th==='sage'?'#DDEBE1':'#0B0F14'))); WV.statusBar.setColor(bar); WV.statusBar.setIconsBrightness(th==='dark'||th==='oled'?'light':'dark'); if(WV.navigationBar&&typeof WV.navigationBar.setColor==='function') WV.navigationBar.setColor(bar); } }catch(e){}
   try{ bgApply(); }catch(e){} }
 function setLang(l){ state.settings.lang=l; saveData(); applyLang();
   Sound.play('transition'); Nav.rerenderAll(); }
@@ -2238,7 +2174,20 @@ async function boot(){
   try{ await Promise.all([loadData(),loadNotes()]); }catch(e){} /* 7. user data */
   try{ await bgApply(); }catch(e){}          /* 7.5 custom theme background */
   Sound.init();           /* 8. audio manager (silent until gesture) */
-  Hist.init();            /* 8.5 native back bridge */
+  /* html2app's documented bridge is loaded explicitly. Do not await the network
+     import, otherwise an offline launch could be delayed by the CDN. */
+  import('https://esm.unpkg.com/@yandeu/js-bridge@0.0.4').then(mod=>{
+    try{
+      const WV=mod&&mod.WebView;
+      if(!WV) return;
+      window.WebView=WV;
+      try{ if(typeof WV.init==='function'&&!WV.isReady) WV.init(); }catch(e){}
+      const nativeBack=()=>{ if(Nav.stack.length>1) Nav.back(); else if(typeof WV.exitApp==='function') WV.exitApp(); };
+      ['back','backButton','back_button','hardwareBack','hardware_back','androidBack','nativeBack'].forEach(ev=>{ try{ WV.on(ev,nativeBack); }catch(e){} });
+      try{ applyTheme(); }catch(e){}
+    }catch(e){}
+  }).catch(()=>{});
+  Hist.init();            /* native back + same-document root sentinel */
   Nav.init('hub');        /* 9. render Main Hub */
 }
 boot().catch(()=>{ /* last-resort: never leave a blank screen */

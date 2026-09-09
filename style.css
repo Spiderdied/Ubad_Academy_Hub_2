@@ -793,13 +793,14 @@ canvas.chart{width:100%;display:block}
 
 /* ── وردي: تريو جديد كليًا — وردي ناري · بنفسجي · فوشيا ── */
 [data-theme="rose"]{
-  --acc-c:#E11D48; --acc-b:#7C3AED; --acc-v:#C026D3;
-  --ink:#2E1B25; --ink2:#5D3A4C; --ink3:#8A6478;
-  --line:rgba(190,24,93,.24); --line2:rgba(190,24,93,.44);
-  --seg-on:rgba(219,39,119,.16);
-  --pri-bg:rgba(219,39,119,.15); --pri-bd:rgba(219,39,119,.65); --pri-fg:#BE123C;
-  --glow-a:rgba(124,58,237,.13); --glow-b:rgba(225,29,72,.12);
-  --shadow:0 18px 44px -16px rgba(190,24,93,.38);
+  --acc-c:#EC4899; --acc-b:#D946EF; --acc-v:#BE185D;
+  --bg0:#FFF0F6; --bg1:#FDE2EE; --bg2:#FFF8FC;
+  --ink:#3D1A2B; --ink2:#7A4561; --ink3:#A87892;
+  --line:rgba(219,39,119,.20); --line2:rgba(219,39,119,.40);
+  --seg-on:rgba(236,72,153,.16);
+  --pri-bg:rgba(236,72,153,.16); --pri-bd:rgba(236,72,153,.68); --pri-fg:#BE185D;
+  --glow-a:rgba(244,114,182,.22); --glow-b:rgba(236,72,153,.16);
+  --shadow:0 18px 44px -18px rgba(190,24,93,.34);
 }
 
 /* ── الشفق: نفس العائلة، تشبع أعلى وحدود أوضح ── */
@@ -838,9 +839,9 @@ canvas.chart{width:100%;display:block}
 [data-theme="light"]  .acc-c{--soft:rgba(8,145,178,.20);--softline:rgba(8,145,178,.45);--glowcol:rgba(8,145,178,.16);--hline:rgba(8,145,178,.6);--hglow:0 16px 44px -10px rgba(8,145,178,.4)}
 [data-theme="light"]  .acc-b{--soft:rgba(37,99,235,.20);--softline:rgba(37,99,235,.45);--glowcol:rgba(37,99,235,.16);--hline:rgba(37,99,235,.6);--hglow:0 16px 44px -10px rgba(37,99,235,.4)}
 [data-theme="light"]  .acc-v{--soft:rgba(124,58,237,.20);--softline:rgba(124,58,237,.45);--glowcol:rgba(124,58,237,.16);--hline:rgba(124,58,237,.6);--hglow:0 16px 44px -10px rgba(124,58,237,.4)}
-[data-theme="rose"]   .acc-c{--soft:rgba(225,29,72,.20);--softline:rgba(225,29,72,.45);--glowcol:rgba(225,29,72,.16);--hline:rgba(225,29,72,.6);--hglow:0 16px 44px -10px rgba(225,29,72,.4)}
-[data-theme="rose"]   .acc-b{--soft:rgba(124,58,237,.20);--softline:rgba(124,58,237,.45);--glowcol:rgba(124,58,237,.16);--hline:rgba(124,58,237,.6);--hglow:0 16px 44px -10px rgba(124,58,237,.4)}
-[data-theme="rose"]   .acc-v{--soft:rgba(192,38,211,.20);--softline:rgba(192,38,211,.45);--glowcol:rgba(192,38,211,.16);--hline:rgba(192,38,211,.6);--hglow:0 16px 44px -10px rgba(192,38,211,.4)}
+[data-theme="rose"]   .acc-c{--soft:rgba(236,72,153,.20);--softline:rgba(236,72,153,.45);--glowcol:rgba(236,72,153,.16);--hline:rgba(219,39,119,.6);--hglow:0 16px 44px -10px rgba(190,24,93,.32)}
+[data-theme="rose"]   .acc-b{--soft:rgba(217,70,239,.18);--softline:rgba(217,70,239,.44);--glowcol:rgba(217,70,239,.15);--hline:rgba(217,70,239,.58);--hglow:0 16px 44px -10px rgba(190,24,93,.28)}
+[data-theme="rose"]   .acc-v{--soft:rgba(190,24,93,.20);--softline:rgba(190,24,93,.45);--glowcol:rgba(190,24,93,.16);--hline:rgba(190,24,93,.6);--hglow:0 16px 44px -10px rgba(190,24,93,.30)}
 [data-theme="paper"]  .acc-c{--soft:rgba(15,118,110,.20);--softline:rgba(15,118,110,.45);--glowcol:rgba(15,118,110,.15);--hline:rgba(15,118,110,.6);--hglow:0 16px 44px -10px rgba(15,118,110,.38)}
 [data-theme="paper"]  .acc-b{--soft:rgba(194,65,12,.20);--softline:rgba(194,65,12,.45);--glowcol:rgba(194,65,12,.15);--hline:rgba(194,65,12,.6);--hglow:0 16px 44px -10px rgba(194,65,12,.38)}
 [data-theme="paper"]  .acc-v{--soft:rgba(190,18,60,.20);--softline:rgba(190,18,60,.45);--glowcol:rgba(190,18,60,.15);--hline:rgba(190,18,60,.6);--hglow:0 16px 44px -10px rgba(190,18,60,.38)}
@@ -850,7 +851,7 @@ canvas.chart{width:100%;display:block}
 
 /* ── الشرائح (chips): بدل الرمادي — لمسة لون الثيم ── */
 [data-theme="light"] .chip{background:rgba(37,99,235,.10);border-color:rgba(37,99,235,.35);color:#1D4ED8}
-[data-theme="rose"]  .chip{background:rgba(225,29,72,.10);border-color:rgba(225,29,72,.38);color:#BE123C}
+[data-theme="rose"]  .chip{background:rgba(236,72,153,.12);border-color:rgba(219,39,119,.42);color:#BE185D}
 [data-theme="paper"] .chip{background:rgba(194,65,12,.10);border-color:rgba(194,65,12,.38);color:#9A3412}
 [data-theme="sage"]  .chip{background:rgba(5,150,105,.10);border-color:rgba(5,150,105,.38);color:#047857}
 
@@ -938,3 +939,29 @@ canvas.chart{width:100%;display:block}
 @media(prefers-reduced-motion:reduce){.lb-img{transition:none!important}}
 /* تلميح ركعتي الضحى — يسمح باللف */
 .rw-hint{white-space:normal;font-size:11.5px;margin-top:1px}
+
+
+/* Developer support cards */
+.support-list{display:grid;gap:10px;margin-top:14px}
+.support-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.025)}
+.support-icon{width:40px;height:40px;display:grid;place-items:center;flex:0 0 40px;border-radius:12px}
+.support-icon .ic{width:23px;height:23px}
+.vodafone-icon{color:#fff;background:#e60000}
+.paypal-icon{color:#fff;background:#003087}
+.support-info{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
+.support-info strong{font-size:13px;color:var(--ink)}
+.support-info span{font-size:12px;color:var(--ink2);overflow-wrap:anywhere}
+.support-copy{flex:0 0 auto}
+.support-heart{color:var(--acc)}
+@media(max-width:520px){.support-item{padding:11px}.support-copy span{display:none}.support-copy{min-width:40px;padding-inline:10px}}
+/* ── ANA MUSLIM internal tabs + editable tasbih ───────────── */
+.islam-tabs{width:100%;display:grid;grid-template-columns:repeat(4,1fr);margin-top:14px;position:sticky;top:0;z-index:3}
+.islam-tabs>button{min-width:0;height:42px;padding:0 8px;display:flex;align-items:center;justify-content:center;gap:7px;border-radius:10px;font-size:12.5px;white-space:nowrap}
+.islam-tabs>button .ic{width:16px;height:16px}
+.islam-pane{margin-top:14px}
+.tasbih-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.tasbih-choice{display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--glass2);border-radius:13px;padding:4px;transition:.16s}
+.tasbih-choice.on{border-color:var(--pri-bd);background:var(--pri-bg);box-shadow:0 0 0 1px rgba(190,24,93,.16)}
+.tas-mode-main{flex:1;min-width:0;text-align:start;padding:9px 10px;border:0;background:transparent;color:var(--ink);font:inherit;font-weight:650}
+.tasbih-choice .icon-btn{flex:none}
+@media(max-width:430px){.islam-tabs>button{font-size:11px;padding:0 4px;gap:4px}.islam-tabs>button .ic{width:14px;height:14px}}

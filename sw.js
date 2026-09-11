@@ -6,7 +6,8 @@
    ═══════════════════════════════════════════════════════════ */
 'use strict';
 
-const VERSION = 'v1.3.0';                 /* bumped — new icons + install button */
+const VERSION = 'v1.4.0';                 /* bumped — Google Forms/Summaries, custom Focus/Break
+                                              durations, new local click/alarm sounds, nav-flicker fix */
 const CACHE   = 'ubad-hub-' + VERSION;
 
 const SHELL = [
@@ -20,7 +21,9 @@ const SHELL = [
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
   './assets/icons/icon-maskable-512.png',
-  './assets/icons/apple-touch-icon.png'
+  './assets/icons/apple-touch-icon.png',
+  './assets/sounds/Click_1.mp3',
+  './assets/sounds/Alarm.mp3'
 ];
 
 self.addEventListener('install', (e) => {

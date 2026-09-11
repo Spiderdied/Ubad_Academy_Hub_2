@@ -107,13 +107,30 @@ body.has-bg .bg-glow-a,body.has-bg .bg-glow-b{opacity:.35}
 .layer{
   position:absolute;inset:0;display:flex;flex-direction:column;
   transform:translate3d(0,0,calc(var(--depth,0)*var(--step)));
-  transition:transform var(--tl) var(--ease),opacity .42s ease,filter .5s ease;
+  transition:transform var(--tl) var(--ease),opacity .4s ease;
   will-change:transform,opacity;
 }
-.layer.is-enter{transition:none;transform:translate3d(0,0,150px) scale(1.05);opacity:0}
+/* NAV FLICKER FIX — root cause: this rule previously set `opacity:0` on the
+   entering layer. Because the entering layer is appended LAST in the DOM
+   (so it always paints on top and fully covers the viewport, position:
+   absolute; inset:0), any opacity below 1 on it necessarily lets the
+   previous page show through underneath for the length of the fade —
+   that was the visible "flash" of the old page during the zoom-in.
+   The fix keeps the zoom (transform: depth + scale) but stops animating
+   opacity on the incoming layer, so it is opaque and fully occludes the
+   previous page from the very first frame; only the transform continues
+   to transition it to the settled position. */
+.layer.is-enter{transition:none;transform:translate3d(0,0,150px) scale(1.05)}
 .layer.is-active{opacity:1;filter:none}
-.layer.is-behind{opacity:.32;filter:blur(5px) brightness(.55) saturate(.85);pointer-events:none}
 .layer.is-exit{transform:translate3d(0,0,170px) scale(1.06);opacity:0}
+/* Parked/behind layers are dimmed only — never left partially transparent
+   while unblurred (that combination is what used to reveal legible text
+   from the previous screen). Blur is intentionally skipped here for
+   Android WebView performance; dimming alone is enough now that the
+   entering layer above it is always fully opaque. */
+.layer.is-behind{opacity:.30;filter:none;pointer-events:none}
+.layer.is-parked{visibility:hidden}
+.layer.is-enter,.layer.is-exit{will-change:transform,opacity}
 
 /* layer chrome */
 .lhead{
@@ -180,6 +197,7 @@ body.has-bg .bg-glow-a,body.has-bg .bg-glow-b{opacity:.35}
   padding:2px 8px;border-radius:8px;background:var(--glass2);border:1px solid var(--line);color:var(--ink2)}
 .chip-ok{background:rgba(52,211,153,.13);border-color:rgba(52,211,153,.45);color:var(--ok)}
 .chip-no{background:rgba(248,113,113,.13);border-color:rgba(248,113,113,.45);color:var(--no)}
+.chip-xs{padding:1px 5px;font-size:9.5px;border-radius:6px}
 
 .progress{display:block;height:6px;border-radius:99px;background:var(--line);overflow:hidden;min-width:60px}
 .progress>i{display:block;height:100%;border-radius:99px;background:var(--acc-c);transition:width .5s var(--ease)}
@@ -197,11 +215,17 @@ body.has-bg .bg-glow-a,body.has-bg .bg-glow-b{opacity:.35}
 }
 textarea.input{height:auto;min-height:96px;padding:10px 12px;resize:vertical;line-height:1.55}
 .input:focus{outline:none;border-color:rgba(59,130,246,.65);box-shadow:0 0 0 3px rgba(59,130,246,.16)}
-[dir="rtl"] input[type=number],[dir="rtl"] input[type=date],[dir="rtl"] input[type=time]{direction:ltr}
+[dir="rtl"] input[type=number],[dir="rtl"] input[type=date],[dir="rtl"] input[type=time],
+[dir="rtl"] input[type=url]{direction:ltr}
 
 .seg{display:inline-flex;background:var(--glass2);border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px}
-.seg>button{height:34px;padding:0 16px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--ink2);transition:.15s}
+.seg>button{height:34px;padding:0 16px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--ink2);transition:.15s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .seg>button.on{background:var(--seg-on);color:var(--ink)}
+.seg.seg-wrap{flex-wrap:wrap;max-width:100%}
+@media(max-width:560px){
+  .seg.seg-wrap{display:flex}
+  .seg.seg-wrap>button{flex:1 1 auto;padding:0 10px;font-size:12.5px}
+}
 
 .pillrow{display:flex;flex-wrap:wrap;gap:8px}
 .pill{height:36px;padding:0 16px;border-radius:10px;border:1px solid var(--line);
@@ -228,6 +252,11 @@ button.rowitem:hover{border-color:var(--line2);transform:translateY(-1px)}
 .row-title{font-weight:600;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row-sub{font-size:12px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row-chev{color:var(--ink3)}
+.rowitem.rowitem-wrap{flex-wrap:wrap}
+.rowitem.rowitem-wrap .row-actions{display:flex;align-items:center;gap:8px;margin-inline-start:auto}
+@media(max-width:480px){
+  .rowitem.rowitem-wrap .row-actions{width:100%;justify-content:flex-end;margin-inline-start:0;margin-top:8px}
+}
 .lesson-row.done .l-title{text-decoration:line-through;opacity:.55}
 .lesson-row.done .row-main{opacity:.7}
 
@@ -672,11 +701,9 @@ canvas.chart{width:100%;display:block}
   .hub-inner{backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 }
 
-/* 3) طبقات الخلفية: بلا فلتر + إيقاف تام بعد انتهاء الحركة */
-.layer{transition:transform var(--tl) var(--ease),opacity .4s ease;will-change:auto}
-.layer.is-behind{opacity:.30;filter:none}
-.layer.is-parked{visibility:hidden}
-.layer.is-enter,.layer.is-exit{will-change:transform,opacity}
+/* 3) طبقات الخلفية: تم دمج هذا القسم في القاعدة الأساسية أعلاه لمنع
+   تعارض تعريفين مختلفين لنفس الفئة (.layer / .is-behind) وإصلاح
+   وميض الصفحة السابقة أثناء الانتقال. لا حاجة لإعادة تعريفها هنا. */
 
 /* 4) موبايل: ظلال أخف وإلغاء أي ضبابية متبقية */
 @media(max-width:768px){
@@ -965,3 +992,18 @@ canvas.chart{width:100%;display:block}
 .tas-mode-main{flex:1;min-width:0;text-align:start;padding:9px 10px;border:0;background:transparent;color:var(--ink);font:inherit;font-weight:650}
 .tasbih-choice .icon-btn{flex:none}
 @media(max-width:430px){.islam-tabs>button{font-size:11px;padding:0 4px;gap:4px}.islam-tabs>button .ic{width:14px;height:14px}}
+
+/* ── reusable internal web viewer (Google Forms + Summaries) ─── */
+.webviewer{position:relative;width:100%;height:min(76vh,860px);min-height:360px;
+  border-radius:var(--r-lg);overflow:hidden;background:var(--cardbg);border:1px solid var(--line);}
+.wv-frame{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;background:#fff}
+.wv-state{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;padding:28px;text-align:center;background:var(--cardbg)}
+.wv-state .ic{width:30px;height:30px;color:var(--ink3)}
+.wv-state .e-t{font-size:15px;font-weight:700;margin:0}
+.wv-state .e-h{font-size:13px;color:var(--ink3);margin:0;max-width:340px;line-height:1.5}
+.wv-spin{width:30px;height:30px;border-radius:99px;border:3px solid var(--line2);
+  border-top-color:var(--acc-c);animation:wvspin .8s linear infinite}
+@keyframes wvspin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.wv-spin{animation-duration:2s}}
+@media(max-width:600px){.webviewer{height:min(70vh,640px)}}

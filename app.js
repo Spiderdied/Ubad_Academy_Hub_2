@@ -87,6 +87,25 @@ en:{
  'study.your':'Your answer','study.correctAns':'Correct','study.retry':'Retry','study.questionsLc':'questions',
  'study.needTitle':'Give the quiz a title.','study.minQ':'A quiz needs at least one question.',
  'study.needQ':'Question {n} needs text, at least 2 options and a marked correct answer.',
+ 'study.tabForms':'Google Forms','study.tabSummaries':'Summaries',
+ 'forms.title':'Google Forms','forms.newTest':'Add Test','forms.testName':'Test name',
+ 'forms.testNamePh':'e.g. Biology Unit 1','forms.url':'Google Forms URL',
+ 'forms.urlPh':'https://docs.google.com/forms/…','forms.startTest':'Start Test',
+ 'forms.badge':'Google Form','forms.empty':'No tests added yet',
+ 'forms.emptyHint':'Add a Google Form to get started.','forms.edit':'Edit test',
+ 'forms.needName':'Give the test a name.','forms.invalidUrl':'Enter a valid https:// link.',
+ 'forms.pin':'Pin','forms.unpin':'Unpin',
+ 'sum.title':'Summaries','sum.titleAr':'التلخيصات','sum.newBtn':'Add Summary','sum.name':'Summary name',
+ 'sum.namePh':'e.g. Biology — Unit 1','sum.url':'Summary link','sum.urlPh':'https://…',
+ 'sum.open':'Open Summary','sum.badge':'Summary','sum.empty':'No summaries added yet',
+ 'sum.emptyHint':'Add a summary link to get started.','sum.edit':'Edit summary',
+ 'sum.needName':'Give the summary a name.','sum.invalidUrl':'Enter a valid https:// link.',
+ 'sum.pin':'Pin','sum.unpin':'Unpin',
+ 'viewer.loading':'Loading…','viewer.blockedTitle':'This page can’t be shown inside the app',
+ 'viewer.blockedMsg':'Some sites don’t allow being displayed inside another app. You can still open it in your browser.',
+ 'viewer.openExternal':'Open in browser','viewer.reload':'Reload','viewer.close':'Close',
+ 'viewer.offline':'You appear to be offline. Connect to the internet to open this link.',
+ 'search.forms':'Google Forms','search.summaries':'Summaries',
  'set.language':'Language','set.langDesc':'Interface language and direction (LTR / RTL).',
  'set.profile':'Profile','set.username':'Username','set.usernamePh':'Your name',
  'set.usernameDesc':'Used only for the greeting on your dashboard — never renames your data.',
@@ -115,6 +134,8 @@ en:{
  'focus.start':'Start','focus.pause':'Pause','focus.reset':'Reset',
  'focus.today':'Sessions today','focus.length':'Session length','focus.min':'min',
  'focus.doneMsg':'Focus session complete — take a break','focus.breakOver':'Break over — ready for another round?',
+ 'focus.breakLength':'Break length','focus.custom':'Custom','focus.focusLabel':'Focus',
+ 'focus.breakLabel':'Break','focus.minShort':'min','focus.customRange':'1–180 min',
  'notes.pin':'Pin note','notes.unpin':'Unpin note','notes.pinned':'Pinned',
  'lb.open':'View image','lb.zoomIn':'Zoom in','lb.zoomOut':'Zoom out','lb.reset':'Original size',
  'islam.peace':'Assalamu alaikum wa rahmatullah',
@@ -189,6 +210,25 @@ ar:{
  'study.your':'إجابتك','study.correctAns':'الصحيحة','study.retry':'إعادة','study.questionsLc':'أسئلة',
  'study.needTitle':'أعطِ الاختبار عنوانًا.','study.minQ':'يحتاج الاختبار إلى سؤال واحد على الأقل.',
  'study.needQ':'السؤال {n} يحتاج نصًا وخيارين على الأقل وتحديد الإجابة الصحيحة.',
+ 'study.tabForms':'اختبارات Google Forms','study.tabSummaries':'التلخيصات',
+ 'forms.title':'اختبارات Google Forms','forms.newTest':'إضافة اختبار','forms.testName':'اسم الاختبار',
+ 'forms.testNamePh':'مثال: أحياء الوحدة 1','forms.url':'رابط Google Forms',
+ 'forms.urlPh':'https://docs.google.com/forms/…','forms.startTest':'ابدأ الاختبار',
+ 'forms.badge':'Google Form','forms.empty':'لا توجد اختبارات مضافة بعد',
+ 'forms.emptyHint':'أضف اختبار Google Forms لتبدأ.','forms.edit':'تعديل الاختبار',
+ 'forms.needName':'أعطِ الاختبار اسمًا.','forms.invalidUrl':'أدخل رابطًا صحيحًا يبدأ بـ https://',
+ 'forms.pin':'تثبيت','forms.unpin':'إلغاء التثبيت',
+ 'sum.title':'التلخيصات','sum.newBtn':'إضافة تلخيص','sum.name':'اسم التلخيص',
+ 'sum.namePh':'مثال: أحياء — الوحدة 1','sum.url':'رابط التلخيص','sum.urlPh':'https://…',
+ 'sum.open':'فتح التلخيص','sum.badge':'تلخيص','sum.empty':'لا توجد تلخيصات مضافة بعد',
+ 'sum.emptyHint':'أضف رابط تلخيص لتبدأ.','sum.edit':'تعديل التلخيص',
+ 'sum.needName':'أعطِ التلخيص اسمًا.','sum.invalidUrl':'أدخل رابطًا صحيحًا يبدأ بـ https://',
+ 'sum.pin':'تثبيت','sum.unpin':'إلغاء التثبيت',
+ 'viewer.loading':'جارٍ التحميل…','viewer.blockedTitle':'لا يمكن عرض هذه الصفحة داخل التطبيق',
+ 'viewer.blockedMsg':'بعض المواقع لا تسمح بعرضها داخل تطبيق آخر. يمكنك فتحها في المتصفح.',
+ 'viewer.openExternal':'فتح في المتصفح','viewer.reload':'إعادة تحميل','viewer.close':'إغلاق',
+ 'viewer.offline':'يبدو أنك غير متصل بالإنترنت. اتصل بالإنترنت لفتح هذا الرابط.',
+ 'search.forms':'اختبارات Google Forms','search.summaries':'التلخيصات',
  'set.language':'اللغة','set.langDesc':'لغة الواجهة واتجاهها (من اليمين لليسار / من اليسار لليمين).',
  'set.profile':'الملف الشخصي','set.username':'اسم المستخدم','set.usernamePh':'اسمك',
  'set.usernameDesc':'يُستخدم فقط في التحية على لوحة التحكم — لا يعيد تسمية بياناتك أبدًا.',
@@ -217,6 +257,8 @@ ar:{
  'focus.start':'ابدأ','focus.pause':'إيقاف مؤقت','focus.reset':'إعادة',
  'focus.today':'جلسات اليوم','focus.length':'مدة الجلسة','focus.min':'دقيقة',
  'focus.doneMsg':'انتهت جلسة التركيز — خذ قسطًا من الراحة','focus.breakOver':'انتهت الراحة — جاهز لجلسة أخرى؟',
+ 'focus.breakLength':'مدة الراحة','focus.custom':'تخصيص','focus.focusLabel':'تركيز',
+ 'focus.breakLabel':'راحة','focus.minShort':'د','focus.customRange':'1–180 دقيقة',
  'notes.pin':'تثبيت الملاحظة','notes.unpin':'إلغاء التثبيت','notes.pinned':'مثبتة',
  'lb.open':'عرض الصورة','lb.zoomIn':'تكبير','lb.zoomOut':'تصغير','lb.reset':'الحجم الأصلي',
  'islam.peace':'السلام عليكم ورحمة الله وبركاته',
@@ -277,7 +319,8 @@ const state={
   user:{name:'Ubad'},
   settings:{lang:'en',sound:true,theme:'dark'},
   courses:[], notes:[], events:[], tasks:[], decks:[], quizzes:[],
-  focus:{day:'',done:0},
+  forms:[], summaries:[],
+  focus:{day:'',done:0,focusMins:25,breakMins:5},
   islam:normIslam({})
 };
 const PREF_KEY='ubad.prefs.v1';
@@ -312,6 +355,32 @@ const DB={ db:null,
     return new Promise((res,rej)=>{ const r=this.st('readwrite',store).clear(); r.onsuccess=res; r.onerror=()=>rej(r.error); }); }
 };
 
+/* ── link validation (Google Forms / Summaries) ────────────────
+   Treat every saved title/URL as untrusted input. Only http/https
+   survive; javascript:, data:, file:, and any other scheme are
+   rejected outright so nothing user-supplied can ever execute. */
+function safeHttpUrl(raw){
+  let s=String(raw||'').trim(); if(!s) return null;
+  if(!/^https?:\/\//i.test(s)){
+    if(/^[a-z][a-z0-9+.-]*:/i.test(s)) return null; /* any other explicit scheme → reject */
+    s='https://'+s; /* bare domains default to https */
+  }
+  let u; try{ u=new URL(s); }catch(e){ return null; }
+  if(u.protocol!=='http:'&&u.protocol!=='https:') return null;
+  if(!u.hostname||!u.hostname.includes('.')) return null;
+  return u.href;
+}
+/* Google Forms officially supports an embedded, iframe-friendly render
+   mode via the documented `embedded=true` query parameter — this is not
+   an invented API, it's the same parameter Google's own "Send via <>"
+   embed code uses. We opt into it only for docs.google.com/forms URLs. */
+function formsEmbedUrl(href){
+  try{ const u=new URL(href);
+    if(u.hostname.toLowerCase()==='docs.google.com'&&/\/forms\//.test(u.pathname)){
+      u.searchParams.set('embedded','true'); return u.href; }
+    return href;
+  }catch(e){ return href; } }
+
 /* ── normalization (defensive against malformed stored data) ── */
 const normCourse=c=>{ if(!c||typeof c!=='object') return null;
   return { id:normStr(c.id,40)||uid(), name:normStr(c.name,80,'Course'), code:normStr(c.code,24),
@@ -326,7 +395,10 @@ function hydrate(d){ if(!d||typeof d!=='object') return;
   if(typeof s.sound==='boolean') state.settings.sound=s.sound;
   if(THEMES.includes(s.theme)) state.settings.theme=s.theme;
   state.focus=(d.focus&&typeof d.focus==='object')?
-    { day:normStr(d.focus.day,10), done:clampNum(d.focus.done,0,999,0) }:{ day:'',done:0 };
+    { day:normStr(d.focus.day,10), done:clampNum(d.focus.done,0,999,0),
+      focusMins:clampNum(d.focus.focusMins,FOCUS_MIN_LEN,FOCUS_MAX_LEN,25),
+      breakMins:clampNum(d.focus.breakMins,FOCUS_MIN_LEN,FOCUS_MAX_LEN,5) }
+    :{ day:'',done:0,focusMins:25,breakMins:5 };
   state.islam=normIslam(d.islam);
   state.courses=normArr(d.courses).map(normCourse).filter(Boolean);
   state.events=normArr(d.events).map(e=>({ id:normStr(e&&e.id,40)||uid(), title:normStr(e&&e.title,120,'Event'),
@@ -342,6 +414,15 @@ function hydrate(d){ if(!d||typeof d!=='object') return;
     questions:normArr(z&&z.questions).map(q=>({ q:normStr(q&&q.q,400),
       options:normArr(q&&q.options).slice(0,4).map(o=>normStr(o,160)), correct:clampNum(q&&q.correct,0,3,0) }))
       .filter(q=>q.q&&q.options.filter(Boolean).length>=2&&q.options[q.correct]) }));
+  /* Old saved data never had these arrays — always initialize safely. */
+  state.forms=normArr(d.forms).map(f=>{ const url=safeHttpUrl(f&&f.url); if(!url) return null;
+    return { id:normStr(f&&f.id,40)||uid(), title:normStr(f&&f.title,120,'Google Form'), url,
+      createdAt:clampNum(f&&f.createdAt,0,1e15,Date.now()),
+      lastOpened:clampNum(f&&f.lastOpened,0,1e15,0), pinned:!!(f&&f.pinned) }; }).filter(Boolean);
+  state.summaries=normArr(d.summaries).map(s=>{ const url=safeHttpUrl(s&&s.url); if(!url) return null;
+    return { id:normStr(s&&s.id,40)||uid(), title:normStr(s&&s.title,120,'Summary'), url,
+      createdAt:clampNum(s&&s.createdAt,0,1e15,Date.now()),
+      lastOpened:clampNum(s&&s.lastOpened,0,1e15,0), pinned:!!(s&&s.pinned) }; }).filter(Boolean);
 }
 async function loadData(){ try{ const rec=await DB.get('kv','appdata'); if(rec&&rec.data) hydrate(rec.data); }catch(e){} }
 async function loadNotes(){ try{
@@ -360,11 +441,13 @@ async function saveNote(rec){ try{ await DB.put('notes',rec); }catch(e){}
 function saveData(){ Nav.invalidate('dashboard','analytics'); savePrefs();
   DB.put('kv',{id:'appdata',data:{user:state.user,settings:state.settings,courses:state.courses,
     events:state.events,tasks:state.tasks,decks:state.decks,quizzes:state.quizzes,
+    forms:state.forms,summaries:state.summaries,
     focus:state.focus,islam:state.islam}}).catch(()=>{}); }
 
 /* ═══ 5. audio manager — fails silently, never blocks ════════ */
-const Sound={ files:{click:'assets/audio/click.mp3',move:'assets/audio/3d-move.mp3',
-    back:'assets/audio/back.mp3',transition:'assets/audio/transition.mp3'},
+const Sound={ files:{click:'assets/sounds/Click_1.mp3',move:'assets/audio/3d-move.mp3',
+    back:'assets/audio/back.mp3',transition:'assets/audio/transition.mp3',
+    alarm:'assets/sounds/Alarm.mp3'},
   els:{}, stat:{}, unlocked:false, ctx:null,
   init(){ for(const k in this.files){ try{
       const a=new Audio(); a.preload='auto'; a.src=this.files[k];
@@ -377,7 +460,7 @@ const Sound={ files:{click:'assets/audio/click.mp3',move:'assets/audio/3d-move.m
   play(k){ if(!state.settings.sound) return;
     try{ const el=this.els[k];
       if(!el||this.stat[k]==='missing'){ this.blip(k); return; }
-      el.currentTime=0; el.volume=(k==='click')?.35:.5;
+      el.currentTime=0; el.volume=(k==='click')?.35:(k==='alarm'?.65:.5);
       const p=el.play(); if(p&&p.catch) p.catch(()=>{});
     }catch(e){} },
   blip(k){ /* tiny synthesized fallback ONLY when the real files are missing */
@@ -385,13 +468,20 @@ const Sound={ files:{click:'assets/audio/click.mp3',move:'assets/audio/3d-move.m
     try{ this.ctx=this.ctx||new (window.AudioContext||window.webkitAudioContext)();
       if(this.ctx.state==='suspended') this.ctx.resume();
       const t0=this.ctx.currentTime, o=this.ctx.createOscillator(), g=this.ctx.createGain();
-      const f=(k==='back')?230:(k==='move')?330:(k==='transition')?450:540;
+      const f=(k==='back')?230:(k==='move')?330:(k==='transition')?450:(k==='alarm'?680:540);
       o.type='sine'; o.frequency.setValueAtTime(f,t0);
       o.frequency.exponentialRampToValueAtTime(f*.72,t0+.09);
       g.gain.setValueAtTime(.0001,t0);
       g.gain.exponentialRampToValueAtTime(.045,t0+.012);
       g.gain.exponentialRampToValueAtTime(.0001,t0+.13);
       o.connect(g); g.connect(this.ctx.destination); o.start(t0); o.stop(t0+.15);
+      if(k==='alarm'){ /* a short extra pulse so the synthesized fallback is
+          noticeably distinct from a plain click, even without the real file */
+        setTimeout(()=>{ try{ const t1=this.ctx.currentTime,o2=this.ctx.createOscillator(),g2=this.ctx.createGain();
+          o2.type='sine'; o2.frequency.setValueAtTime(f,t1);
+          g2.gain.setValueAtTime(.0001,t1); g2.gain.exponentialRampToValueAtTime(.045,t1+.012);
+          g2.gain.exponentialRampToValueAtTime(.0001,t1+.13);
+          o2.connect(g2); g2.connect(this.ctx.destination); o2.start(t1); o2.stop(t1+.15); }catch(e){} },180); }
     }catch(e){} }
 };
 
@@ -492,11 +582,27 @@ const FX={
 };
 
 /* ═══ 5.9 مؤقت التركيز ══════════════════════════════════════ */
+/* Sensible bounds for user-customizable Focus/Break durations. Values are
+   plain minutes so any number the user types (5, 13, 47, 90…) is honored,
+   clamped only to prevent absurd/broken input (0 min, multi-day timers). */
+const FOCUS_MIN_LEN=1, FOCUS_MAX_LEN=180;
 const Focus={
   phase:'focus', mins:25, breakMins:5, remaining:25*60, running:false, endsAt:0, iv:0,
   today(){ return ymd(new Date()); },
   done(){ if(state.focus.day!==this.today()){ state.focus.day=this.today(); state.focus.done=0; }
     return state.focus.done||0; },
+  /* load the user's saved custom lengths (called once at boot, after
+     persisted state has been hydrated) */
+  loadDurations(){
+    this.mins=clampNum(state.focus.focusMins,FOCUS_MIN_LEN,FOCUS_MAX_LEN,25);
+    this.breakMins=clampNum(state.focus.breakMins,FOCUS_MIN_LEN,FOCUS_MAX_LEN,5);
+    this.remaining=(this.phase==='focus'?this.mins:this.breakMins)*60;
+  },
+  setDuration(phaseKey,mins){ mins=clampNum(mins,FOCUS_MIN_LEN,FOCUS_MAX_LEN,phaseKey==='focus'?25:5);
+    if(phaseKey==='focus'){ this.mins=mins; state.focus.focusMins=mins; }
+    else { this.breakMins=mins; state.focus.breakMins=mins; }
+    saveData();
+    if(this.phase===phaseKey&&!this.running) this.reset(); },
   start(rr){ this.running=true; this.endsAt=Date.now()+this.remaining*1000;
     clearInterval(this.iv); this.iv=setInterval(()=>this.tick(rr),250); this.tick(rr); },
   pause(){ this.running=false; clearInterval(this.iv);
@@ -508,11 +614,13 @@ const Focus={
       Math.max(0,Math.round((this.endsAt-Date.now())/1000)):this.remaining;
     this.remaining=left;
     if(left<=0){ this.running=false; clearInterval(this.iv);
+      /* Alarm.mp3 marks both Focus-end and Break-end; falls back to the
+         synthesized tone automatically if the file cannot be played. */
       if(this.phase==='focus'){
         state.focus.day=this.today(); state.focus.done=(state.focus.done||0)+1;
-        saveData(); Sound.play('transition'); toast(t('focus.doneMsg')); FX.confetti();
+        saveData(); Sound.play('alarm'); toast(t('focus.doneMsg')); FX.confetti();
         this.setPhase('break');
-      } else { Sound.play('transition'); toast(t('focus.breakOver')); this.setPhase('focus'); }
+      } else { Sound.play('alarm'); toast(t('focus.breakOver')); this.setPhase('focus'); }
       return; }
     if(rr) rr(); }
 };
@@ -1566,10 +1674,12 @@ LAYERS.study={
     const sec=chrome({title:t('nav.study'),
       actions:`<button class="btn btn-primary btn-sm" id="st-add">${ic('plus','ic-s')}<span id="st-add-l">${t('study.newDeck')}</span></button>`,
       body:`
-      <div class="seg" role="tablist">
+      <div class="seg seg-wrap" role="tablist">
         <button class="${tab==='cards'?'on':''}" data-tab="cards" role="tab" aria-selected="${tab==='cards'}">${t('study.tabCards')}</button>
         <button class="${tab==='quiz'?'on':''}" data-tab="quiz" role="tab" aria-selected="${tab==='quiz'}">${t('study.tabQuiz')}</button>
         <button class="${tab==='focus'?'on':''}" data-tab="focus" role="tab" aria-selected="${tab==='focus'}">${ic('timer','ic-s')} ${t('focus.tab')}</button>
+        <button class="${tab==='forms'?'on':''}" data-tab="forms" role="tab" aria-selected="${tab==='forms'}">${ic('globe','ic-s')} ${t('study.tabForms')}</button>
+        <button class="${tab==='summaries'?'on':''}" data-tab="summaries" role="tab" aria-selected="${tab==='summaries'}">${ic('book','ic-s')} ${t('study.tabSummaries')}</button>
       </div>
       <div id="st-pane" style="margin-top:16px"></div>`});
     const pane=$('#st-pane',sec), addBtn=$('#st-add',sec);
@@ -1633,9 +1743,25 @@ LAYERS.study={
           <button class="btn" id="fo-reset">${t('focus.reset')}</button>
         </div>
         <div style="width:100%">
-          <div class="sect-h"><h2>${t('focus.length')}</h2></div>
+          <div class="sect-h"><h2>${t('focus.focusLabel')} · ${t('focus.length')}</h2></div>
           <div class="pillrow" id="fo-mins" style="justify-content:center">
-            ${[15,25,50].map(m=>`<button class="pill ${Focus.mins===m?'on':''}" data-m="${m}" ${Focus.running?'disabled':''}>${m} ${t('focus.min')}</button>`).join('')}
+            ${[5,15,25,50,90].map(m=>`<button class="pill ${Focus.mins===m?'on':''}" data-m="${m}" ${Focus.running?'disabled':''}>${m} ${t('focus.min')}</button>`).join('')}
+          </div>
+          <div class="field" style="max-width:220px;margin:10px auto 0">
+            <span class="f-label">${t('focus.custom')} (${t('focus.customRange')})</span>
+            <input class="input" id="fo-mins-custom" type="number" min="${FOCUS_MIN_LEN}" max="${FOCUS_MAX_LEN}"
+              value="${Focus.mins}" ${Focus.running?'disabled':''}>
+          </div>
+        </div>
+        <div style="width:100%;margin-top:18px">
+          <div class="sect-h"><h2>${t('focus.breakLabel')} · ${t('focus.breakLength')}</h2></div>
+          <div class="pillrow" id="fo-break" style="justify-content:center">
+            ${[5,10,15,20].map(m=>`<button class="pill ${Focus.breakMins===m?'on':''}" data-m="${m}" ${Focus.running?'disabled':''}>${m} ${t('focus.min')}</button>`).join('')}
+          </div>
+          <div class="field" style="max-width:220px;margin:10px auto 0">
+            <span class="f-label">${t('focus.custom')} (${t('focus.customRange')})</span>
+            <input class="input" id="fo-break-custom" type="number" min="${FOCUS_MIN_LEN}" max="${FOCUS_MAX_LEN}"
+              value="${Focus.breakMins}" ${Focus.running?'disabled':''}>
           </div>
         </div>
       </div>`;
@@ -1653,11 +1779,62 @@ LAYERS.study={
         $('#fo-go',pane).textContent=t('focus.start'); rr(); });
       $('#fo-mins',pane).addEventListener('click',e=>{
         const b=e.target.closest('[data-m]'); if(!b||Focus.running) return;
-        Focus.mins=+b.dataset.m; if(Focus.phase==='focus') Focus.reset();
+        Focus.setDuration('focus',+b.dataset.m);
         Sound.play('click'); drawFocus(); });
+      $('#fo-break',pane).addEventListener('click',e=>{
+        const b=e.target.closest('[data-m]'); if(!b||Focus.running) return;
+        Focus.setDuration('break',+b.dataset.m);
+        Sound.play('click'); drawFocus(); });
+      $('#fo-mins-custom',pane).addEventListener('change',e=>{
+        const v=clampNum(e.target.value,FOCUS_MIN_LEN,FOCUS_MAX_LEN,Focus.mins);
+        e.target.value=v; Focus.setDuration('focus',v); drawFocus(); });
+      $('#fo-break-custom',pane).addEventListener('change',e=>{
+        const v=clampNum(e.target.value,FOCUS_MIN_LEN,FOCUS_MAX_LEN,Focus.breakMins);
+        e.target.value=v; Focus.setDuration('break',v); drawFocus(); });
+    };
+    const LINK_CFG={
+      forms:{ arr:()=>state.forms, icon:'globe', addLabel:'forms.newTest', badge:'forms.badge',
+        empty:'forms.empty', emptyHint:'forms.emptyHint', nameLabel:'forms.testName', namePh:'forms.testNamePh',
+        urlLabel:'forms.url', urlPh:'forms.urlPh', openLabel:'forms.startTest', needName:'forms.needName',
+        invalidUrl:'forms.invalidUrl', editTitle:'forms.edit', pinKey:'forms.pin', unpinKey:'forms.unpin' },
+      summaries:{ arr:()=>state.summaries, icon:'book', addLabel:'sum.newBtn', badge:'sum.badge',
+        empty:'sum.empty', emptyHint:'sum.emptyHint', nameLabel:'sum.name', namePh:'sum.namePh',
+        urlLabel:'sum.url', urlPh:'sum.urlPh', openLabel:'sum.open', needName:'sum.needName',
+        invalidUrl:'sum.invalidUrl', editTitle:'sum.edit', pinKey:'sum.pin', unpinKey:'sum.unpin' }
+    };
+    const drawLinks=(kind)=>{ const cfg=LINK_CFG[kind]; const list=cfg.arr();
+      $('#st-add-l',sec).textContent=t(cfg.addLabel);
+      const sorted=list.slice().sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)||b.createdAt-a.createdAt);
+      pane.innerHTML=sorted.length?`<div class="list">${sorted.map(item=>`
+        <div class="rowitem rowitem-wrap" data-link="${item.id}">
+          <span class="row-ic">${ic(cfg.icon)}</span>
+          <span class="row-main"><span class="row-title">${esc(item.title)}${item.pinned?` <span class="chip chip-ok chip-xs">${ic('pin','ic-xs')}</span>`:''}</span>
+            <span class="row-sub mono">${t(cfg.badge)}</span></span>
+          <span class="row-actions">
+            <button class="btn btn-primary btn-sm lk-open" data-id="${item.id}">${ic('arrow','ic-s dir-flip')}<span>${t(cfg.openLabel)}</span></button>
+            <button class="icon-btn icon-btn-sm lk-pin" data-id="${item.id}" aria-label="${t(item.pinned?cfg.unpinKey:cfg.pinKey)}">${ic('pin','ic-s')}</button>
+            <button class="icon-btn icon-btn-sm lk-edit" data-id="${item.id}" aria-label="${t('common.edit')}">${ic('pen','ic-s')}</button>
+            <button class="icon-btn icon-btn-sm lk-del" data-id="${item.id}" aria-label="${t('common.delete')}">${ic('trash','ic-s')}</button>
+          </span>
+        </div>`).join('')}</div>`
+        :emptyState(cfg.icon,t(cfg.empty),t(cfg.emptyHint));
+      $$('.lk-open',pane).forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation();
+        Nav.push('linkViewer',{kind,id:b.dataset.id}); }));
+      $$('.lk-pin',pane).forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation();
+        const item=cfg.arr().find(x=>x.id===b.dataset.id); if(!item) return;
+        item.pinned=!item.pinned; saveData(); drawLinks(kind); }));
+      $$('.lk-edit',pane).forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation();
+        openLinkModal(kind,cfg.arr().find(x=>x.id===b.dataset.id),()=>drawLinks(kind)); }));
+      $$('.lk-del',pane).forEach(b=>b.addEventListener('click',e=>{ e.stopPropagation();
+        confirmModal({title:t('common.delete'),msg:t('common.confirmDelete'),onOk:()=>{
+          if(kind==='forms') state.forms=state.forms.filter(x=>x.id!==b.dataset.id);
+          else state.summaries=state.summaries.filter(x=>x.id!==b.dataset.id);
+          saveData(); drawLinks(kind); toast(t('toast.deleted')); } }); }));
     };
     const draw=()=>{ addBtn.style.display=(tab==='focus')?'none':'';
-      (tab==='cards'?drawDecks:tab==='quiz'?drawQuizzes:drawFocus)(); };
+      if(tab==='cards') drawDecks(); else if(tab==='quiz') drawQuizzes();
+      else if(tab==='forms') drawLinks('forms'); else if(tab==='summaries') drawLinks('summaries');
+      else drawFocus(); };
     $$('.seg button',sec).forEach(b=>b.addEventListener('click',()=>{
       tab=b.dataset.tab; studyTab=tab;
       $$('.seg button',sec).forEach(x=>{ x.classList.toggle('on',x===b);
@@ -1665,8 +1842,92 @@ LAYERS.study={
     addBtn.addEventListener('click',()=>{
       if(tab==='focus') return;
       if(tab==='cards') openDeckModal(null,()=>drawDecks());
-      else Nav.push('quizEdit',{}); });
+      else if(tab==='quiz') Nav.push('quizEdit',{});
+      else if(tab==='forms') openLinkModal('forms',null,()=>drawLinks('forms'));
+      else if(tab==='summaries') openLinkModal('summaries',null,()=>drawLinks('summaries')); });
     draw();
+    return sec;
+  }
+};
+function openLinkModal(kind,item,cb){
+  const cfg={
+    forms:{ nameLabel:'forms.testName', namePh:'forms.testNamePh', urlLabel:'forms.url', urlPh:'forms.urlPh',
+      needName:'forms.needName', invalidUrl:'forms.invalidUrl', addTitle:'forms.newTest', editTitle:'forms.edit' },
+    summaries:{ nameLabel:'sum.name', namePh:'sum.namePh', urlLabel:'sum.url', urlPh:'sum.urlPh',
+      needName:'sum.needName', invalidUrl:'sum.invalidUrl', addTitle:'sum.newBtn', editTitle:'sum.edit' }
+  }[kind];
+  openModal({title:item?t(cfg.editTitle):t(cfg.addTitle),
+    body:field(t(cfg.nameLabel),inp('lk-title',t(cfg.namePh),item?item.title:''))
+       + field(t(cfg.urlLabel),inp('lk-url',t(cfg.urlPh),item?item.url:'','url')),
+    actions:[{label:t('common.cancel')},{label:t('common.save'),cls:'btn-primary',onClick:close=>{
+      const title=$('#lk-title').value.trim();
+      if(!title){ toast(t(cfg.needName),'err'); return; }
+      const url=safeHttpUrl($('#lk-url').value);
+      if(!url){ toast(t(cfg.invalidUrl),'err'); return; }
+      const list=kind==='forms'?state.forms:state.summaries;
+      if(item){ item.title=title.slice(0,120); item.url=url; }
+      else list.push({id:uid(),title:title.slice(0,120),url,createdAt:Date.now(),lastOpened:0,pinned:false});
+      saveData(); close(); if(cb)cb(); toast(t('toast.saved')); } }]});
+}
+
+/* ── REUSABLE INTERNAL WEB VIEWER (Google Forms + Summaries) ──────────
+   One shared viewer for both tools — no duplicate browser systems.
+   Best-supported approach available in this html2app/WebView project:
+     • docs.google.com/forms links get Google's own documented
+       `embedded=true` parameter (the same one Google's "Send via <>"
+       embed code uses) and are shown in an iframe.
+     • Any other saved link (GitHub Pages, NotebookLM shares, etc.) is
+       attempted in an iframe as-is.
+     • Cross-origin iframes cannot be inspected by JavaScript, so a
+       page that refuses to be framed (X-Frame-Options / CSP) cannot be
+       detected with certainty — only a load timeout is possible. If the
+       frame hasn't loaded within a few seconds, the viewer stops
+       waiting and offers a clear "Open in browser" fallback instead of
+       ever leaving a blank screen. That fallback is a plain
+       `window.open` — this project does not bundle a native
+       InAppBrowser plugin, so this is the most honest, best-supported
+       "open externally" mechanism available here. */
+function findLinkItem(p){ const arr=p.kind==='forms'?state.forms:state.summaries;
+  return arr.find(x=>x.id===p.id); }
+LAYERS.linkViewer={
+  title:p=>{ const item=findLinkItem(p); return item?item.title:''; },
+  render(p){
+    const item=findLinkItem(p);
+    if(!item) return chrome({title:'',body:emptyState('alert',t('toast.error'))});
+    const embedSrc=p.kind==='forms'?formsEmbedUrl(item.url):item.url;
+    const sec=chrome({title:item.title,
+      actions:`<button class="icon-btn" id="wv-reload" aria-label="${t('viewer.reload')}">${ic('refresh')}</button>
+        <button class="icon-btn" id="wv-ext" aria-label="${t('viewer.openExternal')}">${ic('globe')}</button>`,
+      body:`<div class="webviewer" id="wv-wrap">
+          <div class="wv-state" id="wv-loading"><span class="wv-spin"></span><p>${t('viewer.loading')}</p></div>
+          <div class="wv-state" id="wv-offline" hidden>${ic('alert')}<p class="e-t">${t('viewer.offline')}</p>
+            <button class="btn btn-primary" id="wv-open-offline">${ic('globe','ic-s')}<span>${t('viewer.openExternal')}</span></button></div>
+          <div class="wv-state" id="wv-blocked" hidden>${ic('alert')}<p class="e-t">${t('viewer.blockedTitle')}</p>
+            <p class="e-h">${t('viewer.blockedMsg')}</p>
+            <button class="btn btn-primary" id="wv-open-fallback">${ic('globe','ic-s')}<span>${t('viewer.openExternal')}</span></button></div>
+          <iframe id="wv-frame" class="wv-frame" title="${esc(item.title)}" hidden
+            referrerpolicy="no-referrer"
+            sandbox="allow-scripts allow-forms allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+        </div>`});
+    const loadingEl=$('#wv-loading',sec), offlineEl=$('#wv-offline',sec), blockedEl=$('#wv-blocked',sec), frame=$('#wv-frame',sec);
+    let settled=false, timer=0;
+    const markOpened=()=>{ item.lastOpened=Date.now(); saveData(); };
+    const openExternal=()=>{ markOpened(); try{ window.open(item.url,'_blank','noopener'); }catch(e){} };
+    const showOnly=el=>{ [loadingEl,offlineEl,blockedEl,frame].forEach(x=>{ x.hidden=(x!==el); }); };
+    const attempt=()=>{
+      settled=false; clearTimeout(timer);
+      if(!navigator.onLine){ showOnly(offlineEl); return; }
+      showOnly(loadingEl);
+      frame.src=embedSrc;
+      timer=setTimeout(()=>{ if(!settled){ settled=true; showOnly(blockedEl); } },6000);
+    };
+    frame.addEventListener('load',()=>{ if(settled) return; settled=true; clearTimeout(timer);
+      showOnly(frame); markOpened(); });
+    $('#wv-reload',sec).addEventListener('click',()=>{ Sound.play('click'); attempt(); });
+    $('#wv-ext',sec).addEventListener('click',()=>{ Sound.play('click'); openExternal(); });
+    $('#wv-open-fallback',sec).addEventListener('click',openExternal);
+    $('#wv-open-offline',sec).addEventListener('click',openExternal);
+    attempt();
     return sec;
   }
 };
@@ -2087,6 +2348,12 @@ function buildResults(q,raw,actions){
     state.quizzes.filter(z=>(z.title+' '+z.questions.map(x=>x.q).join(' ')).toLowerCase().includes(q)).slice(0,4)
       .map(z=>push(()=>Nav.push('quizPlay',{quizId:z.id}),'check',
         z.title,z.questions.length+' '+t('study.questionsLc'))).join(''));
+  grp(t('search.forms'),
+    state.forms.filter(f=>f.title.toLowerCase().includes(q)).slice(0,4)
+      .map(f=>push(()=>Nav.push('linkViewer',{kind:'forms',id:f.id}),'globe',f.title,t('forms.badge'))).join(''));
+  grp(t('search.summaries'),
+    state.summaries.filter(s=>s.title.toLowerCase().includes(q)).slice(0,4)
+      .map(s=>push(()=>Nav.push('linkViewer',{kind:'summaries',id:s.id}),'book',s.title,t('sum.badge'))).join(''));
   return any?html
     :`<div class="empty empty-sm">${ic('search')}<p>${esc(t('search.none',{q:raw}))}</p></div>`;
 }
@@ -2153,6 +2420,7 @@ async function importBackup(file){
               await DB.put('kv',{id:'bg-'+th,blob:bl}); }catch(e){} } }
         hydrate({ user:d.user, settings:d.settings, courses:d.courses,
           events:d.events, tasks:d.tasks, decks:d.decks, quizzes:d.quizzes,
+          forms:d.forms, summaries:d.summaries,
           focus:d.focus, islam:d.islam });
         saveData(); applyLang(); applyTheme(); bgApply();
         Nav.popTo(0,true); Nav.rerenderAll();
@@ -2172,6 +2440,7 @@ async function boot(){
   bindKeys();
   try{ await DB.open(); }catch(e){}          /* 6. IndexedDB (memory fallback ok) */
   try{ await Promise.all([loadData(),loadNotes()]); }catch(e){} /* 7. user data */
+  Focus.loadDurations();  /* 7.2 apply saved custom Focus/Break lengths */
   try{ await bgApply(); }catch(e){}          /* 7.5 custom theme background */
   Sound.init();           /* 8. audio manager (silent until gesture) */
   /* html2app's documented bridge is loaded explicitly. Do not await the network

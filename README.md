@@ -12,7 +12,10 @@ A local-first, **spatial academic operating environment** — dark, glassmorphic
 - **Calendar** — month view, events, contextual swipe (month change only).
 - **Grades / GPA** — standard 4.0 scale, mathematically correct, target planner.
 - **Analytics** — canvas-drawn charts (no libraries).
-- **Study Tools** — flashcards (flip + shuffle + swipe) and quizzes with scoring.
+- **Study Tools** — flashcards (flip + shuffle + swipe), quizzes with scoring,
+  a customizable Focus/Break timer, saved **Google Forms** tests and saved
+  **Summaries** links (opened in a shared internal viewer, with a graceful
+  external-browser fallback when a site refuses to be embedded).
 - **Settings** — real **English/Arabic** localization with full RTL, username
   (greeting only), dark/light theme, sound toggle, backup/restore.
 - **Search** — compact icon → glass overlay across notes, courses, events, decks.
@@ -29,7 +32,8 @@ A local-first, **spatial academic operating environment** — dark, glassmorphic
 ├── sw.js
 └── assets/
     ├── icons/          # icon.svg · icon-maskable.svg (replaceable)
-    └── audio/          # optional: click.mp3 · 3d-move.mp3 · back.mp3 · transition.mp3
+    ├── sounds/         # Click_1.mp3 · Alarm.mp3 (bundled, always available offline)
+    └── audio/          # optional: 3d-move.mp3 · back.mp3 · transition.mp3
 
 
 ## Run
@@ -44,16 +48,22 @@ python -m http.server 8080
 3. Done — the service worker registers automatically over HTTPS.
 
 ## Audio
-The app **works perfectly without audio files** — it falls back to tiny
-synthesized tones. To use your own sounds later, simply drop these files in:
+UBAD ships with two bundled sound files that always work offline:
 ```
-assets/audio/click.mp3        # button / card activation
+assets/sounds/Click_1.mp3   # default interaction/click sound (buttons, nav, toggles…)
+assets/sounds/Alarm.mp3     # plays when a Focus session or Break ends
+```
+Everything else **still works perfectly without extra audio files** — it falls
+back to tiny synthesized tones. To add your own sounds for layer transitions
+later, drop these optional files in:
+```
 assets/audio/3d-move.mp3      # entering a layer
 assets/audio/back.mp3         # returning
 assets/audio/transition.mp3   # deep layer transitions
 ```
 Missing files fail silently and never block navigation. Sounds can be
-disabled in Settings.
+disabled in Settings — when Sound is off, neither Click_1.mp3 nor
+Alarm.mp3 play.
 
 ## Replacing the logo
 The logo lives in two places, both isolated for easy replacement:

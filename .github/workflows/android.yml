@@ -3,7 +3,7 @@ name: Android build
 on:
   push:
     branches: [ 'arena/**', 'main' ]
-    paths: [ 'android/**', '.github/workflows/android.yml' ]
+    paths: [ 'android/**', '.github/workflows/android.yml', 'tools/android-security-scan.py' ]
   pull_request:
     paths: [ 'android/**' ]
   workflow_dispatch:
@@ -34,6 +34,9 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v5
 
+      - name: Security scan (sources)
+        run: python3 ../tools/android-security-scan.py source
+
       - name: Assemble debug + unit tests
         id: build
         run: |
@@ -46,6 +49,10 @@ jobs:
         run: |
           set -o pipefail
           ./gradlew --no-daemon assembleRelease bundleRelease 2>&1 | tee release.log
+
+      - name: Security scan (APK + merged manifest)
+        if: success()
+        run: python3 ../tools/android-security-scan.py apk
 
       - name: Report problems as annotations
         if: always()

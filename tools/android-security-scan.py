@@ -45,6 +45,8 @@ DANGEROUS = re.compile(r'(?i)EXTERNAL_STORAGE|READ_MEDIA_|LOCATION|CAMERA|RECORD
 # Library-merged permissions that are normal-level and scoped to the app.
 LIBRARY_OK = re.compile(r'DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION$|^android\.permission\.(ACCESS_NETWORK_STATE|WAKE_LOCK)$')
 
+KNOWN_LIBRARY_WEBVIEW = ('androidx.media3.ui.WebViewSubtitleOutput',)
+
 problems, notes = [], []
 
 
@@ -194,8 +196,15 @@ def apk():
         notes.append('WebView methods referenced: ' + (', '.join(sorted(wv_methods)) or 'none'))
         notes.append('Classes named *WebView*/*webkit*: ' + (', '.join(sorted(wv_classes)) or 'none'))
         own = [c for c in wv_classes if c.startswith('com.ubad.')]
-        if own or wv_methods & {'loadUrl', 'loadData', 'loadDataWithBaseURL', 'addJavascriptInterface', 'evaluateJavascript'}:
-            problems.append(f'App code loads content in a WebView: methods={sorted(wv_methods)} classes={own}')
+        # Known library paths the app never activates:
+        #  * androidx.media3.ui.WebViewSubtitleOutput — PlayerView's optional WebVTT renderer; the default
+        #    (and the only one this app uses) is CanvasSubtitleOutput.
+        known = {c for c in wv_classes if c.startswith(KNOWN_LIBRARY_WEBVIEW)}
+        loads = wv_methods & {'loadUrl', 'loadData', 'loadDataWithBaseURL', 'addJavascriptInterface', 'evaluateJavascript'}
+        if own or (loads and not known):
+            problems.append(f'Unattributed WebView content loading: methods={sorted(wv_methods)} classes={sorted(wv_classes)}')
+        elif known:
+            notes.append('WebView references attributed to inactive library code: ' + ', '.join(sorted(known)))
 
 
 if __name__ == '__main__':

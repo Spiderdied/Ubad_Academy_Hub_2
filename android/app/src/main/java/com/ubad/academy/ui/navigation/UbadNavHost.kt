@@ -16,6 +16,7 @@ import com.ubad.academy.ui.screens.calendar.CalendarScreen
 import com.ubad.academy.ui.screens.notes.NoteEditorScreen
 import com.ubad.academy.ui.screens.notes.NotesScreen
 import com.ubad.academy.ui.screens.search.SearchScreen
+import com.ubad.academy.ui.screens.islam.IslamScreen
 import com.ubad.academy.ui.screens.study.DeckScreen
 import com.ubad.academy.ui.screens.study.DeckTestScreen
 import com.ubad.academy.ui.screens.study.QuizEditScreen
@@ -74,7 +75,7 @@ fun UbadNavHost(navController: NavHostController, settings: UserSettings) {
         composable<Route.Notes> { NotesScreen(onNavigate = go, onBack = back) }
         composable<Route.NoteEditor> { NoteEditorScreen(onNavigate = go, onBack = back) }
         composable<Route.Calendar> { CalendarScreen(onBack = back) }
-        composable<Route.Islam> { PendingScreen("Islam", back) }
+        composable<Route.Islam> { IslamScreen() }
         composable<Route.Blog> { PendingScreen("Blog", back) }
         composable<Route.BlogPost>(
             deepLinks = listOf(navDeepLink<Route.BlogPost>(basePath = "${DeepLinks.BASE}blog")),

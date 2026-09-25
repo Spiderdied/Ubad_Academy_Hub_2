@@ -76,11 +76,11 @@ class BackupCodec @Inject constructor(
         } catch (e: BackupException) {
             staged.forEach { it.delete() }; throw e
         } catch (e: IOException) {
-            staged.forEach { it.delete() }; throw BackupException(BackupError.Invalid)
+            staged.forEach { it.delete() }; throw BackupException(BackupError.Invalid, e)
         } catch (e: kotlinx.coroutines.CancellationException) {
             staged.forEach { it.delete() }; throw e
         } catch (e: RuntimeException) {
-            staged.forEach { it.delete() }; throw BackupException(BackupError.Invalid)
+            staged.forEach { it.delete() }; throw BackupException(BackupError.Invalid, e)
         }
     }
 

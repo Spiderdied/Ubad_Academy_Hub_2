@@ -70,4 +70,5 @@ sealed interface BackupError {
     data class Io(val cause: Throwable) : BackupError
 }
 
-class BackupException(val error: BackupError) : Exception(error.toString())
+class BackupException(val error: BackupError, cause: Throwable? = null) :
+    Exception(error.toString() + (cause?.let { " ← $it @ " + it.stackTrace.take(3).joinToString(" < ") } ?: ""), cause)

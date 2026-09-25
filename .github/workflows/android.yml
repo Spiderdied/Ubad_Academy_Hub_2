@@ -1,0 +1,11 @@
+name: Android build
+on:
+  push:
+    branches: [ 'arena/**' ]
+    paths: [ 'android/**', '.github/workflows/android.yml' ]
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "probe ok"; java -version; echo $ANDROID_HOME; ls $ANDROID_HOME/platforms

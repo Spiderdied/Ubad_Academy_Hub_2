@@ -50,7 +50,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.em
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ubad.academy.R
@@ -87,8 +87,8 @@ fun HubScreen(
                 Column(Modifier.weight(1f)) {
                     Text(stringResource(R.string.brand_name), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
                     Text(
-                        stringResource(R.string.brand_sub), fontFamily = FontFamily.Monospace, fontSize = 10.sp,
-                        letterSpacing = 3.sp, color = MaterialTheme.colorScheme.outline,
+                        stringResource(R.string.brand_sub), fontFamily = FontFamily.Monospace, style = MaterialTheme.typography.labelSmall,
+                        letterSpacing = 0.3.em, color = MaterialTheme.colorScheme.outline,
                     )
                 }
                 IconButton(onClick = { onNavigate(Route.Search) }) {

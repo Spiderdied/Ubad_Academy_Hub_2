@@ -36,7 +36,7 @@ import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Upload
-import androidx.compose.material.icons.outlined.VolumeUp
+import androidx.compose.material.icons.automirrored.outlined.VolumeUp
 import androidx.compose.material.icons.outlined.WarningAmber
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -184,7 +184,7 @@ fun SettingsScreen(onBack: () -> Unit, onHome: () -> Unit, viewModel: SettingsVi
                     Modifier.fillMaxWidth().toggleable(st.sound, role = Role.Switch, onValueChange = viewModel::setSound).padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    GroupHeader(Icons.Outlined.VolumeUp, label, stringResource(R.string.set_soundDesc), Modifier.weight(1f))
+                    GroupHeader(Icons.AutoMirrored.Outlined.VolumeUp, label, stringResource(R.string.set_soundDesc), Modifier.weight(1f))
                     Switch(checked = st.sound, onCheckedChange = null)
                 }
             }

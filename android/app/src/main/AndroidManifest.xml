@@ -4,7 +4,6 @@
 
     <!-- Blog (Cloudflare Worker) + external images only. -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Focus/Break end alarm. Requested at runtime only when a timer is first started. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- Lets the timer end on time while the app is closed; the app degrades to an

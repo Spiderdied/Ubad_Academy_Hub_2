@@ -31,7 +31,6 @@
         android:label="@string/app_label"
         android:supportsRtl="true"
         android:enableOnBackInvokedCallback="true"
-        android:localeConfig="@xml/_generated_res_locale_config"
         android:theme="@style/Theme.Ubad"
         tools:targetApi="35">
 

@@ -50,4 +50,5 @@
     <string name="notif_hint">Notifications are off, so the timer can\'t alert you while the app is closed.</string>
     <!-- Web references study.newCard but never defines it. -->
     <string name="study_newCard">New card</string>
+    <string name="blog_openEmbed">Open embedded content</string>
 </resources>

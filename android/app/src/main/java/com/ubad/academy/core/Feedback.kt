@@ -37,6 +37,12 @@ class Feedback @Inject constructor(
                 .build(),
         ).build()
     private val clickId = pool.load(context, R.raw.click, 1)
+    private val alarmId = pool.load(context, R.raw.alarm, 1)
+
+    /** Web `Sound.play('alarm')` when a focus/break phase ends with the app open. */
+    fun alarm() {
+        if (soundOn.value) pool.play(alarmId, 1f, 1f, 1, 0, 1f)
+    }
 
     fun click() {
         if (soundOn.value) pool.play(clickId, 0.35f, 0.35f, 0, 0, 1f)

@@ -13,12 +13,21 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.activity.compose.setContent
 import com.ubad.academy.ui.UbadApp
 import com.ubad.academy.ui.theme.UbadTheme
+import com.ubad.academy.focus.FocusTimer
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
+    @Inject lateinit var focusTimer: FocusTimer
+
+    override fun onStart() {
+        super.onStart()
+        // Finish a focus phase that ended while the app was closed / re-arm after a reboot.
+        focusTimer.reconcile()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splash = installSplashScreen()

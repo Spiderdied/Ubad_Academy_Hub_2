@@ -58,7 +58,7 @@ class PlannerRepository @Inject constructor(private val db: UbadDatabase) {
         val t = title.trim().take(120)
         val entry = (existing ?: ScheduleEntry(Web.uid(), t, days, start, end, emptyMap(), System.currentTimeMillis()))
             .copy(title = t, days = days.distinct().filter { it in 0..6 }, start = start, end = end)
-        val pos = if (existing != null) dao.schedule().indexOfFirst { it.id == existing.id }.coerceAtLeast(0) else dao.nextSchedulePos()
+        val pos = existing?.let { e -> dao.schedule().firstOrNull { it.id == e.id }?.position } ?: dao.firstSchedulePos()
         dao.upsertSchedule(entry.toEntity(pos))
     }
 

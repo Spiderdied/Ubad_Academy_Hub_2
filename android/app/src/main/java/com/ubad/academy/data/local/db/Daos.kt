@@ -97,6 +97,8 @@ interface PlannerDao {
     @Query("SELECT * FROM schedule ORDER BY position") fun observeSchedule(): Flow<List<ScheduleEntity>>
     @Query("SELECT * FROM schedule ORDER BY position") suspend fun schedule(): List<ScheduleEntity>
     @Query("SELECT COALESCE(MAX(position), -1) + 1 FROM schedule") suspend fun nextSchedulePos(): Int
+    /** Web `state.schedule.unshift(draft)`: new sessions go first. */
+    @Query("SELECT COALESCE(MIN(position), 1) - 1 FROM schedule") suspend fun firstSchedulePos(): Int
     @Upsert suspend fun upsertSchedule(s: ScheduleEntity)
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insertSchedule(s: List<ScheduleEntity>)
     @Query("DELETE FROM schedule WHERE id = :id") suspend fun deleteSchedule(id: String)

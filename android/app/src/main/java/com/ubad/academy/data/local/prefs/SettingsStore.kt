@@ -105,6 +105,32 @@ class SettingsStore @Inject constructor(@ApplicationContext context: Context) {
         it[K.T_REMAIN] = t.remainingSec
     }
 
+    /**
+     * Web `Focus.tick` when the countdown reaches zero, done atomically so the alarm
+     * receiver and an on-screen ticker can't both count the same session. Returns the
+     * phase that just ended, or null if nothing was due (already handled / not running).
+     */
+    suspend fun completePhase(now: Long, today: String): FocusPhase? {
+        var ended: FocusPhase? = null
+        store.edit { p ->
+            val running = p[K.T_RUNNING] ?: false
+            val endsAt = p[K.T_ENDS] ?: 0L
+            if (!running || endsAt - now > 1_000) return@edit
+            val phase = if (p[K.T_PHASE] == FocusPhase.BREAK.key) FocusPhase.BREAK else FocusPhase.FOCUS
+            if (phase == FocusPhase.FOCUS) {
+                val sameDay = p[K.FOCUS_DAY] == today
+                p[K.FOCUS_DAY] = today
+                p[K.FOCUS_DONE] = (if (sameDay) p[K.FOCUS_DONE] ?: 0 else 0) + 1
+            }
+            p[K.T_PHASE] = (if (phase == FocusPhase.FOCUS) FocusPhase.BREAK else FocusPhase.FOCUS).key
+            p[K.T_RUNNING] = false
+            p[K.T_ENDS] = 0L
+            p[K.T_REMAIN] = -1
+            ended = phase
+        }
+        return ended
+    }
+
     val blogNextToken: Flow<String?> = store.data.map { it[K.BLOG_NEXT] }
     val blogSavedAt: Flow<Long> = store.data.map { it[K.BLOG_SAVED] ?: 0L }
     suspend fun setBlogMeta(next: String?, savedAt: Long) = store.edit {

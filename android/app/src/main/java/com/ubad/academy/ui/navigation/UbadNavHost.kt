@@ -12,13 +12,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import com.ubad.academy.domain.model.UserSettings
+import com.ubad.academy.ui.navigateTopLevel
 import com.ubad.academy.ui.screens.PendingScreen
 import com.ubad.academy.ui.screens.hub.HubScreen
+import com.ubad.academy.ui.screens.dashboard.DashboardScreen
 
 @Composable
 fun UbadNavHost(navController: NavHostController, settings: UserSettings) {
     val back: () -> Unit = { navController.navigateUp() }
-    val go: (Route) -> Unit = { navController.navigate(it) }
+    // Top-level sections (bottom bar / rail) switch tabs; everything else pushes a layer.
+    val go: (Route) -> Unit = { r ->
+        if (TopLevel.entries.any { it.route::class == r::class }) navController.navigateTopLevel(r) else navController.navigate(r)
+    }
 
     NavHost(
         navController = navController,
@@ -31,7 +36,7 @@ fun UbadNavHost(navController: NavHostController, settings: UserSettings) {
         popExitTransition = { fadeOut(tween(200)) + scaleOut(tween(320), targetScale = 0.94f) },
     ) {
         composable<Route.Hub> { HubScreen(onNavigate = go) }
-        composable<Route.Dashboard> { PendingScreen("Dashboard", back) }
+        composable<Route.Dashboard> { DashboardScreen(onNavigate = go, onBack = null) }
         composable<Route.Courses> { PendingScreen("Courses", back) }
         composable<Route.CourseDetail>(
             deepLinks = listOf(navDeepLink<Route.CourseDetail>(basePath = "${DeepLinks.BASE}course")),
@@ -40,6 +45,7 @@ fun UbadNavHost(navController: NavHostController, settings: UserSettings) {
             deepLinks = listOf(navDeepLink<Route.UnitDetail>(basePath = "${DeepLinks.BASE}unit")),
         ) { PendingScreen("Unit", back) }
         composable<Route.Notes> { PendingScreen("Notes", back) }
+        composable<Route.NoteEditor> { PendingScreen("Note", back) }
         composable<Route.Calendar> { PendingScreen("Calendar", back) }
         composable<Route.Islam> { PendingScreen("Islam", back) }
         composable<Route.Blog> { PendingScreen("Blog", back) }

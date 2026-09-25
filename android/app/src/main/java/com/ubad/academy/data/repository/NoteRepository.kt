@@ -45,7 +45,7 @@ class NoteRepository @Inject constructor(
     }
 
     /**
-     * Copies a picked file into private storage (web `addFiles`): max 5 MB, image/* or audio/*.
+     * Copies a picked file into private storage (web `addFiles`): max 5 MB, image or audio MIME types.
      * The file is "pending" until [save]; call [discardPending] if the editor is discarded.
      */
     suspend fun importAttachment(uri: Uri, kind: Kind): AttachResult = withContext(Dispatchers.IO) {

@@ -89,3 +89,14 @@ object Web {
     fun youtubeWatchUrl(id: String) = "https://www.youtube.com/watch?v=$id"
     fun youtubeThumb(id: String) = "https://img.youtube.com/vi/$id/hqdefault.jpg"
 }
+
+/** `scheduleTimeLabel(hm)` — 12-hour clock with ص/م in Arabic, AM/PM in English. */
+fun scheduleTimeLabel(hm: String, arabic: Boolean): String {
+    val n = Web.hmToMin(hm) ?: return hm
+    val h = n / 60
+    val m = n % 60
+    val am = h < 12
+    val hh = if (h % 12 == 0) 12 else h % 12
+    val suffix = if (arabic) (if (am) "ص" else "م") else (if (am) "AM" else "PM")
+    return "$hh:${m.toString().padStart(2, '0')} $suffix"
+}

@@ -24,6 +24,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ubad.academy.domain.model.UserSettings
 import com.ubad.academy.ui.components.UbadBackground
+import com.ubad.academy.ui.components.ConfettiOverlay
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ubad.academy.ui.navigation.Route
 import com.ubad.academy.ui.navigation.TopLevel
 import com.ubad.academy.ui.navigation.UbadNavHost
@@ -47,7 +50,10 @@ fun UbadApp(settings: UserSettings, navController: NavHostController = rememberN
     val layoutType = if (currentTop == null) NavigationSuiteType.None
     else NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(adaptive)
 
-    UbadBackground(userBackground = null) {
+    val shell: AppShellViewModel = hiltViewModel()
+    val background by shell.background.collectAsStateWithLifecycle()
+
+    UbadBackground(userBackground = background) {
         NavigationSuiteScaffold(
             layoutType = layoutType,
             containerColor = Color.Transparent,
@@ -68,6 +74,7 @@ fun UbadApp(settings: UserSettings, navController: NavHostController = rememberN
         ) {
             UbadNavHost(navController = navController, settings = settings)
         }
+        ConfettiOverlay(shell.celebrations)
     }
 }
 

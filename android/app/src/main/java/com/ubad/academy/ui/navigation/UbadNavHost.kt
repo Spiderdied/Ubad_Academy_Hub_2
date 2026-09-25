@@ -16,6 +16,9 @@ import com.ubad.academy.ui.navigateTopLevel
 import com.ubad.academy.ui.screens.PendingScreen
 import com.ubad.academy.ui.screens.hub.HubScreen
 import com.ubad.academy.ui.screens.dashboard.DashboardScreen
+import com.ubad.academy.ui.screens.courses.CourseDetailScreen
+import com.ubad.academy.ui.screens.courses.CoursesScreen
+import com.ubad.academy.ui.screens.courses.UnitScreen
 
 @Composable
 fun UbadNavHost(navController: NavHostController, settings: UserSettings) {
@@ -37,13 +40,13 @@ fun UbadNavHost(navController: NavHostController, settings: UserSettings) {
     ) {
         composable<Route.Hub> { HubScreen(onNavigate = go) }
         composable<Route.Dashboard> { DashboardScreen(onNavigate = go, onBack = null) }
-        composable<Route.Courses> { PendingScreen("Courses", back) }
+        composable<Route.Courses> { CoursesScreen(onNavigate = go) }
         composable<Route.CourseDetail>(
             deepLinks = listOf(navDeepLink<Route.CourseDetail>(basePath = "${DeepLinks.BASE}course")),
-        ) { PendingScreen("Course", back) }
+        ) { CourseDetailScreen(onNavigate = go, onBack = back) }
         composable<Route.UnitDetail>(
             deepLinks = listOf(navDeepLink<Route.UnitDetail>(basePath = "${DeepLinks.BASE}unit")),
-        ) { PendingScreen("Unit", back) }
+        ) { UnitScreen(onNavigate = go, onBack = back) }
         composable<Route.Notes> { PendingScreen("Notes", back) }
         composable<Route.NoteEditor> { PendingScreen("Note", back) }
         composable<Route.Calendar> { PendingScreen("Calendar", back) }

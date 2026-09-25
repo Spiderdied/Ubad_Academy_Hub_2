@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ubad.academy.domain.model.UserSettings
 import com.ubad.academy.ui.components.UbadBackground
 import com.ubad.academy.ui.components.ConfettiOverlay
+import com.ubad.academy.ui.screens.onboarding.OnboardingGate
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ubad.academy.ui.navigation.Route
@@ -75,6 +76,7 @@ fun UbadApp(settings: UserSettings, navController: NavHostController = rememberN
             UbadNavHost(navController = navController, settings = settings)
         }
         ConfettiOverlay(shell.celebrations)
+        OnboardingGate(settings)
     }
 }
 

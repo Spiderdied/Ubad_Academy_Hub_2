@@ -32,4 +32,15 @@
         <item>Ramadan</item><item>Shawwal</item><item>Dhul-Qadah</item><item>Dhul-Hijjah</item>
     </string-array>
     <string name="hijri_format">%1$s, %2$s %3$s %4$s AH</string>
+    <string name="media_play">Play</string>
+    <string name="media_error">This file can\'t be played.</string>
+    <string name="action_open_with">Open with…</string>
+    <string name="action_share">Share</string>
+    <string name="pdf_fullscreen">Fullscreen</string>
+    <string name="pdf_exit_fullscreen">Exit fullscreen</string>
+    <string name="pdf_go_to_page">Go to page</string>
+    <string name="pdf_page_of">%1$d / %2$d</string>
+    <string name="pdf_password">This PDF is password-protected and can\'t be displayed.</string>
+    <string name="pdf_page_desc">Page %1$d of %2$d</string>
+    <string name="image_desc">Image %1$d of %2$d</string>
 </resources>

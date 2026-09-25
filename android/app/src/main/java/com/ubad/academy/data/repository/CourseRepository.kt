@@ -43,6 +43,15 @@ class CourseRepository @Inject constructor(
     suspend fun assetMime(id: String): String? = dao.asset(id)?.mime
     fun uriFor(file: File): Uri = files.uriFor(file)
 
+    /** Writes a stored asset to a user-chosen document (web "download"). */
+    suspend fun copyAssetTo(id: String, dest: Uri): Boolean = withContext(Dispatchers.IO) {
+        runCatching {
+            val src = files.courseFile(id)
+            if (!src.exists()) return@runCatching false
+            resolver.openOutputStream(dest, "w")?.use { out -> src.inputStream().use { it.copyTo(out) } } != null
+        }.getOrDefault(false)
+    }
+
     // ── courses ──
     data class CourseInput(val name: String, val code: String, val instructor: String, val credits: Double, val semester: String)
 

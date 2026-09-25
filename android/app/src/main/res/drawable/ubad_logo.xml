@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- In-app logo: native port of the #i-logo SVG symbol (index.html). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="64dp" android:height="64dp"
+    android:viewportWidth="64" android:viewportHeight="64">
+    <path android:pathData="M15,0h34a15,15 0,0 1,15 15v34a15,15 0,0 1,-15 15h-34a15,15 0,0 1,-15 -15v-34a15,15 0,0 1,15 -15z"
+        android:fillColor="#0A1024" />
+    <path android:pathData="M15,1h34a14,14 0,0 1,14 14v34a14,14 0,0 1,-14 14h-34a14,14 0,0 1,-14 -14v-34a14,14 0,0 1,14 -14z"
+        android:strokeColor="#478CA0FF" android:strokeWidth="1" android:fillColor="#00000000" />
+    <path android:pathData="M20,15v19a12,12 0,0 0,24 0V15"
+        android:strokeWidth="7" android:strokeLineCap="round" android:fillColor="#00000000">
+        <aapt:attr name="android:strokeColor">
+            <gradient android:type="linear"
+                android:startX="0" android:startY="0" android:endX="64" android:endY="64">
+                <item android:offset="0" android:color="#22D3EE" />
+                <item android:offset="0.55" android:color="#3B82F6" />
+                <item android:offset="1" android:color="#8B5CF6" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path android:pathData="M47.5,14.5m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" android:fillColor="#22D3EE" />
+</vector>

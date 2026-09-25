@@ -1,11 +1,102 @@
 name: Android build
+
 on:
   push:
-    branches: [ 'arena/**' ]
+    branches: [ 'arena/**', 'main' ]
     paths: [ 'android/**', '.github/workflows/android.yml' ]
+  pull_request:
+    paths: [ 'android/**' ]
   workflow_dispatch:
+    inputs:
+      release:
+        description: 'Also build release APK + AAB'
+        type: boolean
+        default: false
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  probe:
+  build:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: android
     steps:
-      - run: echo "probe ok"; java -version; echo $ANDROID_HOME; ls $ANDROID_HOME/platforms
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Assemble debug + unit tests
+        id: build
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon --stacktrace assembleDebug testDebugUnitTest 2>&1 | tee build.log
+
+      - name: Release APK + AAB
+        id: release
+        if: success() && (github.event.inputs.release == 'true' || contains(github.event.head_commit.message, '[release]'))
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon assembleRelease bundleRelease 2>&1 | tee release.log
+
+      - name: Report problems as annotations
+        if: always()
+        run: |
+          python3 - <<'EOF'
+          import glob, os, re, xml.etree.ElementTree as ET
+          def emit(kind, title, lines):
+              if not lines: return
+              chunk = []
+              n = 0
+              for l in lines:
+                  chunk.append(l)
+                  if len(chunk) >= 25:
+                      msg = '%0A'.join(x.replace('%','%25').replace('\r','') for x in chunk)
+                      print(f"::{kind} title={title} {n}::{msg}"); n += 1; chunk = []
+                      if n >= 9: return
+              if chunk:
+                  msg = '%0A'.join(x.replace('%','%25').replace('\r','') for x in chunk)
+                  print(f"::{kind} title={title} {n}::{msg}")
+          errs = []
+          for log in ('build.log', 'release.log'):
+              if not os.path.exists(log): continue
+              lines = open(log, errors='replace').read().splitlines()
+              for i, l in enumerate(lines):
+                  if l.startswith('e: ') or 'error:' in l.lower() and ('.kt' in l or '.xml' in l or 'AAPT' in l or 'ksp' in l.lower()):
+                      errs.append(l.replace('file:///home/runner/work/Ubad_Academy_Hub_2/Ubad_Academy_Hub_2/android/', ''))
+                  if l.startswith('* What went wrong'):
+                      errs.extend(lines[i+1:i+12])
+          emit('error', 'Build', errs[:220])
+          fails = []
+          for f in glob.glob('app/build/test-results/**/*.xml', recursive=True):
+              for tc in ET.parse(f).getroot().iter('testcase'):
+                  for fl in list(tc.findall('failure')) + list(tc.findall('error')):
+                      txt = (fl.get('message') or '') + ' ' + (fl.text or '')[:600]
+                      fails.append(f"{tc.get('classname')}.{tc.get('name')}: " + ' '.join(txt.split())[:700])
+          emit('error', 'Tests', fails[:200])
+          total = sum(len(list(ET.parse(f).getroot().iter('testcase'))) for f in glob.glob('app/build/test-results/**/*.xml', recursive=True))
+          apks = [f"{p} ({os.path.getsize(p)//1024} KB)" for p in glob.glob('app/build/outputs/**/*.apk', recursive=True) + glob.glob('app/build/outputs/**/*.aab', recursive=True)]
+          print(f"::notice title=Summary::tests={total} failures={len(fails)} outputs=" + ' | '.join(apks))
+          warns = []
+          if os.path.exists('build.log'):
+              warns = [l.replace('file:///home/runner/work/Ubad_Academy_Hub_2/Ubad_Academy_Hub_2/android/', '') for l in open('build.log', errors='replace').read().splitlines() if l.startswith('w: ')]
+          emit('warning', 'KotlinWarnings', warns[:50])
+          EOF
+
+      - name: Upload APKs
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ubad-academy-apks
+          path: |
+            android/app/build/outputs/apk/**/*.apk
+            android/app/build/outputs/bundle/**/*.aab
+          if-no-files-found: ignore

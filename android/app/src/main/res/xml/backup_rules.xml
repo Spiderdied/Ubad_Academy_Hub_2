@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android auto-backup (API <= 30). The app is local-first; user data is included
+     like the web app keeps it on-device. Caches are excluded. -->
+<full-backup-content>
+    <include domain="database" path="." />
+    <include domain="sharedpref" path="." />
+    <include domain="file" path="." />
+    <exclude domain="file" path="datastore/blog_cache.preferences_pb" />
+</full-backup-content>

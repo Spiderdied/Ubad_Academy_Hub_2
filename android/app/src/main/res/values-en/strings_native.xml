@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_home_short">Home</string>
+    <string name="cd_logo">UBAD Academy logo</string>
+    <string name="cd_more">More</string>
+    <string name="cd_open_settings">Open settings</string>
+
+    <string name="state_loading">Loading…</string>
+    <string name="state_retry">Try again</string>
+    <string name="state_offline_title">You\'re offline</string>
+    <string name="state_offline_body">Everything saved on this device is still available. Reconnect to load new content.</string>
+    <string name="state_not_found">This item doesn\'t exist or was deleted.</string>
+    <string name="error_generic">Something unexpected happened. Please try again.</string>
+    <string name="error_network">Couldn\'t reach the server. Check your connection and try again.</string>
+    <string name="error_file_read">Couldn\'t read the file.</string>
+    <string name="error_no_app">No app on this device can open this link.</string>
+
+    <string name="notif_channel_focus">Focus timer</string>
+    <string name="notif_channel_focus_desc">Alert when a focus session or break ends</string>
+    <string name="notif_channel_focus_silent">Focus timer (silent)</string>
+    <string name="notif_open">Open</string>
+    <string name="notif_permission_rationale">Allow notifications so you\'re alerted when the timer ends, even if the app is closed.</string>
+    <string name="notif_permission_denied">Timer alerts won\'t appear while the app is closed. You can enable them in system settings.</string>
+    <string name="exact_alarm_hint">To ring exactly on time, allow “Alarms &amp; reminders”.</string>
+    <string name="action_allow">Allow</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="settings_follow_hint">Applies instantly to the whole app.</string>
+    <string-array name="hijri_months">
+        <item>Muharram</item><item>Safar</item><item>Rabi al-Awwal</item><item>Rabi al-Thani</item>
+        <item>Jumada al-Awwal</item><item>Jumada al-Thani</item><item>Rajab</item><item>Shaaban</item>
+        <item>Ramadan</item><item>Shawwal</item><item>Dhul-Qadah</item><item>Dhul-Hijjah</item>
+    </string-array>
+    <string name="hijri_format">%1$s, %2$s %3$s %4$s AH</string>
+</resources>

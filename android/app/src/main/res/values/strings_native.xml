@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android-only strings (Arabic, default locale). Web-derived strings live in strings_web.xml. -->
+<resources>
+    <string name="app_label" translatable="false">UBAD Hub</string>
+    <string name="brand_name" translatable="false">UBAD</string>
+    <string name="brand_sub" translatable="false">ACADEMY HUB</string>
+
+    <string name="nav_home_short">الرئيسية</string>
+    <string name="cd_logo">شعار أكاديمية عُبَدْ</string>
+    <string name="cd_more">المزيد</string>
+    <string name="cd_open_settings">فتح الإعدادات</string>
+
+    <string name="state_loading">جارٍ التحميل…</string>
+    <string name="state_retry">إعادة المحاولة</string>
+    <string name="state_offline_title">أنت غير متصل بالإنترنت</string>
+    <string name="state_offline_body">المحتوى المحفوظ على جهازك متاح. تحقّق من الاتصال لتحميل الجديد.</string>
+    <string name="state_not_found">هذا العنصر غير موجود أو تم حذفه.</string>
+    <string name="error_generic">حدث خطأ غير متوقع. حاول مرة أخرى.</string>
+    <string name="error_network">تعذّر الاتصال بالخادم. تحقّق من الإنترنت ثم حاول مجددًا.</string>
+    <string name="error_file_read">تعذّرت قراءة الملف.</string>
+    <string name="error_no_app">لا يوجد تطبيق على الجهاز يمكنه فتح هذا الرابط.</string>
+
+    <string name="notif_channel_focus">مؤقت التركيز</string>
+    <string name="notif_channel_focus_desc">تنبيه عند انتهاء جلسة التركيز أو الاستراحة</string>
+    <string name="notif_channel_focus_silent">مؤقت التركيز (صامت)</string>
+    <string name="notif_open">فتح</string>
+    <string name="notif_permission_rationale">اسمح بالإشعارات لتصلك رسالة عند انتهاء المؤقت حتى لو كان التطبيق مغلقًا.</string>
+    <string name="notif_permission_denied">لن تصلك تنبيهات المؤقت والتطبيق مغلق. يمكنك تفعيلها من إعدادات النظام.</string>
+    <string name="exact_alarm_hint">لضبط التنبيه في موعده بالضبط، اسمح بـ «المنبّهات والتذكيرات».</string>
+    <string name="action_allow">سماح</string>
+    <string name="action_settings">الإعدادات</string>
+
+    <string name="settings_follow_hint">يُطبَّق فورًا على التطبيق بالكامل.</string>
+    <string name="lang_ar" translatable="false">العربية</string>
+    <string name="lang_en" translatable="false">English</string>
+    <string-array name="hijri_months">
+        <item>محرم</item><item>صفر</item><item>ربيع الأول</item><item>ربيع الآخر</item>
+        <item>جمادى الأولى</item><item>جمادى الآخرة</item><item>رجب</item><item>شعبان</item>
+        <item>رمضان</item><item>شوال</item><item>ذو القعدة</item><item>ذو الحجة</item>
+    </string-array>
+    <string name="hijri_format">%1$s، %2$s %3$s %4$s هـ</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <files-path name="course_assets" path="course_assets/" />
+    <files-path name="note_files" path="note_files/" />
+    <cache-path name="shared" path="shared/" />
+</paths>

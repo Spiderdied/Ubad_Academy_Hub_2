@@ -12,13 +12,22 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.isCtrlPressed
+import androidx.compose.ui.input.key.isMetaPressed
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.util.Consumer
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -42,6 +51,20 @@ fun UbadApp(settings: UserSettings, navController: NavHostController = rememberN
         onDispose { activity?.removeOnNewIntentListener(listener) }
     }
 
+    val shell: AppShellViewModel = hiltViewModel()
+    // Returning to an entry we've already shown = back; a new entry = forward ('transition' when not directly above Hub).
+    DisposableEffect(navController) {
+        val seen = HashSet<String>()
+        val listener = NavController.OnDestinationChangedListener { c, _, _ ->
+            val id = c.currentBackStackEntry?.id ?: return@OnDestinationChangedListener
+            val first = seen.isEmpty()
+            val back = !seen.add(id)
+            if (!first) shell.navSound(back, deep = c.previousBackStackEntry?.destination?.hasRoute(Route.Hub::class) == false)
+        }
+        navController.addOnDestinationChangedListener(listener)
+        onDispose { navController.removeOnDestinationChangedListener(listener) }
+    }
+
     val backStack by navController.currentBackStackEntryAsState()
     val destination = backStack?.destination
     val currentTop = TopLevel.entries.firstOrNull { top ->
@@ -51,11 +74,17 @@ fun UbadApp(settings: UserSettings, navController: NavHostController = rememberN
     val layoutType = if (currentTop == null) NavigationSuiteType.None
     else NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(adaptive)
 
-    val shell: AppShellViewModel = hiltViewModel()
     val background by shell.background.collectAsStateWithLifecycle()
 
     UbadBackground(userBackground = background) {
         NavigationSuiteScaffold(
+            // Ctrl/Cmd + K opens search (web bindKeys); dialogs are separate windows so they're excluded.
+            modifier = Modifier.onPreviewKeyEvent { e ->
+                val open = settings.onboarded && e.type == KeyEventType.KeyDown && e.key == Key.K &&
+                    (e.isCtrlPressed || e.isMetaPressed) && destination?.hasRoute(Route.Search::class) != true
+                if (open) navController.navigate(Route.Search) { launchSingleTop = true }
+                open
+            },
             layoutType = layoutType,
             containerColor = Color.Transparent,
             navigationSuiteColors = NavigationSuiteDefaults.colors(

@@ -42,15 +42,32 @@ class Feedback @Inject constructor(
         ).build()
     private val clickId = pool.load(context, R.raw.click, 1)
     private val alarmId = pool.load(context, R.raw.alarm, 1)
+    // The web's move/back/transition mp3s don't ship, so users hear Sound.blip(); these WAVs are that blip.
+    private val moveId = pool.load(context, R.raw.nav_move, 1)
+    private val backId = pool.load(context, R.raw.nav_back, 1)
+    private val transitionId = pool.load(context, R.raw.nav_transition, 1)
 
     /** Web `Sound.play('alarm')` when a focus/break phase ends with the app open. */
     fun alarm() {
-        if (soundOn.value) pool.play(alarmId, 1f, 1f, 1, 0, 1f)
+        if (soundOn.value) pool.play(alarmId, 0.65f, 0.65f, 1, 0, 1f)
     }
 
     fun click() {
         if (soundOn.value) pool.play(clickId, 0.35f, 0.35f, 0, 0, 1f)
     }
+
+    /** Web `Nav.go()`: 'move' into a section, 'transition' deeper than one level. */
+    fun move(deep: Boolean) {
+        if (soundOn.value) pool.play(if (deep) transitionId else moveId, 1f, 1f, 0, 0, 1f)
+    }
+
+    /** Web `Nav.back()`. */
+    fun back() {
+        if (soundOn.value) pool.play(backId, 1f, 1f, 0, 0, 1f)
+    }
+
+    /** Web theme apply (`Sound.play('transition')`). */
+    fun transition() = move(deep = true)
 
     private val _celebrations = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     val celebrations: SharedFlow<Unit> = _celebrations

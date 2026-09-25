@@ -51,7 +51,9 @@ class SettingsViewModel @Inject constructor(
     val pendingRestore: StateFlow<ParsedBackup?> = _pendingRestore.asStateFlow()
 
     fun setLanguage(l: AppLanguage) = viewModelScope.launch { settings.setLanguage(l); feedback.click() }
-    fun setTheme(t: ThemeId) = viewModelScope.launch { settings.setTheme(t) }
+    fun setTheme(t: ThemeId) = viewModelScope.launch {
+        if (t != settings.current().theme) { settings.setTheme(t); feedback.transition() }
+    }
     fun setSound(on: Boolean) = viewModelScope.launch {
         settings.setSound(on)
         if (on) feedback.click()

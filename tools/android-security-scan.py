@@ -48,6 +48,42 @@ LIBRARY_OK = re.compile(r'DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION$|^android\.pe
 problems, notes = [], []
 
 
+def _uleb(b, o):
+    r = sh = 0
+    while True:
+        x = b[o]; o += 1; r |= (x & 0x7f) << sh; sh += 7
+        if x < 0x80:
+            return r, o
+
+
+def dex_webview_refs(d):
+    """Methods invoked on android.webkit.WebView + classes named *WebView* (to attribute library references)."""
+    import struct
+    so, tc, to = struct.unpack_from('<I', d, 0x3C)[0], *struct.unpack_from('<II', d, 0x40)
+    mc, mo = struct.unpack_from('<II', d, 0x58)
+    cc, co = struct.unpack_from('<II', d, 0x60)
+
+    def string(i):
+        off = struct.unpack_from('<I', d, so + 4 * i)[0]
+        _, o = _uleb(d, off)
+        return d[o:d.index(b'\0', o)].decode('utf-8', 'replace')
+
+    types = [struct.unpack_from('<I', d, to + 4 * i)[0] for i in range(tc)]
+    wv = [i for i, t in enumerate(types) if string(t) == 'Landroid/webkit/WebView;']
+    methods = set()
+    if wv:
+        for i in range(mc):
+            c, _, nm = struct.unpack_from('<HHI', d, mo + 8 * i)
+            if c == wv[0]:
+                methods.add(string(nm))
+    named = set()
+    for i in range(cc):
+        name = string(types[struct.unpack_from('<I', d, co + 32 * i)[0]])
+        if 'webview' in name.lower() or 'webkit' in name.lower():
+            named.add(name.strip('L;').replace('/', '.'))
+    return methods, named
+
+
 def rel(p):
     return os.path.relpath(p, ROOT)
 
@@ -135,7 +171,7 @@ def apk():
             problems.append(f'Unexpected merged permission: {perm}')
     notes.append('Merged permissions: ' + (', '.join(sorted(merged)) or 'manifest not found'))
     for a in glob.glob(os.path.join(APP, 'build', 'outputs', '**', '*.apk'), recursive=True):
-        webview_refs = 0
+        webview_refs, wv_methods, wv_classes = 0, set(), set()
         with zipfile.ZipFile(a) as z:
             for n in z.namelist():
                 if n in ('META-INF/CERT.RSA',) or n.endswith(('.png', '.webp', '.so')):
@@ -143,6 +179,10 @@ def apk():
                 data = z.read(n)
                 if n.endswith('.dex'):
                     webview_refs += data.count(b'Landroid/webkit/WebView;')
+                    try:
+                        m, c = dex_webview_refs(data); wv_methods |= m; wv_classes |= c
+                    except Exception as e:  # never fail the scan on a parser edge case
+                        notes.append(f'dex parse skipped for {n}: {e}')
                 text = data.decode('latin-1')
                 for name, pat in SECRET_PATTERNS.items():
                     if name == 'Hardcoded credential':
@@ -151,6 +191,11 @@ def apk():
                         problems.append(f'{name} inside {os.path.basename(a)}!{n}')
         # Only framework-level references (e.g. androidx compat shims) may remain; the app never creates one.
         notes.append(f'{os.path.basename(a)}: {os.path.getsize(a) // 1024} KB, dex references to android.webkit.WebView type: {webview_refs}')
+        notes.append('WebView methods referenced: ' + (', '.join(sorted(wv_methods)) or 'none'))
+        notes.append('Classes named *WebView*/*webkit*: ' + (', '.join(sorted(wv_classes)) or 'none'))
+        own = [c for c in wv_classes if c.startswith('com.ubad.')]
+        if own or wv_methods & {'loadUrl', 'loadData', 'loadDataWithBaseURL', 'addJavascriptInterface', 'evaluateJavascript'}:
+            problems.append(f'App code loads content in a WebView: methods={sorted(wv_methods)} classes={own}')
 
 
 if __name__ == '__main__':

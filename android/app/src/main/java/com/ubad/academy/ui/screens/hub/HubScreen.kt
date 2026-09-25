@@ -58,6 +58,7 @@ import com.ubad.academy.core.Dates
 import com.ubad.academy.core.Hijri
 import com.ubad.academy.core.Web
 import com.ubad.academy.core.currentLocale
+import com.ubad.academy.ui.components.HubStars
 import com.ubad.academy.ui.navigation.HubSection
 import com.ubad.academy.ui.navigation.Route
 import com.ubad.academy.ui.theme.UbadThemeExt
@@ -73,63 +74,66 @@ fun HubScreen(
     val today = remember { LocalDate.now() }
     val colors = UbadThemeExt.colors
 
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 164.dp),
-        modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing),
-        contentPadding = PaddingValues(horizontal = 18.dp, vertical = 12.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(painterResource(R.drawable.ubad_logo), stringResource(R.string.cd_logo), Modifier.size(40.dp))
-                Spacer(Modifier.width(10.dp))
-                Column(Modifier.weight(1f)) {
-                    Text(stringResource(R.string.brand_name), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
-                    Text(
-                        stringResource(R.string.brand_sub), fontFamily = FontFamily.Monospace, style = MaterialTheme.typography.labelSmall,
-                        letterSpacing = 0.3.em, color = MaterialTheme.colorScheme.outline,
-                    )
-                }
-                IconButton(onClick = { onNavigate(Route.Search) }) {
-                    Icon(Icons.Outlined.Search, stringResource(R.string.common_search))
-                }
-            }
-        }
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            Column(Modifier.padding(top = 18.dp, bottom = 6.dp)) {
-                Text(
-                    Dates.long(today, locale), style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.outline,
-                )
-                Spacer(Modifier.height(4.dp))
-                Text(stringResource(R.string.hub_head), style = MaterialTheme.typography.headlineLarge)
-                Spacer(Modifier.height(10.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    AssistChip(
-                        onClick = { onNavigate(Route.Calendar(Web.today())) },
-                        label = { Text(Dates.shortChip(today, locale)) },
-                        leadingIcon = { Icon(Icons.Outlined.CalendarMonth, null, Modifier.size(AssistChipDefaults.IconSize)) },
-                    )
-                    ramadan?.let { r ->
-                        AssistChip(
-                            onClick = { onNavigate(Route.Islam) },
-                            label = { Text(stringResource(R.string.islam_ramadan) + " " + r.days) },
-                            leadingIcon = { Icon(Icons.Outlined.DarkMode, null, Modifier.size(AssistChipDefaults.IconSize)) },
+    Box(Modifier.fillMaxSize()) {
+        HubStars(Modifier.fillMaxSize())
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(minSize = 164.dp),
+            modifier = Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing),
+            contentPadding = PaddingValues(horizontal = 18.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(painterResource(R.drawable.ubad_logo), stringResource(R.string.cd_logo), Modifier.size(40.dp))
+                    Spacer(Modifier.width(10.dp))
+                    Column(Modifier.weight(1f)) {
+                        Text(stringResource(R.string.brand_name), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                        Text(
+                            stringResource(R.string.brand_sub), fontFamily = FontFamily.Monospace, style = MaterialTheme.typography.labelSmall,
+                            letterSpacing = 0.3.em, color = MaterialTheme.colorScheme.outline,
                         )
+                    }
+                    IconButton(onClick = { onNavigate(Route.Search) }) {
+                        Icon(Icons.Outlined.Search, stringResource(R.string.common_search))
                     }
                 }
             }
-        }
-        itemsIndexed(HubSection.entries, key = { _, s -> s.name }) { i, section ->
-            HubCard(section, i, accent = colors.accent(i)) { onNavigate(section.route) }
-        }
-        item(span = { GridItemSpan(maxLineSpan) }) {
-            Text(
-                stringResource(R.string.hub_foot), style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.outline, modifier = Modifier.fillMaxWidth().padding(vertical = 18.dp),
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-            )
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Column(Modifier.padding(top = 18.dp, bottom = 6.dp)) {
+                    Text(
+                        Dates.long(today, locale), style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.outline,
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(stringResource(R.string.hub_head), style = MaterialTheme.typography.headlineLarge)
+                    Spacer(Modifier.height(10.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        AssistChip(
+                            onClick = { onNavigate(Route.Calendar(Web.today())) },
+                            label = { Text(Dates.shortChip(today, locale)) },
+                            leadingIcon = { Icon(Icons.Outlined.CalendarMonth, null, Modifier.size(AssistChipDefaults.IconSize)) },
+                        )
+                        ramadan?.let { r ->
+                            AssistChip(
+                                onClick = { onNavigate(Route.Islam) },
+                                label = { Text(stringResource(R.string.islam_ramadan) + " " + r.days) },
+                                leadingIcon = { Icon(Icons.Outlined.DarkMode, null, Modifier.size(AssistChipDefaults.IconSize)) },
+                            )
+                        }
+                    }
+                }
+            }
+            itemsIndexed(HubSection.entries, key = { _, s -> s.name }) { i, section ->
+                HubCard(section, i, accent = colors.accent(i)) { onNavigate(section.route) }
+            }
+            item(span = { GridItemSpan(maxLineSpan) }) {
+                Text(
+                    stringResource(R.string.hub_foot), style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.outline, modifier = Modifier.fillMaxWidth().padding(vertical = 18.dp),
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                )
+            }
         }
     }
 }

@@ -11,7 +11,10 @@ import javax.inject.Inject
 
 /** App-wide chrome state: the per-theme custom background and celebration events. */
 @HiltViewModel
-class AppShellViewModel @Inject constructor(appData: AppDataRepository, feedback: Feedback) : ViewModel() {
+class AppShellViewModel @Inject constructor(appData: AppDataRepository, private val feedback: Feedback) : ViewModel() {
     val background = appData.background.stateIn(viewModelScope, SharingStarted.Eagerly, null)
     val celebrations = feedback.celebrations
+
+    /** Navigation sounds like the web Nav: 'back' when returning, 'move'/'transition' going forward. */
+    fun navSound(back: Boolean, deep: Boolean) = if (back) feedback.back() else feedback.move(deep)
 }

@@ -3,6 +3,9 @@
 A local-first, **spatial academic operating environment** — dark, glassmorphic,
 3D, and fully offline. No account, no server, no frameworks.
 
+> **Native Android app:** a Kotlin/Jetpack Compose rebuild lives in [`android/`](android/README.md)
+> (same data via backup v2, no WebView). See [`docs/ANDROID_FEATURE_COMPARISON.md`](docs/ANDROID_FEATURE_COMPARISON.md).
+
 ## Features
 - **Hierarchical spatial navigation** — Hub → Category → Subcategory → Content,
   each level a real layer that moves through depth (never a carousel).

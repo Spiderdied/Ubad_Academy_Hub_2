@@ -203,8 +203,9 @@ com.ubad.academy/
   uses `AppCompatDelegate.setApplicationLocales` (per-app language, Android 13 system settings integration).
 * **Deep links**: `ubadacademy://course/{id}`, `…/unit/{courseId}/{unitId}`, `…/blog/{postId}`,
   `…/study/focus`. No HTTPS App Links, because there is no owned domain to verify.
-* **Permissions**: `INTERNET`, `ACCESS_NETWORK_STATE`, `POST_NOTIFICATIONS` (requested only when the
-  user first starts a focus timer), and `SCHEDULE_EXACT_ALARM`/`USE_EXACT_ALARM` for timer end.
+* **Permissions** (as shipped): `INTERNET`, `POST_NOTIFICATIONS` (requested only when the
+  user first starts a focus timer), and `SCHEDULE_EXACT_ALARM` for timer end (optional; inexact fallback).
+  `ACCESS_NETWORK_STATE` and `USE_EXACT_ALARM` turned out to be unnecessary and were dropped.
   Nothing else: no storage, camera, mic, or location.
 * **Builds**: debug APK, release APK (R8 + resource shrinking, signing from `keystore.properties`
   / env vars, **never committed**), and `bundleRelease` AAB.

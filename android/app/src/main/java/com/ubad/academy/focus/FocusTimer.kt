@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.ubad.academy.R
 import com.ubad.academy.core.Feedback
 import com.ubad.academy.core.Web
 import com.ubad.academy.data.local.prefs.SettingsStore
@@ -105,6 +106,7 @@ class FocusTimer @Inject constructor(
         if (visible) {
             feedback.alarm()
             if (ended == FocusPhase.FOCUS) feedback.celebrate()
+            feedback.toast(if (ended == FocusPhase.FOCUS) R.string.focus_doneMsg else R.string.focus_breakOver)
             _ended.tryEmit(ended)
         } else if (fromAlarm) {
             notifier.phaseEnded(ended)
@@ -117,6 +119,8 @@ class FocusTimer @Inject constructor(
         if (!t.running) return@launch
         if (t.endsAt <= System.currentTimeMillis()) completeIfDue(fromAlarm = false) else schedule(t.endsAt)
     }
+
+    fun notificationsAllowed(): Boolean = notifier.canPost()
 
     fun canScheduleExact(): Boolean = Build.VERSION.SDK_INT < Build.VERSION_CODES.S || alarms?.canScheduleExactAlarms() == true
 

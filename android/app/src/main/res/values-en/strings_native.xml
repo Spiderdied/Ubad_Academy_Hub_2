@@ -43,4 +43,12 @@
     <string name="pdf_password">This PDF is password-protected and can\'t be displayed.</string>
     <string name="pdf_page_desc">Page %1$d of %2$d</string>
     <string name="image_desc">Image %1$d of %2$d</string>
+    <string name="exact_alarm_title">On-time alerts</string>
+    <string name="exact_alarm_msg">To ring the moment a session ends — even with the app closed or the screen locked — Android needs the “Alarms &amp; reminders” permission. Without it the timer still works, but the alert may arrive a little late.</string>
+    <string name="exact_alarm_allow">Allow</string>
+    <string name="exact_alarm_not_now">Not now</string>
+    <string name="exact_alarm_hint">Timer alerts may be slightly late. Allow precise alarms for on-time alerts.</string>
+    <string name="notif_hint">Notifications are off, so the timer can\'t alert you while the app is closed.</string>
+    <!-- Web references study.newCard but never defines it. -->
+    <string name="study_newCard">New card</string>
 </resources>

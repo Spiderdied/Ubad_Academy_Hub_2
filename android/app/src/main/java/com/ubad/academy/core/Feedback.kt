@@ -3,6 +3,10 @@ package com.ubad.academy.core
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.SoundPool
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
+import androidx.annotation.StringRes
 import com.ubad.academy.R
 import com.ubad.academy.data.local.prefs.SettingsStore
 import com.ubad.academy.di.AppScope
@@ -22,7 +26,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class Feedback @Inject constructor(
-    @ApplicationContext context: Context,
+    @ApplicationContext private val context: Context,
     settings: SettingsStore,
     @AppScope scope: CoroutineScope,
 ) {
@@ -52,4 +56,9 @@ class Feedback @Inject constructor(
     val celebrations: SharedFlow<Unit> = _celebrations
 
     fun celebrate() { _celebrations.tryEmit(Unit) }
+
+    /** Web `toast()` for messages that must outlive the current screen (e.g. "deleted" after popping back). */
+    fun toast(@StringRes text: Int) {
+        Handler(Looper.getMainLooper()).post { Toast.makeText(context, text, Toast.LENGTH_SHORT).show() }
+    }
 }

@@ -50,6 +50,7 @@ class SettingsStore @Inject constructor(@ApplicationContext context: Context) {
         val BLOG_NEXT = stringPreferencesKey("blog_next_token")
         val BLOG_SAVED = longPreferencesKey("blog_saved_at")
         val NOTIF_ASKED = booleanPreferencesKey("notif_asked")
+        val EXACT_ASKED = booleanPreferencesKey("exact_alarm_asked")
         fun pdfPage(assetId: String) = intPreferencesKey("pdf_page_$assetId")
     }
 
@@ -140,6 +141,8 @@ class SettingsStore @Inject constructor(@ApplicationContext context: Context) {
 
     suspend fun notificationAsked(): Boolean = store.data.first()[K.NOTIF_ASKED] ?: false
     suspend fun setNotificationAsked() = store.edit { it[K.NOTIF_ASKED] = true }
+    suspend fun exactAlarmAsked(): Boolean = store.data.first()[K.EXACT_ASKED] ?: false
+    suspend fun setExactAlarmAsked() = store.edit { it[K.EXACT_ASKED] = true }
 
     suspend fun pdfLastPage(assetId: String): Int = store.data.first()[K.pdfPage(assetId)] ?: 0
     suspend fun setPdfLastPage(assetId: String, page: Int) = store.edit { it[K.pdfPage(assetId)] = page }

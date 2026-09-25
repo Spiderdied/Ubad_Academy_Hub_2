@@ -16,6 +16,11 @@ import com.ubad.academy.ui.screens.calendar.CalendarScreen
 import com.ubad.academy.ui.screens.notes.NoteEditorScreen
 import com.ubad.academy.ui.screens.notes.NotesScreen
 import com.ubad.academy.ui.screens.search.SearchScreen
+import com.ubad.academy.ui.screens.study.DeckScreen
+import com.ubad.academy.ui.screens.study.DeckTestScreen
+import com.ubad.academy.ui.screens.study.QuizEditScreen
+import com.ubad.academy.ui.screens.study.QuizPlayScreen
+import com.ubad.academy.ui.screens.study.StudyScreen
 import com.ubad.academy.ui.screens.viewer.GallerySource
 import com.ubad.academy.ui.screens.viewer.ImageViewerScreen
 import com.ubad.academy.ui.screens.viewer.MediaPlayerScreen
@@ -76,7 +81,11 @@ fun UbadNavHost(navController: NavHostController, settings: UserSettings) {
         ) { PendingScreen("Post", back) }
         composable<Route.Study>(
             deepLinks = listOf(navDeepLink<Route.Study>(basePath = "${DeepLinks.BASE}study")),
-        ) { PendingScreen("Study", back) }
+        ) { StudyScreen(onNavigate = go) }
+        composable<Route.Deck> { DeckScreen(onBack = back) }
+        composable<Route.DeckTest> { DeckTestScreen(onBack = back) }
+        composable<Route.QuizEdit> { QuizEditScreen(onBack = back) }
+        composable<Route.QuizPlay> { QuizPlayScreen(onBack = back) }
         composable<Route.Settings> { PendingScreen("Settings", back) }
         composable<Route.Search> {
             // Like the web overlay: picking a result closes search first.

@@ -12,6 +12,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
+import com.ubad.academy.ui.screens.calendar.CalendarScreen
+import com.ubad.academy.ui.screens.notes.NoteEditorScreen
+import com.ubad.academy.ui.screens.notes.NotesScreen
+import com.ubad.academy.ui.screens.search.SearchScreen
 import com.ubad.academy.ui.screens.viewer.GallerySource
 import com.ubad.academy.ui.screens.viewer.ImageViewerScreen
 import com.ubad.academy.ui.screens.viewer.MediaPlayerScreen
@@ -62,9 +66,9 @@ fun UbadNavHost(navController: NavHostController, settings: UserSettings) {
             val r = e.toRoute<Route.NoteImageViewer>()
             ImageViewerScreen(GallerySource.Note(r.noteId), r.index, onBack = back)
         }
-        composable<Route.Notes> { PendingScreen("Notes", back) }
-        composable<Route.NoteEditor> { PendingScreen("Note", back) }
-        composable<Route.Calendar> { PendingScreen("Calendar", back) }
+        composable<Route.Notes> { NotesScreen(onNavigate = go, onBack = back) }
+        composable<Route.NoteEditor> { NoteEditorScreen(onNavigate = go, onBack = back) }
+        composable<Route.Calendar> { CalendarScreen(onBack = back) }
         composable<Route.Islam> { PendingScreen("Islam", back) }
         composable<Route.Blog> { PendingScreen("Blog", back) }
         composable<Route.BlogPost>(
@@ -74,7 +78,10 @@ fun UbadNavHost(navController: NavHostController, settings: UserSettings) {
             deepLinks = listOf(navDeepLink<Route.Study>(basePath = "${DeepLinks.BASE}study")),
         ) { PendingScreen("Study", back) }
         composable<Route.Settings> { PendingScreen("Settings", back) }
-        composable<Route.Search> { PendingScreen("Search", back) }
+        composable<Route.Search> {
+            // Like the web overlay: picking a result closes search first.
+            SearchScreen(onNavigate = { r -> navController.navigate(r) { popUpTo<Route.Search> { inclusive = true } } }, onBack = back)
+        }
     }
 }
 

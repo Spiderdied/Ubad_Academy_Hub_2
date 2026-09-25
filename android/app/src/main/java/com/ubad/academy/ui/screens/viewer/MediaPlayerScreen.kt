@@ -156,7 +156,7 @@ fun MediaPlayerScreen(onBack: () -> Unit, viewModel: MediaPlayerViewModel = hilt
                             // Audio: keep the transport controls permanently visible.
                             controllerShowTimeoutMs = 0
                             controllerHideOnTouch = false
-                            useArtwork = false
+                            artworkDisplayMode = PlayerView.ARTWORK_DISPLAY_MODE_OFF
                             showController()
                         }
                     }

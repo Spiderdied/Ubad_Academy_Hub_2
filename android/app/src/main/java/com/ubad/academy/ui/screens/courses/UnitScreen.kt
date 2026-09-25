@@ -33,7 +33,7 @@ import androidx.compose.material.icons.outlined.Headphones
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Layers
 import androidx.compose.material.icons.outlined.Movie
-import androidx.compose.material.icons.outlined.OpenInNew
+import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.PictureAsPdf
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.SaveAlt
@@ -301,7 +301,7 @@ private fun ContentBody(
         }
         x.isYoutube -> {
             if (com.ubad.academy.core.Web.youtubeVideoId(x.url) == null) Text(stringResource(R.string.courses_badFile), color = MaterialTheme.colorScheme.error)
-            else FilledTonalButton(onClick = onYoutube) { Icon(Icons.Outlined.OpenInNew, null); Spacer(Modifier.width(8.dp)); Text(stringResource(R.string.courses_open) + " · YouTube") }
+            else FilledTonalButton(onClick = onYoutube) { Icon(Icons.AutoMirrored.Outlined.OpenInNew, null); Spacer(Modifier.width(8.dp)); Text(stringResource(R.string.courses_open) + " · YouTube") }
         }
         x.contentType == ContentType.IMAGE -> {
             val refs = x.assets.map { it.id }.ifEmpty { listOfNotNull(x.assetId.ifEmpty { null }) }.filter { fileFor(it).exists() }
@@ -331,7 +331,7 @@ private fun ContentBody(
             else FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Button(onClick = onOpenPdf) { Icon(Icons.Outlined.Visibility, null); Spacer(Modifier.width(8.dp)); Text(stringResource(R.string.courses_openPdf)) }
                 OutlinedButton(onClick = onSavePdf) { Icon(Icons.Outlined.SaveAlt, null); Spacer(Modifier.width(8.dp)); Text(stringResource(R.string.courses_downloadPdf)) }
-                OutlinedButton(onClick = onOpenWith) { Icon(Icons.Outlined.OpenInNew, null); Spacer(Modifier.width(8.dp)); Text(stringResource(R.string.action_open_with)) }
+                OutlinedButton(onClick = onOpenWith) { Icon(Icons.AutoMirrored.Outlined.OpenInNew, null); Spacer(Modifier.width(8.dp)); Text(stringResource(R.string.action_open_with)) }
             }
         }
     }

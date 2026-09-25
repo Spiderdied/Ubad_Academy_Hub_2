@@ -177,3 +177,12 @@ fun ThemeId.swatch(): Color = when (this) {
     ThemeId.SAGE -> Color(0xFFF7FBF7)
     ThemeId.ROSE -> Color(0xFFFDF5F8)
 }
+
+/** Fixed colours for media surfaces (photo/video backdrops, PDF paper) — same in every theme. */
+object MediaColors {
+    val backdrop = Color(0xFF000000)
+    val onBackdrop = Color(0xFFFFFFFF)
+    val scrim = Color(0x8C000000)
+    val paper = Color(0xFFFFFFFF)
+    val pageSpinner = Color(0xFF9E9E9E)
+}

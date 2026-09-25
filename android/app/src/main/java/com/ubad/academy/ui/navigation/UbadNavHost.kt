@@ -11,6 +11,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
+import androidx.navigation.toRoute
+import com.ubad.academy.ui.screens.viewer.GallerySource
+import com.ubad.academy.ui.screens.viewer.ImageViewerScreen
+import com.ubad.academy.ui.screens.viewer.MediaPlayerScreen
+import com.ubad.academy.ui.screens.viewer.PdfViewerScreen
 import com.ubad.academy.domain.model.UserSettings
 import com.ubad.academy.ui.navigateTopLevel
 import com.ubad.academy.ui.screens.PendingScreen
@@ -47,6 +52,16 @@ fun UbadNavHost(navController: NavHostController, settings: UserSettings) {
         composable<Route.UnitDetail>(
             deepLinks = listOf(navDeepLink<Route.UnitDetail>(basePath = "${DeepLinks.BASE}unit")),
         ) { UnitScreen(onNavigate = go, onBack = back) }
+        composable<Route.PdfViewer> { PdfViewerScreen(onBack = back) }
+        composable<Route.MediaPlayer> { MediaPlayerScreen(onBack = back) }
+        composable<Route.ImageViewer> { e ->
+            val r = e.toRoute<Route.ImageViewer>()
+            ImageViewerScreen(GallerySource.CourseContent(r.contentId), r.index, onBack = back)
+        }
+        composable<Route.NoteImageViewer> { e ->
+            val r = e.toRoute<Route.NoteImageViewer>()
+            ImageViewerScreen(GallerySource.Note(r.noteId), r.index, onBack = back)
+        }
         composable<Route.Notes> { PendingScreen("Notes", back) }
         composable<Route.NoteEditor> { PendingScreen("Note", back) }
         composable<Route.Calendar> { PendingScreen("Calendar", back) }

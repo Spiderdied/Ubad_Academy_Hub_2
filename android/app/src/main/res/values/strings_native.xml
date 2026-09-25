@@ -32,6 +32,7 @@
     <string name="settings_follow_hint">يُطبَّق فورًا على التطبيق بالكامل.</string>
     <string name="lang_ar" translatable="false">العربية</string>
     <string name="lang_en" translatable="false">English</string>
+    <string name="app_name_caps" translatable="false">UBAD ACADEMY HUB</string>
     <string-array name="hijri_months">
         <item>محرم</item><item>صفر</item><item>ربيع الأول</item><item>ربيع الآخر</item>
         <item>جمادى الأولى</item><item>جمادى الآخرة</item><item>رجب</item><item>شعبان</item>

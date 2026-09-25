@@ -17,6 +17,7 @@ import com.ubad.academy.ui.screens.notes.NoteEditorScreen
 import com.ubad.academy.ui.screens.notes.NotesScreen
 import com.ubad.academy.ui.screens.search.SearchScreen
 import com.ubad.academy.ui.screens.islam.IslamScreen
+import com.ubad.academy.ui.screens.settings.SettingsScreen
 import com.ubad.academy.ui.screens.blog.BlogPostScreen
 import com.ubad.academy.ui.screens.blog.BlogScreen
 import com.ubad.academy.ui.screens.study.DeckScreen
@@ -30,7 +31,6 @@ import com.ubad.academy.ui.screens.viewer.MediaPlayerScreen
 import com.ubad.academy.ui.screens.viewer.PdfViewerScreen
 import com.ubad.academy.domain.model.UserSettings
 import com.ubad.academy.ui.navigateTopLevel
-import com.ubad.academy.ui.screens.PendingScreen
 import com.ubad.academy.ui.screens.hub.HubScreen
 import com.ubad.academy.ui.screens.dashboard.DashboardScreen
 import com.ubad.academy.ui.screens.courses.CourseDetailScreen
@@ -89,7 +89,9 @@ fun UbadNavHost(navController: NavHostController, settings: UserSettings) {
         composable<Route.DeckTest> { DeckTestScreen(onBack = back) }
         composable<Route.QuizEdit> { QuizEditScreen(onBack = back) }
         composable<Route.QuizPlay> { QuizPlayScreen(onBack = back) }
-        composable<Route.Settings> { PendingScreen("Settings", back) }
+        composable<Route.Settings> {
+            SettingsScreen(onBack = back, onHome = { navController.popBackStack(Route.Hub, inclusive = false) })
+        }
         composable<Route.Search> {
             // Like the web overlay: picking a result closes search first.
             SearchScreen(onNavigate = { r -> navController.navigate(r) { popUpTo<Route.Search> { inclusive = true } } }, onBack = back)

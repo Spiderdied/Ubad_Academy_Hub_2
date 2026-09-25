@@ -21,7 +21,6 @@
     <string name="notif_open">Open</string>
     <string name="notif_permission_rationale">Allow notifications so you\'re alerted when the timer ends, even if the app is closed.</string>
     <string name="notif_permission_denied">Timer alerts won\'t appear while the app is closed. You can enable them in system settings.</string>
-    <string name="exact_alarm_hint">To ring exactly on time, allow “Alarms &amp; reminders”.</string>
     <string name="action_allow">Allow</string>
     <string name="action_settings">Settings</string>
 

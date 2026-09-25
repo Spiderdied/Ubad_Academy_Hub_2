@@ -26,7 +26,6 @@
     <string name="notif_open">فتح</string>
     <string name="notif_permission_rationale">اسمح بالإشعارات لتصلك رسالة عند انتهاء المؤقت حتى لو كان التطبيق مغلقًا.</string>
     <string name="notif_permission_denied">لن تصلك تنبيهات المؤقت والتطبيق مغلق. يمكنك تفعيلها من إعدادات النظام.</string>
-    <string name="exact_alarm_hint">لضبط التنبيه في موعده بالضبط، اسمح بـ «المنبّهات والتذكيرات».</string>
     <string name="action_allow">سماح</string>
     <string name="action_settings">الإعدادات</string>
 

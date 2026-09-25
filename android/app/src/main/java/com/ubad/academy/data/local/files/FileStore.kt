@@ -34,7 +34,7 @@ class FileStore @Inject constructor(@ApplicationContext private val context: Con
     fun noteFile(fileId: String) = File(noteDir, safeName(fileId))
     fun backgroundFile(theme: ThemeId) = File(bgDir, "bg-${theme.key}")
 
-    fun newTempFile(prefix: String = "in"): File = File.createTempFile(prefix, ".bin", tmpDir)
+    fun newTempFile(prefix: String = "in"): File = File.createTempFile("ubad_$prefix", ".bin", tmpDir)
 
     /** Copies [input] into [target] atomically (temp file + rename). Returns bytes written. */
     fun writeAtomically(target: File, input: InputStream): Long {

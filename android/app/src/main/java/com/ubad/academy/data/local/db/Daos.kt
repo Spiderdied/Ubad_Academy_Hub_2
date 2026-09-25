@@ -86,6 +86,9 @@ interface PlannerDao {
     @Query("SELECT * FROM tasks ORDER BY position") fun observeTasks(): Flow<List<TaskEntity>>
     @Query("SELECT * FROM tasks ORDER BY position") suspend fun tasks(): List<TaskEntity>
     @Query("SELECT COALESCE(MAX(position), -1) + 1 FROM tasks") suspend fun nextTaskPos(): Int
+    /** Web quick-add uses `tasks.unshift(...)` → new tasks go to the front. */
+    @Query("SELECT COALESCE(MIN(position), 1) - 1 FROM tasks") suspend fun firstTaskPos(): Int
+    @Query("UPDATE tasks SET done = NOT done WHERE id = :id") suspend fun toggleTask(id: String)
     @Upsert suspend fun upsertTask(t: TaskEntity)
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insertTasks(t: List<TaskEntity>)
     @Query("DELETE FROM tasks WHERE id = :id") suspend fun deleteTask(id: String)

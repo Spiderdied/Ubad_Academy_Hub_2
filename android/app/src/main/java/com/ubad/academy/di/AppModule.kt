@@ -36,3 +36,11 @@ object AppModule {
     @Provides @Singleton @AppScope
     fun appScope(): CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 }
+
+@Module
+@InstallIn(SingletonComponent::class)
+object AndroidModule {
+    @Provides
+    fun contentResolver(@dagger.hilt.android.qualifiers.ApplicationContext context: android.content.Context): android.content.ContentResolver =
+        context.contentResolver
+}

@@ -371,52 +371,52 @@ def main():
     health('after export')
 
     # 9b. Round trip: erase everything, re-import the file Android just exported, check data is intact.
+    #     Erase resets the language to Arabic (documented deviation), so labels match both languages.
     if exported:
         export_name = path[0]
-        home_hub(); tap(r'Settings', scrolls=2)
-        wiped = tap(r'Erase all data', scrolls=10, wait=2) and tap(r'Erase all data', scrolls=0, wait=4, last=True)
-        # Wipe resets the language to Arabic (documented deviation); verify, then switch back to English.
+        SETTINGS, COURSES, NOTES = r'Settings|الإعدادات', r'Courses|المقررات', r'Notes|الملاحظات'
+        home_hub(); tap(SETTINGS, scrolls=2)
+        wiped = tap(r'Erase all data', scrolls=10, wait=2) and tap(r'Erase all data', scrolls=0, wait=5, last=True)
         if wiped:
-            log('PASS' if wait_for(r'.*الإعدادات.*|.*اللغة.*', 10) else 'FAIL', 'erase resets language to Arabic')
-            tap(r'English', scrolls=6, wait=4)
-        home_hub(); tap(r'Courses', scrolls=1)
+            log('PASS' if wait_for(r'.*(الإعدادات|اللغة|المظهر).*', 10) else 'FAIL', 'erase resets language to Arabic')
+        home_hub(); tap(COURSES, scrolls=1)
         empty = wiped and find(r'.*Smoke Physics.*') is None
         log('PASS' if empty else 'FAIL', 'erase all data before re-import', ' | '.join(texts())[:200])
-        home_hub(); tap(r'Settings', scrolls=2)
+        home_hub(); tap(SETTINGS, scrolls=2)
         reimported = False
-        if tap(r'Import backup', scrolls=8, wait=4):
+        if tap(r'Import backup|استيراد نسخة احتياطية', scrolls=10, wait=4):
             picked = tap(re.escape(export_name), scrolls=0, wait=4)
             if not picked:
                 tap(r'Show roots', scrolls=0, wait=2) and tap(r'Downloads?', scrolls=0, wait=3)
                 picked = tap(re.escape(export_name), scrolls=2, wait=4)
-            if picked and wait_for(r'Restore selected', 20):
-                tap(r'Restore selected', scrolls=0, wait=5, last=True)
+            if picked and wait_for(r'Restore selected|استرجاع المحدد', 20):
+                tap(r'Restore selected|استرجاع المحدد', scrolls=0, wait=5, last=True)
                 reimported = True
         log('PASS' if reimported else 'FAIL', f're-import Android export ({export_name}) via system picker',
             '' if reimported else ' | '.join(texts())[:300])
         health('after re-import')
         if reimported:
-            for label, expect in ((r'Courses', r'.*Smoke Physics.*'), (r'Notes', r'.*Smoke Note.*')):
+            for label, expect in ((COURSES, r'.*Smoke Physics.*'), (NOTES, r'.*Smoke Note.*')):
                 home_hub(); tap(label, scrolls=2)
-                step(f'after re-import: {label} intact', expect, 10)
-            home_hub(); tap(r'Courses', scrolls=1)
+                step(f'after re-import: {label.split("|")[0]} intact', expect, 10)
+            home_hub(); tap(COURSES, scrolls=1)
             if tap(r'.*Smoke Physics.*', scrolls=1) and tap(r'.*Smoke Unit.*', scrolls=1):
-                step('after re-import: unit contents + progress intact', r'.*4 items.*', 8)
-                if tap_tab(r'PDF · \d+') and tap(r'Open PDF', scrolls=2, wait=4):
-                    step('after re-import: PDF asset opens', r'Page 1 of 2', 10)
+                step('after re-import: unit contents + progress intact', r'.*(4 items|4 عناصر).*', 8)
+                if tap_tab(r'PDF · \d+', anchor=r'(Text|نص) · \d+') and tap(r'Open PDF|فتح PDF', scrolls=2, wait=4):
+                    step('after re-import: PDF asset opens and renders', r'Page 1 of 2|صفحة 1 من 2', 10)
                     back()
                 else:
-                    log('FAIL', 'after re-import: PDF not reachable')
-            home_hub(); tap(r'Study Tools', scrolls=2)
+                    log('FAIL', 'after re-import: PDF not reachable', ' | '.join(texts())[:200])
+            home_hub(); tap(r'Study Tools|أدوات الدراسة', scrolls=2)
             step('after re-import: Study deck intact', r'.*Smoke Deck.*', 8)
-            tap(r'Quizzes', scrolls=0)
+            tap(r'Quizzes|الاختبارات', scrolls=0)
             step('after re-import: quiz intact', r'.*Smoke Quiz.*', 8)
-            home_hub(); tap(r'Dashboard', scrolls=1)
+            home_hub(); tap(r'Dashboard|لوحة التحكم', scrolls=1)
             step('after re-import: user name intact', r'.*Smoke Tester.*', 8)
 
     # 10. Arabic + RTL
-    home_hub(); tap(r'Settings', scrolls=2)
-    if tap(r'العربية', scrolls=4, wait=4):
+    home_hub(); tap(r'Settings|الإعدادات', scrolls=2)
+    if find(r'.*الإعدادات.*') is not None or tap(r'العربية', scrolls=4, wait=4):
         ok = step('language → Arabic', r'الإعدادات|.*الإعدادات.*', 10)
         back_btn = find(r'رجوع|Back|Navigate up')
         if back_btn is not None:

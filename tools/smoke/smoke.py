@@ -383,17 +383,21 @@ def main():
         empty = wiped and find(r'.*Smoke Physics.*') is None
         log('PASS' if empty else 'FAIL', 'erase all data before re-import', ' | '.join(texts())[:200])
         home_hub(); tap(SETTINGS, scrolls=2)
-        reimported = False
-        if tap(r'Import backup|استيراد نسخة احتياطية', scrolls=10, wait=4):
+        reimported, stage = False, 'import button'
+        if tap(r'Import backup|استيراد نسخة احتياطية', scrolls=10, wait=4) or \
+                tap(r'.*(Import|استيراد).*', scrolls=10, wait=4):
+            stage = 'file in picker'
             picked = tap(re.escape(export_name), scrolls=0, wait=4)
             if not picked:
                 tap(r'Show roots', scrolls=0, wait=2) and tap(r'Downloads?', scrolls=0, wait=3)
-                picked = tap(re.escape(export_name), scrolls=2, wait=4)
-            if picked and wait_for(r'Restore selected|استرجاع المحدد', 20):
-                tap(r'Restore selected|استرجاع المحدد', scrolls=0, wait=5, last=True)
-                reimported = True
+                picked = tap(r'.*' + re.escape(export_name.rsplit('.', 1)[0]) + r'.*', scrolls=2, wait=4)
+            if picked:
+                stage = 'restore dialog'
+                if wait_for(r'.*(Restore selected|استرجاع المحدد).*', 20):
+                    tap(r'.*(Restore selected|استرجاع المحدد).*', scrolls=0, wait=5, last=True)
+                    reimported = True
         log('PASS' if reimported else 'FAIL', f're-import Android export ({export_name}) via system picker',
-            '' if reimported else ' | '.join(texts())[:300])
+            '' if reimported else f'stuck at {stage}: ' + ' | '.join(texts())[:260])
         health('after re-import')
         if reimported:
             for label, expect in ((COURSES, r'.*Smoke Physics.*'), (NOTES, r'.*Smoke Note.*')):

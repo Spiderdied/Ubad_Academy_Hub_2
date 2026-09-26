@@ -67,13 +67,11 @@ def center(n):
     return (x1 + x2) // 2, (y1 + y2) // 2
 
 
-def find(pattern, ns=None):
+def find(pattern, ns=None, last=False):
     rx = re.compile(pattern)
-    for n in (nodes() if ns is None else ns):
-        for t in (n.get('text'), n.get('content-desc')):
-            if t and rx.fullmatch(t.strip()):
-                return n
-    return None
+    hits = [n for n in (nodes() if ns is None else ns)
+            if any(t and rx.fullmatch(t.strip()) for t in (n.get('text'), n.get('content-desc')))]
+    return (hits[-1] if last else hits[0]) if hits else None
 
 
 def swipe_up():
@@ -90,13 +88,13 @@ def swipe_down():
     time.sleep(0.6)
 
 
-def tap(pattern, scrolls=4, wait=2.0):
+def tap(pattern, scrolls=4, wait=2.0, last=False):
     """Taps the first node whose text/content-desc fully matches; scrolls down, then back up, to find it."""
     moves = [None] + [swipe_up] * scrolls + [swipe_down] * (scrolls * 2)
     for move in moves:
         if move:
             move()
-        n = find(pattern)
+        n = find(pattern, last=last)
         if n is not None:
             x, y = center(n)
             sh(f'input tap {x} {y}')
@@ -341,7 +339,7 @@ def main():
     # 9. Backup export (Android → Web shape) through the system picker
     sh('rm -f /sdcard/Download/ubad-backup-*.json')
     exported = False
-    if tap(r'Export backup', scrolls=8, wait=3) and tap(r'Create backup', scrolls=0, wait=4):
+    if tap(r'Export backup', scrolls=8, wait=3) and tap(r'Create backup', scrolls=0, wait=4, last=True):
         if tap(r'(?i)save', scrolls=0, wait=5):
             time.sleep(3)
             path = sh('ls /sdcard/Download/ | grep ubad-backup').strip().splitlines()
@@ -371,6 +369,50 @@ def main():
     if not exported and not any('backup export JSON' in r for r in report):
         log('FAIL', 'backup export via system picker', ' | '.join(texts())[:300])
     health('after export')
+
+    # 9b. Round trip: erase everything, re-import the file Android just exported, check data is intact.
+    if exported:
+        export_name = path[0]
+        home_hub(); tap(r'Settings', scrolls=2)
+        wiped = tap(r'Erase all data', scrolls=10, wait=2) and tap(r'Erase all data', scrolls=0, wait=4, last=True)
+        # Wipe resets the language to Arabic (documented deviation); verify, then switch back to English.
+        if wiped:
+            log('PASS' if wait_for(r'.*الإعدادات.*|.*اللغة.*', 10) else 'FAIL', 'erase resets language to Arabic')
+            tap(r'English', scrolls=6, wait=4)
+        home_hub(); tap(r'Courses', scrolls=1)
+        empty = wiped and find(r'.*Smoke Physics.*') is None
+        log('PASS' if empty else 'FAIL', 'erase all data before re-import', ' | '.join(texts())[:200])
+        home_hub(); tap(r'Settings', scrolls=2)
+        reimported = False
+        if tap(r'Import backup', scrolls=8, wait=4):
+            picked = tap(re.escape(export_name), scrolls=0, wait=4)
+            if not picked:
+                tap(r'Show roots', scrolls=0, wait=2) and tap(r'Downloads?', scrolls=0, wait=3)
+                picked = tap(re.escape(export_name), scrolls=2, wait=4)
+            if picked and wait_for(r'Restore selected', 20):
+                tap(r'Restore selected', scrolls=0, wait=5, last=True)
+                reimported = True
+        log('PASS' if reimported else 'FAIL', f're-import Android export ({export_name}) via system picker',
+            '' if reimported else ' | '.join(texts())[:300])
+        health('after re-import')
+        if reimported:
+            for label, expect in ((r'Courses', r'.*Smoke Physics.*'), (r'Notes', r'.*Smoke Note.*')):
+                home_hub(); tap(label, scrolls=2)
+                step(f'after re-import: {label} intact', expect, 10)
+            home_hub(); tap(r'Courses', scrolls=1)
+            if tap(r'.*Smoke Physics.*', scrolls=1) and tap(r'.*Smoke Unit.*', scrolls=1):
+                step('after re-import: unit contents + progress intact', r'.*4 items.*', 8)
+                if tap_tab(r'PDF · \d+') and tap(r'Open PDF', scrolls=2, wait=4):
+                    step('after re-import: PDF asset opens', r'Page 1 of 2', 10)
+                    back()
+                else:
+                    log('FAIL', 'after re-import: PDF not reachable')
+            home_hub(); tap(r'Study Tools', scrolls=2)
+            step('after re-import: Study deck intact', r'.*Smoke Deck.*', 8)
+            tap(r'Quizzes', scrolls=0)
+            step('after re-import: quiz intact', r'.*Smoke Quiz.*', 8)
+            home_hub(); tap(r'Dashboard', scrolls=1)
+            step('after re-import: user name intact', r'.*Smoke Tester.*', 8)
 
     # 10. Arabic + RTL
     home_hub(); tap(r'Settings', scrolls=2)

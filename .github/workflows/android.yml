@@ -3,7 +3,7 @@ name: Android build
 on:
   push:
     branches: [ 'arena/**', 'main' ]
-    paths: [ 'android/**', '.github/workflows/android.yml', 'tools/android-security-scan.py' ]
+    paths: [ 'android/**', '.github/workflows/android.yml', 'tools/android-security-scan.py', 'tools/smoke/**' ]
   pull_request:
     paths: [ 'android/**' ]
   workflow_dispatch:
@@ -106,4 +106,81 @@ jobs:
           path: |
             android/app/build/outputs/apk/**/*.apk
             android/app/build/outputs/bundle/**/*.aab
+            android/app/build/outputs/mapping/release/mapping.txt
+          if-no-files-found: ignore
+
+  # Runtime smoke test of the R8-minified release APK on an emulator (release runs only).
+  smoke:
+    needs: build
+    if: github.event.inputs.release == 'true' || contains(github.event.head_commit.message, '[release]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: ubad-academy-apks
+          path: out
+
+      - name: Sign release APK with a throwaway CI key (never stored)
+        run: |
+          set -e
+          BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
+          APK=$(find out -name 'app-release*.apk' | head -1)
+          keytool -genkeypair -keystore /tmp/smoke.jks -storepass smoke-only -keypass smoke-only -alias smoke \
+            -dname CN=ubad-smoke -keyalg RSA -keysize 2048 -validity 2 >/dev/null
+          "$BT/zipalign" -f -p 4 "$APK" /tmp/aligned.apk
+          "$BT/apksigner" sign --ks /tmp/smoke.jks --ks-pass pass:smoke-only --out /tmp/smoke.apk /tmp/aligned.apk
+          "$BT/apksigner" verify /tmp/smoke.apk && rm /tmp/smoke.jks
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Emulator smoke test (API 34)
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: python3 tools/smoke/smoke.py /tmp/smoke.apk smoke-out
+
+      - name: Report smoke results
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import os, glob, subprocess
+          lines = open('smoke-out/report.txt').read().splitlines() if os.path.exists('smoke-out/report.txt') else ['no report']
+          if os.path.exists('smoke-out/crash.txt'):
+              m = glob.glob('out/**/mapping.txt', recursive=True)
+              rt = glob.glob(os.environ.get('ANDROID_HOME', '') + '/cmdline-tools/*/bin/retrace')
+              if m and rt:
+                  r = subprocess.run([rt[0], m[0], 'smoke-out/crash.txt'], capture_output=True, text=True)
+                  open('smoke-out/crash-retraced.txt', 'w').write(r.stdout)
+                  lines += ['RETRACED CRASH:'] + [l for l in r.stdout.splitlines() if l.strip()][:60]
+          fails = [l for l in lines if l.startswith('FAIL')]
+          summary = f"passed={sum(l.startswith('PASS') for l in lines)} failed={len(fails)}"
+          print(f"::notice title=Smoke summary::{summary}")
+          for i in range(0, min(len(lines), 200), 22):
+              kind = 'error' if any(l.startswith(('FAIL', 'RETRACED')) for l in lines[i:i+22]) else 'notice'
+              msg = '%0A'.join(l.replace('%', '%25').replace('\r', '') for l in lines[i:i+22])
+              print(f"::{kind} title=Smoke {i // 22}::{msg}")
+          PY
+
+      - name: Upload smoke evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ubad-smoke-evidence
+          path: smoke-out
           if-no-files-found: ignore

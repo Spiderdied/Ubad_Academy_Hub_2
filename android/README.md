@@ -132,6 +132,10 @@ survives minimising, screen lock and the app being killed.
   * WebView or JS-bridge usage
   * CDN/JS runtime dependencies
   * unexpected or dangerous permissions (checked in the source and merged manifests)
+* The APK scan reports every reference to `android.webkit.WebView`. The only ones come from
+  Media3 UI's `WebViewSubtitleOutput`, the optional WebVTT subtitle renderer inside `PlayerView`.
+  The app uses the default canvas renderer and never loads content into a WebView. The scan fails
+  on any WebView content loading it can't attribute to that library path.
 * Blog HTML goes through a Jsoup allow-list. Scripts, styles, forms and event handlers are dropped,
   and only `http(s)` links and images are kept. An embedded iframe (such as a YouTube video) turns
   into a native "open" block that launches outside the app. It is never embedded.

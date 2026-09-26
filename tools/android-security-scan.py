@@ -45,7 +45,14 @@ DANGEROUS = re.compile(r'(?i)EXTERNAL_STORAGE|READ_MEDIA_|LOCATION|CAMERA|RECORD
 # Library-merged permissions that are normal-level and scoped to the app.
 LIBRARY_OK = re.compile(r'DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION$|^android\.permission\.(ACCESS_NETWORK_STATE|WAKE_LOCK)$')
 
-KNOWN_LIBRARY_WEBVIEW = ('androidx.media3.ui.WebViewSubtitleOutput',)
+# Library code that references WebView but that this app never activates:
+#  androidx.media3.ui.WebViewSubtitleOutput — PlayerView's optional WebVTT renderer. SubtitleView only
+#  creates it after setViewType(VIEW_TYPE_WEB), which the app never calls (default: CanvasSubtitleOutput).
+#  androidx.core.text.util.LinkifyCompat — calls the static text utility WebView.findAddress(); no WebView is created.
+KNOWN_LIBRARY_WEBVIEW = ('androidx.media3.ui.WebViewSubtitleOutput', 'androidx.media3.ui.SubtitleView',
+                         'androidx.core.text.util.LinkifyCompat')
+# The html2app bridge / CDN JS must not appear anywhere in a built APK.
+JS_BRIDGE_BIN = re.compile(r'(?i)html2app|esm\.unpkg\.com|cdn\.jsdelivr|pdfjs-dist|pdf\.worker')
 
 problems, notes = [], []
 
@@ -58,32 +65,85 @@ def _uleb(b, o):
             return r, o
 
 
-def dex_webview_refs(d):
-    """Methods invoked on android.webkit.WebView + classes named *WebView* (to attribute library references)."""
+# Dalvik instruction sizes in 16-bit code units, by opcode (from the bytecode format table).
+_SIZES = [1] * 256
+for _op, _n in {0x02: 2, 0x03: 3, 0x05: 2, 0x06: 3, 0x08: 2, 0x09: 3, 0x13: 2, 0x14: 3, 0x15: 2, 0x16: 2,
+                0x17: 3, 0x18: 5, 0x19: 2, 0x1a: 2, 0x1b: 3, 0x1c: 2, 0x1f: 2, 0x20: 2, 0x22: 2, 0x23: 2,
+                0x24: 3, 0x25: 3, 0x26: 3, 0x29: 2, 0x2a: 3, 0x2b: 3, 0x2c: 3, 0xfa: 4, 0xfb: 4, 0xfc: 3,
+                0xfd: 3, 0xfe: 2, 0xff: 2}.items():
+    _SIZES[_op] = _n
+for _r, _n in ((range(0x2d, 0x32), 2), (range(0x32, 0x38), 2), (range(0x38, 0x3e), 2), (range(0x44, 0x52), 2),
+               (range(0x52, 0x60), 2), (range(0x60, 0x6e), 2), (range(0x6e, 0x73), 3), (range(0x74, 0x79), 3),
+               (range(0x90, 0xb0), 2), (range(0xd0, 0xe3), 2)):
+    for _op in _r:
+        _SIZES[_op] = _n
+_INVOKE = set(range(0x6e, 0x73)) | set(range(0x74, 0x79))
+_TYPE_REF = {0x1c, 0x1f, 0x20, 0x22, 0x23}  # const-class, check-cast, instance-of, new-instance, new-array
+
+
+def dex_webview_callers(d):
+    """Names of classes whose bytecode touches android.webkit.WebView (invokes its methods or uses the type)."""
     import struct
-    so, tc, to = struct.unpack_from('<I', d, 0x3C)[0], *struct.unpack_from('<II', d, 0x40)
-    mc, mo = struct.unpack_from('<II', d, 0x58)
-    cc, co = struct.unpack_from('<II', d, 0x60)
+    u32 = lambda o: struct.unpack_from('<I', d, o)[0]
+    so, tc, to = u32(0x3C), u32(0x40), u32(0x44)
+    mc, mo, cc, co = u32(0x58), u32(0x5C), u32(0x60), u32(0x64)
 
     def string(i):
-        off = struct.unpack_from('<I', d, so + 4 * i)[0]
-        _, o = _uleb(d, off)
+        _, o = _uleb(d, u32(so + 4 * i))
         return d[o:d.index(b'\0', o)].decode('utf-8', 'replace')
 
-    types = [struct.unpack_from('<I', d, to + 4 * i)[0] for i in range(tc)]
-    wv = [i for i, t in enumerate(types) if string(t) == 'Landroid/webkit/WebView;']
-    methods = set()
-    if wv:
-        for i in range(mc):
-            c, _, nm = struct.unpack_from('<HHI', d, mo + 8 * i)
-            if c == wv[0]:
-                methods.add(string(nm))
-    named = set()
-    for i in range(cc):
-        name = string(types[struct.unpack_from('<I', d, co + 32 * i)[0]])
-        if 'webview' in name.lower() or 'webkit' in name.lower():
-            named.add(name.strip('L;').replace('/', '.'))
-    return methods, named
+    types = [u32(to + 4 * i) for i in range(tc)]
+    wv = next((i for i, t in enumerate(types) if string(t) == 'Landroid/webkit/WebView;'), None)
+    if wv is None:
+        return set(), set()
+    wv_methods = {i: string(u32(mo + 8 * i + 4)) for i in range(mc) if struct.unpack_from('<H', d, mo + 8 * i)[0] == wv}
+    callers, used = set(), set()
+    for ci in range(cc):
+        base = co + 32 * ci
+        cname = string(types[u32(base)]).strip('L;').replace('/', '.')
+        data = u32(base + 24)
+        if not data:
+            continue
+        o = data
+        sf, o = _uleb(d, o); inf, o = _uleb(d, o); dm, o = _uleb(d, o); vm, o = _uleb(d, o)
+        for _ in range(sf + inf):
+            _, o = _uleb(d, o); _, o = _uleb(d, o)
+        for _ in range(dm + vm):
+            _, o = _uleb(d, o); _, o = _uleb(d, o); code, o = _uleb(d, o)
+            if not code:
+                continue
+            n = u32(code + 12); ins = code + 16; pc = 0
+            while pc < n:
+                unit = struct.unpack_from('<H', d, ins + 2 * pc)[0]
+                op = unit & 0xff
+                if unit == 0x0100:    # packed-switch payload
+                    pc += 4 + struct.unpack_from('<H', d, ins + 2 * pc + 2)[0] * 2; continue
+                if unit == 0x0200:    # sparse-switch payload
+                    pc += 2 + struct.unpack_from('<H', d, ins + 2 * pc + 2)[0] * 4; continue
+                if unit == 0x0300:    # fill-array-data payload
+                    w = struct.unpack_from('<H', d, ins + 2 * pc + 2)[0]; cnt = u32(ins + 2 * pc + 4)
+                    pc += 4 + (cnt * w + 1) // 2; continue
+                if op in _INVOKE or op in _TYPE_REF:
+                    ref = struct.unpack_from('<H', d, ins + 2 * pc + 2)[0]
+                    if (op in _INVOKE and ref in wv_methods) or (op in _TYPE_REF and ref == wv):
+                        callers.add(cname)
+                        if op in _INVOKE:
+                            used.add(wv_methods[ref])
+                pc += _SIZES[op]
+    return callers, used
+
+
+def r8_mapping(apk_path):
+    """obfuscated → original class names from R8's mapping.txt (release builds)."""
+    m = {}
+    if 'release' not in os.path.basename(apk_path):
+        return m
+    for f in glob.glob(os.path.join(APP, 'build', 'outputs', 'mapping', 'release', 'mapping.txt')):
+        for line in open(f, encoding='utf-8', errors='replace'):
+            if not line.startswith((' ', '#')) and line.rstrip().endswith(':') and ' -> ' in line:
+                orig, obf = line.rstrip()[:-1].split(' -> ')
+                m[obf] = orig
+    return m
 
 
 def rel(p):
@@ -172,39 +232,46 @@ def apk():
         elif perm not in ALLOWED_PERMISSIONS and not LIBRARY_OK.search(perm):
             problems.append(f'Unexpected merged permission: {perm}')
     notes.append('Merged permissions: ' + (', '.join(sorted(merged)) or 'manifest not found'))
+    # Who added each permission (AGP manifest-merger blame report).
+    for rep in sorted(glob.glob(os.path.join(APP, 'build', 'outputs', 'logs', 'manifest-merger-*-report.txt'))):
+        lines = open(rep, encoding='utf-8', errors='replace').read().splitlines()
+        blame = []
+        for i, l in enumerate(lines):
+            if l.startswith('uses-permission#'):
+                src = next((x for x in lines[i + 1:i + 4] if x.startswith(('ADDED from', 'MERGED from'))), '')
+                lib = re.search(r'\[([^\]]+)\]', src)
+                blame.append(f"{l.split('#', 1)[1]} <- {lib.group(1) if lib else 'app manifest'}")
+        notes.append(f'{os.path.basename(rep)}: ' + ('; '.join(blame) or 'no permissions'))
+    if not manifests:
+        problems.append('Merged manifest not found — permission scan could not run')
     for a in glob.glob(os.path.join(APP, 'build', 'outputs', '**', '*.apk'), recursive=True):
-        webview_refs, wv_methods, wv_classes = 0, set(), set()
+        callers, used = set(), set()
         with zipfile.ZipFile(a) as z:
             for n in z.namelist():
-                if n in ('META-INF/CERT.RSA',) or n.endswith(('.png', '.webp', '.so')):
+                if n.endswith(('.png', '.webp', '.so', '.jpg', '.mp3', '.wav', '.ttf')):
                     continue
                 data = z.read(n)
                 if n.endswith('.dex'):
-                    webview_refs += data.count(b'Landroid/webkit/WebView;')
-                    try:
-                        m, c = dex_webview_refs(data); wv_methods |= m; wv_classes |= c
-                    except Exception as e:  # never fail the scan on a parser edge case
-                        notes.append(f'dex parse skipped for {n}: {e}')
+                    c, u = dex_webview_callers(data)  # a parser error fails the scan loudly (no silent pass)
+                    callers |= c; used |= u
                 text = data.decode('latin-1')
                 for name, pat in SECRET_PATTERNS.items():
                     if name == 'Hardcoded credential':
                         continue  # too noisy on binary dex constant pools
                     if re.search(pat, text):
                         problems.append(f'{name} inside {os.path.basename(a)}!{n}')
-        # Only framework-level references (e.g. androidx compat shims) may remain; the app never creates one.
-        notes.append(f'{os.path.basename(a)}: {os.path.getsize(a) // 1024} KB, dex references to android.webkit.WebView type: {webview_refs}')
-        notes.append('WebView methods referenced: ' + (', '.join(sorted(wv_methods)) or 'none'))
-        notes.append('Classes named *WebView*/*webkit*: ' + (', '.join(sorted(wv_classes)) or 'none'))
-        own = [c for c in wv_classes if c.startswith('com.ubad.')]
-        # Known library paths the app never activates:
-        #  * androidx.media3.ui.WebViewSubtitleOutput — PlayerView's optional WebVTT renderer; the default
-        #    (and the only one this app uses) is CanvasSubtitleOutput.
-        known = {c for c in wv_classes if c.startswith(KNOWN_LIBRARY_WEBVIEW)}
-        loads = wv_methods & {'loadUrl', 'loadData', 'loadDataWithBaseURL', 'addJavascriptInterface', 'evaluateJavascript'}
-        if own or (loads and not known):
-            problems.append(f'Unattributed WebView content loading: methods={sorted(wv_methods)} classes={sorted(wv_classes)}')
+                if JS_BRIDGE_BIN.search(text):
+                    problems.append(f'Web runtime/bridge reference inside {os.path.basename(a)}!{n}')
+        mapping = r8_mapping(a)
+        named = sorted(mapping.get(c, c) for c in callers)
+        known = [c for c in named if c.startswith(KNOWN_LIBRARY_WEBVIEW)]
+        unexpected = [c for c in named if c not in known]
+        notes.append(f'{os.path.basename(a)}: {os.path.getsize(a) // 1024} KB; R8 mapping entries: {len(mapping)}')
+        notes.append(f'  WebView callers: {", ".join(named) or "none"}; methods used: {", ".join(sorted(used)) or "none"}')
+        if unexpected:
+            problems.append(f'{os.path.basename(a)}: WebView used by unexpected/own code: {", ".join(unexpected)}')
         elif known:
-            notes.append('WebView references attributed to inactive library code: ' + ', '.join(sorted(known)))
+            notes.append('  all WebView references attributed to inactive library code (' + ', '.join(known) + ')')
 
 
 if __name__ == '__main__':

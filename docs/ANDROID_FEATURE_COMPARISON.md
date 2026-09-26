@@ -64,10 +64,19 @@ All of these keep their meaning, field by field, and use the same limits as the 
 * focus settings, the Islam state (prayers, Sunnah, fasts, tasbih, custom dhikr, history)
 * user name, language, theme, sound, per-theme background images
 
-Backup v2 import and export are compatible in both directions. The unit tests cover this:
+Backup v2 import and export are compatible in both directions.
+
+One caveat. The web's backup format has no `tasks`, `focus` or `settings`, and the web import
+ignores those keys. Android exports them anyway, so Android → Android is lossless, but dashboard
+tasks, focus lengths and preferences don't reach the web app. That is existing web behavior, and
+the web code was not changed.
+
+The unit tests cover both directions:
 
 * `BackupCodecTest` covers web → Android.
-* `BackupWebCompatTest` covers Android → Web.
+* `BackupWebCompatTest` covers Android → Web, plus the lossless Android → Android round-trip of
+  tasks, focus and settings.
+* The emulator smoke test repeats import and export on the release APK.
 
 ## Deviations (intentional)
 

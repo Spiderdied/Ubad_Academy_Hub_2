@@ -12,6 +12,8 @@ import com.ubad.academy.data.local.prefs.SettingsStore
 import com.ubad.academy.data.repository.IslamRepository
 import com.ubad.academy.data.repository.PlannerRepository
 import com.ubad.academy.data.repository.StudyRepository
+import com.ubad.academy.domain.model.AppLanguage
+import com.ubad.academy.domain.model.FocusSettings
 import com.ubad.academy.domain.model.IslamState
 import com.ubad.academy.domain.model.LinkKind
 import com.ubad.academy.domain.model.Quiz
@@ -208,6 +210,49 @@ class BackupWebCompatTest {
         assertEquals(setOf("sage"), bgs.keys)
         bgs.values.map { it.jsonObject }.forEach { b -> assertTrue(b.s("type")!!.startsWith("image/")); assertDataUrl(b, "type") }
         assertTrue(bgs.keys.all { ThemeId.isValid(it) })
+    }
+
+    /**
+     * `tasks`, `focus` and `settings` aren't part of the web's backup format (the web import ignores
+     * them), so Android must at least round-trip them losslessly between Android installs.
+     */
+    @Test fun `android-only keys round trip losslessly and never break the web shape`() = runTest {
+        seed()
+        val planner = PlannerRepository(db)
+        planner.addQuickTask("مهمة اختبار")
+        planner.addQuickTask("Second task")
+        planner.toggleTask(db.planner().tasks().first { it.toDomain().title == "Second task" }.toDomain().id)
+        settings.setFocus(FocusSettings(day = Web.today(), done = 3, focusMins = 50, breakMins = 10))
+        settings.setTheme(ThemeId.SAGE); settings.setSound(false); settings.setLanguage(AppLanguage.EN)
+
+        val tasksBefore = db.planner().tasks().map { it.toDomain() }
+        val focusBefore = settings.currentFocus()
+        val prefsBefore = settings.current()
+        val out = ByteArrayOutputStream()
+        codec.export(out, BackupSection.entries.toSet())
+        val json = out.toString(Charsets.UTF_8.name())
+        val d = Json.parseToJsonElement(json).jsonObject["data"]!!.jsonObject
+        // Web shape of the extra keys (what the web's own state uses).
+        d["tasks"]!!.jsonArray.map { it.jsonObject }.forEach { t ->
+            assertStr(t, "id", 40, allowEmpty = false); assertStr(t, "title", 120, allowEmpty = false); assertBool(t, "done"); assertTime(t, "createdAt")
+        }
+        assertEquals(setOf("lang", "sound", "theme"), d["settings"]!!.jsonObject.keys)
+
+        // Fresh install: wipe everything, then restore the Android export.
+        db.clearAllTables(); files.clearAll(); settings.wipe()
+        settings.setTheme(ThemeId.DARK); settings.setSound(true); settings.setLanguage(AppLanguage.AR)
+        val parsed = codec.parse(json.byteInputStream())
+        codec.restore(parsed, parsed.available.toSet())
+
+        assertEquals(tasksBefore.sortedBy { it.id }, db.planner().tasks().map { it.toDomain() }.sortedBy { it.id })
+        assertTrue(db.planner().tasks().map { it.toDomain() }.any { it.title == "Second task" && it.done })
+        assertEquals(focusBefore, settings.currentFocus())
+        val prefs = settings.current()
+        assertEquals(prefsBefore.name, prefs.name)
+        assertEquals(ThemeId.SAGE, prefs.theme); assertEquals(false, prefs.sound); assertEquals(AppLanguage.EN, prefs.language)
+        // Course progress (done flags) and every other section survive too.
+        val courses = assembleCourses(db.courses().courses(), db.courses().units(), db.courses().contents())
+        assertTrue(courses.single().units[0].contents[0].done)
     }
 
     @Test fun `numbers are plain JSON numbers the web can compare`() = runTest {

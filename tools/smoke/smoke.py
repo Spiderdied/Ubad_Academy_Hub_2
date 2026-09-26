@@ -82,16 +82,25 @@ def swipe_up():
     time.sleep(1)
 
 
+def swipe_down():
+    size = re.findall(r'(\d+)x(\d+)', sh('wm size'))[-1]
+    w, h = int(size[0]), int(size[1])
+    sh(f'input swipe {w // 2} {int(h * .3)} {w // 2} {int(h * .75)} 300')
+    time.sleep(0.6)
+
+
 def tap(pattern, scrolls=4, wait=2.0):
-    for i in range(scrolls + 1):
+    """Taps the first node whose text/content-desc fully matches; scrolls down, then back up, to find it."""
+    moves = [None] + [swipe_up] * scrolls + [swipe_down] * (scrolls * 2)
+    for move in moves:
+        if move:
+            move()
         n = find(pattern)
         if n is not None:
             x, y = center(n)
             sh(f'input tap {x} {y}')
             time.sleep(wait)
             return True
-        if i < scrolls:
-            swipe_up()
     return False
 
 
@@ -114,7 +123,8 @@ def crashed():
 
 
 def shot(name):
-    with open(os.path.join(OUT, f'{len(report):02d}-{name}.png'), 'wb') as f:
+    safe = re.sub(r'[^A-Za-z0-9._-]+', '_', name)[:60]
+    with open(os.path.join(OUT, f'{len(report):02d}-{safe}.png'), 'wb') as f:
         f.write(subprocess.run(['adb', 'exec-out', 'screencap', '-p'], capture_output=True, timeout=60).stdout)
 
 
@@ -162,7 +172,11 @@ def home_hub():
     """Back to the Hub (either language): bottom-bar Home if visible, else Back; relaunch if we left the app."""
     for _ in range(8):
         ns = nodes()
-        if find(r'Settings|الإعدادات', ns) is not None and find(r'Blog|المدونة', ns) is not None:
+        if find(r'ACADEMY HUB', ns) is None and find(r'Dashboard|لوحة التحكم', ns) is not None:
+            for _ in range(3):
+                swipe_down()                         # maybe a scrolled Hub grid: go to its top
+            ns = nodes()
+        if find(r'ACADEMY HUB', ns) is not None:     # brand header exists only on the Hub
             return True
         home = find(r'Home|الرئيسية', ns)
         if home is not None:
@@ -196,7 +210,7 @@ def main():
     tap(r'English', scrolls=0)
     step('onboarding: English', r'Get started', 10)
     tap(r'Get started', scrolls=2, wait=3)
-    if not step('onboarding done → Home', r'Settings', 15):
+    if not step('onboarding done → Home', r'ACADEMY HUB', 15):
         return
 
     # 3. Backup import (web → Android) through the system picker
@@ -206,7 +220,7 @@ def main():
     sh("am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///sdcard/Download/web-backup.json >/dev/null 2>&1")
     time.sleep(2)
     tap(r'Settings', scrolls=2)
-    step('Settings', r'Settings|Language.*', 10)
+    step('Settings', r'Language|Import backup|Export backup', 10)
     imported = False
     if tap(r'Import backup', scrolls=8, wait=4):
         picked = tap(r'web-backup\.json', scrolls=0, wait=4)

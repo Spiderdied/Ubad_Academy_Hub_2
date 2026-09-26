@@ -168,13 +168,16 @@ jobs:
                   r = subprocess.run([rt[0], m[0], 'smoke-out/crash.txt'], capture_output=True, text=True)
                   open('smoke-out/crash-retraced.txt', 'w').write(r.stdout)
                   lines += ['RETRACED CRASH:'] + [l for l in r.stdout.splitlines() if l.strip()][:60]
-          fails = [l for l in lines if l.startswith('FAIL')]
-          summary = f"passed={sum(l.startswith('PASS') for l in lines)} failed={len(fails)}"
-          print(f"::notice title=Smoke summary::{summary}")
-          for i in range(0, min(len(lines), 200), 22):
-              kind = 'error' if any(l.startswith(('FAIL', 'RETRACED')) for l in lines[i:i+22]) else 'notice'
-              msg = '%0A'.join(l.replace('%', '%25').replace('\r', '') for l in lines[i:i+22])
-              print(f"::{kind} title=Smoke {i // 22}::{msg}")
+          fails = [l for l in lines if l.startswith(('FAIL', 'RETRACED'))]
+          esc = lambda l: l.replace('%', '%25').replace('\r', '')
+          print(f"::notice title=Smoke summary::passed={sum(l.startswith('PASS') for l in lines)} failed={sum(l.startswith('FAIL') for l in lines)}")
+          for i, l in enumerate(fails[:9]):
+              print(f"::error title=Smoke failure {i}::{esc(l)}")
+          if len(fails) > 9 or any(l.startswith('RETRACED') for l in lines):
+              tail = lines[lines.index('RETRACED CRASH:'):] if 'RETRACED CRASH:' in lines else fails[9:]
+              print("::error title=Smoke more::" + '%0A'.join(esc(l) for l in tail[:40]))
+          for i in range(0, min(len(lines), 180), 20):
+              print(f"::notice title=Smoke log {i // 20}::" + '%0A'.join(esc(l)[:170] for l in lines[i:i+20]))
           PY
 
       - name: Upload smoke evidence

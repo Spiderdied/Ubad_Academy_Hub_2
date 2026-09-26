@@ -38,7 +38,8 @@ def sh(cmd, timeout=90):
 
 
 def log(status, name, detail=''):
-    line = f'{status:5} {name}' + (f' — {detail}' if detail else '')
+    detail = detail.replace('\n', ' ')
+    line = f'{status:5} {name}' + (f' — {detail[:600 if status == "FAIL" else 160]}' if detail else '')
     print(line, flush=True)
     report.append(line)
     if status == 'FAIL':
@@ -100,6 +101,22 @@ def tap(pattern, scrolls=4, wait=2.0):
             x, y = center(n)
             sh(f'input tap {x} {y}')
             time.sleep(wait)
+            return True
+    return False
+
+
+def tap_tab(pattern, anchor=r'Text · \d+|نص · \d+'):
+    """Taps a tab in a horizontally scrolling tab row, swiping the row (both directions) until it shows."""
+    if tap(pattern, scrolls=0):
+        return True
+    a = find(anchor)
+    if a is None:
+        return False
+    _, y = center(a)
+    w = int(re.findall(r'(\d+)x(\d+)', sh('wm size'))[-1][0])
+    for x1, x2 in ((int(w * .85), int(w * .15)),) * 3 + ((int(w * .15), int(w * .85)),) * 6:
+        sh(f'input swipe {x1} {y} {x2} {y} 300'); time.sleep(0.8)
+        if tap(pattern, scrolls=0):
             return True
     return False
 
@@ -243,16 +260,28 @@ def main():
             step('Course detail', r'.*Smoke Unit.*', 10)
             if tap(r'.*Smoke Unit.*', scrolls=1):
                 step('Unit', r'.*Smoke.*', 10)
-                if tap(r'PDF · \d+', scrolls=0) and tap(r'Open PDF', scrolls=1, wait=4):
-                    step('PDF viewer (PdfRenderer)', r'.*1.*', 10)
-                    sh('input keyevent KEYCODE_VOLUME_DOWN'); back()
-                if tap(r'Image · \d+', scrolls=0):
+                if tap_tab(r'PDF · \d+'):
+                    if tap(r'Open PDF', scrolls=2, wait=4):
+                        step('PDF viewer (PdfRenderer)', r'.*1.*2.*|.*[Pp]age.*', 10)
+                        back()
+                    else:
+                        log('FAIL', 'Open PDF button not found', ' | '.join(texts())[:200])
+                else:
+                    log('FAIL', 'PDF tab not found')
+                if tap_tab(r'Image · \d+'):
                     step('Image tab', r'.*Smoke Image.*', 5)
-                if tap(r'Audio · \d+', scrolls=0) and tap(r'Play', scrolls=1, wait=4):
+                    if tap(r'Smoke Image 1', scrolls=1, wait=3):
+                        step('Image viewer (zoom pager)', None)
+                        back()
+                else:
+                    log('FAIL', 'Image tab not found')
+                if tap_tab(r'Audio · \d+') and tap(r'Play', scrolls=1, wait=4):
                     step('Media3 player (audio)', None)
                     back()
-                if tap(r'Text · \d+', scrolls=0):
-                    step('Text content (Arabic + English)', r'.*سطر عربي.*|.*English line.*', 5)
+                else:
+                    log('FAIL', 'Audio tab / Play not found')
+                if tap_tab(r'Text · \d+'):
+                    step('Text content (Arabic + English)', r'(?s).*سطر عربي.*|(?s).*English line.*', 5)
     home_hub()
     for label, expect in ((r'Notes', r'.*Smoke Note.*'), (r'Calendar', r'.*'), (r'Dashboard', r'.*'),
                           (r'I am Muslim', r'.*'), (r'Blog', r'.*')):
@@ -367,7 +396,8 @@ def main():
     sh('input keyevent KEYCODE_HOME'); time.sleep(1)
     sh(f'am kill {PKG}'); time.sleep(1)
     launch()
-    step('relaunch after process kill (data persisted, Arabic kept)', r'.*الإعدادات.*|.*المقررات.*', 15)
+    # Android restores the saved back stack after a process kill, so any Arabic screen is correct here.
+    step('relaunch after process kill (state restored, Arabic kept)', r'.*(الإعدادات|المقررات|المدونة|الرئيسية|رجوع).*', 15)
     home_hub(); tap(r'المقررات', scrolls=1)
     step('imported data persisted after restart', r'.*Smoke Physics.*', 10)
 

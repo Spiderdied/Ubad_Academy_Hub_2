@@ -111,6 +111,7 @@ private fun BackupSection.emoji() = when (this) {
     BackupSection.BACKGROUND -> "🖼️"
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SettingsScreen(onBack: () -> Unit, onHome: () -> Unit, viewModel: SettingsViewModel = hiltViewModel()) {
     val s by viewModel.state.collectAsStateWithLifecycle()
@@ -190,7 +191,8 @@ fun SettingsScreen(onBack: () -> Unit, onHome: () -> Unit, viewModel: SettingsVi
             }
 
             SetGroup(Icons.Outlined.Download, stringResource(R.string.set_backup), stringResource(R.string.set_backupDesc), m) {
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                // FlowRow: long (e.g. Arabic) labels wrap to a second line instead of squeezing Import out of view.
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = { exportDialog = true }) { Icon(Icons.Outlined.Download, null, Modifier.size(18.dp)); Spacer(Modifier.width(6.dp)); Text(stringResource(R.string.set_export)) }
                     OutlinedButton(onClick = { openDoc.launch(arrayOf("application/json", "application/octet-stream", "text/plain")) }) {
                         Icon(Icons.Outlined.Upload, null, Modifier.size(18.dp)); Spacer(Modifier.width(6.dp)); Text(stringResource(R.string.set_import))

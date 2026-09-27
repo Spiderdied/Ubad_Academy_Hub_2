@@ -203,6 +203,16 @@ def home_hub():
     return False
 
 
+def open_screen(label, expect, tries=3):
+    """Hub → tile `label`, waiting for `expect`; retries (a tap can land while the Hub grid is still settling)."""
+    for _ in range(tries):
+        home_hub()
+        time.sleep(1)
+        if tap(label, scrolls=3, wait=2.5) and wait_for(expect, 8):
+            return True
+    return False
+
+
 # ─────────────────────────────── run ───────────────────────────────
 def main():
     adb('wait-for-device')
@@ -234,8 +244,8 @@ def main():
     sh('content call --uri content://media/external/file --method scan_file --arg /sdcard/Download/web-backup.json >/dev/null 2>&1')
     sh("am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///sdcard/Download/web-backup.json >/dev/null 2>&1")
     time.sleep(2)
-    tap(r'Settings', scrolls=2)
-    step('Settings', r'Language|Import backup|Export backup', 10)
+    ok = open_screen(r'Settings', r'Language|Import backup|Export backup')
+    log('PASS' if ok else 'FAIL', 'Settings', '' if ok else ' | '.join(texts())[:200])
     imported = False
     if tap(r'Import backup', scrolls=8, wait=4):
         picked = tap(r'web-backup\.json', scrolls=0, wait=4)
@@ -328,8 +338,7 @@ def main():
     log('PASS' if alive() else 'FAIL', 'focus alarm receiver handled broadcast')
 
     # 8. Themes (all 6) + language back to Arabic
-    home_hub()
-    tap(r'Settings', scrolls=2)
+    open_screen(r'Settings', r'Language|Import backup|Export backup')
     for th in (r'OLED Black', r'Aurora', r'Paper', r'Sage', r'Rose', r'Midnight'):
         if tap(th, scrolls=6, wait=1.5):
             step(f'theme {th}', None)
@@ -375,14 +384,14 @@ def main():
     if exported:
         export_name = path[0]
         SETTINGS, COURSES, NOTES = r'Settings|الإعدادات', r'Courses|المقررات', r'Notes|الملاحظات'
-        home_hub(); tap(SETTINGS, scrolls=2)
+        open_screen(SETTINGS, r'.*(Language|Import backup|Export backup|اللغة|استيراد نسخة احتياطية).*')
         wiped = tap(r'Erase all data', scrolls=10, wait=2) and tap(r'Erase all data', scrolls=0, wait=5, last=True)
         if wiped:
             log('PASS' if wait_for(r'.*(الإعدادات|اللغة|المظهر).*', 10) else 'FAIL', 'erase resets language to Arabic')
         home_hub(); tap(COURSES, scrolls=1)
         empty = wiped and find(r'.*Smoke Physics.*') is None
         log('PASS' if empty else 'FAIL', 'erase all data before re-import', ' | '.join(texts())[:200])
-        home_hub(); tap(SETTINGS, scrolls=2)
+        open_screen(SETTINGS, r'.*(Language|Import backup|Export backup|اللغة|استيراد نسخة احتياطية).*')
         reimported, stage = False, 'import button'
         if tap(r'Import backup|استيراد نسخة احتياطية', scrolls=10, wait=4) or \
                 tap(r'.*(Import|استيراد).*', scrolls=10, wait=4):

@@ -168,7 +168,8 @@ en:{
  'set.language':'Language','set.langDesc':'Interface language and direction (LTR / RTL).',
  'set.profile':'Profile','set.username':'Username','set.usernamePh':'Your name',
  'set.usernameDesc':'Used only for the greeting on your dashboard — never renames your data.',
- 'set.appearance':'Appearance','set.theme':'Theme','set.dark':'Dark','set.light':'Light',
+ 'set.googleAccount':'Google account','set.googleSignIn':'Sign in with Google','set.googleSignOut':'Sign out','set.googleSignedIn':'Signed in as {name}','set.googleNotSignedIn':'Connect your Google account to UBAD.','set.authError':'Could not sign in with Google. Please try again.','set.cloudSync':'Cloud sync','set.cloudSyncOn':'Your UBAD data and local files are mirrored to this Google account.','set.cloudSyncOff':'Sign in with Google to enable cloud sync.','set.syncNow':'Sync now','set.uploadCloud':'Upload to cloud','set.downloadCloud':'Download from cloud','set.uploading':'Uploading…','set.downloading':'Downloading…','set.cloudUploaded':'Device data uploaded to the cloud.','set.cloudDownloaded':'Cloud data downloaded to this device.','set.syncing':'Syncing…','set.synced':'Cloud sync completed.','set.syncedFiles':'cloud files','set.connection':'connection','set.online':'Online','set.offline':'Offline',
+ 'set.appearance':'Appearance','set.appearanceDesc':'Personalize the visual identity of your UBAD workspace.','set.theme':'Theme','set.themeDesc':'Choose the visual atmosphere used across the whole app.','set.dark':'Dark','set.light':'Light',
  'set.th.dark':'Midnight','set.th.oled':'OLED Black','set.th.light':'Aurora',
  'set.th.paper':'Paper','set.th.sage':'Sage','set.th.rose':'Rose',
  'set.bg':'Theme backgrounds','set.bgDesc':'Upload your own background for each theme (max 5 MB). Stored offline on your device and shown softly behind the interface.',
@@ -180,8 +181,8 @@ en:{
  'set.imported':'Backup restored successfully.','set.importFailed':'Invalid backup file.',
  'set.danger':'Danger zone',
  'set.clearMsg':'This permanently deletes all courses, notes, events, worship records and study content stored on this device.',
- 'set.clearAll':'Erase all data','set.cleared':'All data erased.',
- 'set.about':'About','set.aboutBody':'A local-first academic hub. Your notes, files, and study content stay on your device. UBAD may use Google Analytics to collect general usage statistics; we do not send your name, email, phone number, notes, files, or other content.',
+ 'set.clearAll':'Erase all data','set.cleared':'All data erased.','sync.firstTitle':'Choose how to sync','sync.firstBody':'UBAD found data on this device and cloud data for this Google account. Choose what should happen now.','sync.upload':'Upload device data','sync.uploadDesc':'Keep this device as the source and upload its data to the cloud.','sync.restore':'Restore cloud data','sync.restoreDesc':'Replace the device data with the cloud copy.','sync.merge':'Merge','sync.mergeDesc':'Combine records from both sides and keep newer records when possible.',
+ 'settings.account':'Account & sync','settings.appearance':'Appearance','settings.data':'Data & backup','settings.about':'About UBAD','set.about':'About','set.aboutBody':'A local-first academic hub. Your notes, files, and study content stay on your device. UBAD may use Google Analytics to collect general usage statistics; we do not send your name, email, phone number, notes, files, or other content.',
  'rights.title':'Copyright','rights.body':'© 2026 UBAD Academy Hub — All Rights Reserved.','rights.detail':'Unauthorized copying, reproduction, modification, redistribution, or use of the source code is prohibited without explicit permission from the copyright holder.',
  'onboard.title':'Welcome to UBAD','onboard.body':'Let’s personalize your academic hub before you start.','onboard.language':'Language','onboard.name':'Your name','onboard.namePh':'Enter your name','onboard.theme':'Theme','onboard.start':'Get started',
  'set.support':'Developer Support','set.supportDesc':'If UBAD Academy Hub has helped you, you can support the developer.','set.vodafone':'Vodafone Cash','set.paypal':'PayPal','set.copy':'Copy','set.copied':'Copied.',
@@ -310,7 +311,8 @@ ar:{
  'set.language':'اللغة','set.langDesc':'لغة الواجهة واتجاهها (من اليمين لليسار / من اليسار لليمين).',
  'set.profile':'الملف الشخصي','set.username':'اسم المستخدم','set.usernamePh':'اسمك',
  'set.usernameDesc':'يُستخدم فقط في التحية على لوحة التحكم — لا يعيد تسمية بياناتك أبدًا.',
- 'set.appearance':'المظهر','set.theme':'السمة','set.dark':'داكنة','set.light':'فاتحة',
+ 'set.googleAccount':'حساب Google','set.googleSignIn':'تسجيل الدخول بحساب Google','set.googleSignOut':'تسجيل الخروج','set.googleSignedIn':'تم تسجيل الدخول باسم {name}','set.googleNotSignedIn':'اربط حساب Google الخاص بك بتطبيق UBAD.','set.authError':'تعذر تسجيل الدخول بحساب Google. حاول مرة أخرى.','set.cloudSync':'المزامنة السحابية','set.cloudSyncOn':'تتم مزامنة بيانات UBAD وملفاته المحلية مع حساب Google هذا.','set.cloudSyncOff':'سجّل الدخول بحساب Google لتفعيل المزامنة السحابية.','set.syncNow':'مزامنة الآن','set.uploadCloud':'رفع إلى السحابة','set.downloadCloud':'تنزيل من السحابة','set.uploading':'جارٍ الرفع…','set.downloading':'جارٍ التنزيل…','set.cloudUploaded':'تم رفع بيانات الجهاز إلى السحابة.','set.cloudDownloaded':'تم تنزيل بيانات السحابة إلى الجهاز.','set.syncing':'جارٍ المزامنة…','set.synced':'اكتملت المزامنة السحابية.','set.syncedFiles':'ملفات سحابية','set.connection':'الاتصال','set.online':'متصل','set.offline':'غير متصل',
+ 'set.appearance':'المظهر والتخصيص','set.appearanceDesc':'خصص الهوية البصرية لمساحة UBAD الخاصة بك.','set.theme':'السمة','set.themeDesc':'اختر الجو البصري المستخدم في التطبيق بالكامل.','set.dark':'داكنة','set.light':'فاتحة',
  'set.th.dark':'منتصف الليل','set.th.oled':'أسود نقي','set.th.light':'الشفق',
  'set.th.paper':'ورقي','set.th.sage':'نعناعي','set.th.rose':'وردي',
  'set.bg':'خلفيات الثيمات','set.bgDesc':'ارفع خلفية خاصة لكل ثيم (حتى 5 ميغابايت). تُحفظ على جهازك دون اتصال وتظهر بشفافية خلف الواجهة.',
@@ -322,8 +324,8 @@ ar:{
  'set.imported':'تمت الاستعادة بنجاح.','set.importFailed':'ملف نسخة احتياطية غير صالح.',
  'set.danger':'منطقة الخطر',
  'set.clearMsg':'سيحذف هذا نهائيًا كل المقررات والملاحظات والفعاليات وسجلات العبادة ومحتوى الدراسة المحفوظة على هذا الجهاز.',
- 'set.clearAll':'محو جميع البيانات','set.cleared':'تم محو جميع البيانات.',
- 'set.about':'حول','set.aboutBody':'بيئة أكاديمية محلية بالكامل. ملاحظاتك وملفاتك ومحتواك الدراسي يبقون على جهازك. قد يستخدم UBAD خدمة Google Analytics لجمع إحصاءات عامة عن الاستخدام، ولا نرسل اسمك أو بريدك أو رقم هاتفك أو ملاحظاتك أو ملفاتك أو محتواك.',
+ 'set.clearAll':'محو جميع البيانات','set.cleared':'تم محو جميع البيانات.','sync.firstTitle':'اختر طريقة المزامنة','sync.firstBody':'وجد UBAD بيانات على هذا الجهاز وبيانات سحابية لحساب Google. اختر ما تريد فعله الآن.','sync.upload':'رفع بيانات الجهاز','sync.uploadDesc':'اعتبر بيانات هذا الجهاز هي المصدر وارفعها إلى السحابة.','sync.restore':'استعادة بيانات السحابة','sync.restoreDesc':'استبدل بيانات الجهاز بالنسخة الموجودة في السحابة.','sync.merge':'دمج','sync.mergeDesc':'اجمع السجلات من الطرفين وحافظ على الأحدث قدر الإمكان.',
+ 'settings.account':'الحساب والمزامنة','settings.appearance':'المظهر والتخصيص','settings.data':'البيانات والنسخ الاحتياطي','settings.about':'حول UBAD','set.about':'حول','set.aboutBody':'بيئة أكاديمية محلية بالكامل. ملاحظاتك وملفاتك ومحتواك الدراسي يبقون على جهازك. قد يستخدم UBAD خدمة Google Analytics لجمع إحصاءات عامة عن الاستخدام، ولا نرسل اسمك أو بريدك أو رقم هاتفك أو ملاحظاتك أو ملفاتك أو محتواك.',
  'rights.title':'حقوق الملكية','rights.body':'© 2026 UBAD Academy Hub — جميع الحقوق محفوظة.','rights.detail':'يُمنع نسخ أو إعادة توزيع أو تعديل أو استخدام الكود المصدري دون إذن صريح من صاحب حقوق المشروع.',
  'onboard.title':'أهلًا بيك في UBAD','onboard.body':'خلينا نجهز أكاديميتك على ذوقك قبل ما نبدأ.','onboard.language':'اللغة','onboard.name':'اسمك','onboard.namePh':'اكتب اسمك','onboard.theme':'الثيم','onboard.start':'ابدأ',
  'set.support':'دعم المطور','set.supportDesc':'إذا ساعدتك أكاديمية عُبَدْ، يمكنك دعم المطور عبر الطرق التالية.','set.vodafone':'فودافون كاش','set.paypal':'PayPal','set.copy':'نسخ','set.copied':'تم النسخ.',
@@ -446,11 +448,12 @@ function loadPrefs(){ try{ const p=JSON.parse(localStorage.getItem(PREF_KEY)||'{
 const DB={ db:null,
   open(){ return new Promise((res,rej)=>{
     if(!('indexedDB' in window)) return rej();
-    const rq=indexedDB.open('ubad-academy-hub',2);
+    const rq=indexedDB.open('ubad-academy-hub',4);
     rq.onupgradeneeded=()=>{ const d=rq.result;
       if(!d.objectStoreNames.contains('kv')) d.createObjectStore('kv',{keyPath:'id'});
       if(!d.objectStoreNames.contains('notes')) d.createObjectStore('notes',{keyPath:'id'});
-      if(!d.objectStoreNames.contains('courseAssets')) d.createObjectStore('courseAssets',{keyPath:'id'}); };
+      if(!d.objectStoreNames.contains('courseAssets')) d.createObjectStore('courseAssets',{keyPath:'id'});
+      if(d.objectStoreNames.contains('notifications')) d.deleteObjectStore('notifications'); };
     rq.onsuccess=()=>{ this.db=rq.result; res(); };
     rq.onerror=()=>rej(rq.error); }); },
   st(mode,store){ return this.db.transaction(store,mode).objectStore(store); },
@@ -592,12 +595,285 @@ async function loadNotes(){ try{
 async function saveNote(rec){ try{ await DB.put('notes',rec); }catch(e){}
   const i=state.notes.findIndex(n=>n.id===rec.id);
   if(i>-1) state.notes[i]=rec; else state.notes.unshift(rec);
-  state.notes.sort((a,b)=>(b.pin?1:0)-(a.pin?1:0)||b.updatedAt-a.updatedAt); }
+  state.notes.sort((a,b)=>(b.pin?1:0)-(a.pin?1:0)||b.updatedAt-a.updatedAt); scheduleCloudSync(); }
+/* ═══ Cloud sync — Firebase/Firestore account backup + restore ═══
+   Structured app data is synchronized automatically after Google sign-in.
+   Structured data lives in Firestore; binary media is mirrored to Firebase
+   Storage and remains in IndexedDB locally for offline-first use. */
+const CLOUD_SYNC_VERSION=1;
+const cloudSync={
+  active:false, userId:'', timer:0, syncing:false, applying:false,
+  localUpdatedAt:0, lastRemoteId:'', unsubscribe:null, fileSig:{}, remoteFiles:[]
+};
+
+function cloudNotes(){
+  return normArr(state.notes).map(n=>({
+    id:normStr(n&&n.id,40)||uid(), title:normStr(n&&n.title,120), body:normStr(n&&n.body,20000),
+    tags:normArr(n&&n.tags).map(x=>normStr(x,24)).slice(0,8),
+    createdAt:clampNum(n&&n.createdAt,0,1e15,Date.now()),
+    updatedAt:clampNum(n&&n.updatedAt,0,1e15,Date.now()), pin:!!(n&&n.pin),
+    hasImages:normArr(n&&n.images).length>0, hasAudio:normArr(n&&n.audio).length>0
+  }));
+}
+function cloudPayload(){
+  return {
+    version:CLOUD_SYNC_VERSION,
+    user:{name:state.user.name},
+    settings:{...state.settings},
+    courses:state.courses, events:state.events, tasks:state.tasks,
+    decks:state.decks, quizzes:state.quizzes, schedule:state.schedule,
+    forms:state.forms, summaries:state.summaries, focus:state.focus,
+    islam:state.islam, notes:cloudNotes()
+  };
+}
+function hasMeaningfulLocalData(){
+  return !!(state.courses.length||state.notes.length||state.events.length||state.tasks.length||
+    state.decks.length||state.quizzes.length||state.schedule.length||state.forms.length||
+    state.summaries.length||state.fasts?.length||state.islam?.fasts?.length||
+    state.islam?.tasbih?.total||state.user.name!=='Ubad');
+}
+function mergeCloudNotes(cloudNotesList){
+  const localById=new Map(state.notes.map(n=>[n.id,n]));
+  const next=normArr(cloudNotesList).map(n=>{
+    const id=normStr(n&&n.id,40)||uid(), local=localById.get(id);
+    return {
+      id, title:normStr(n&&n.title,120), body:normStr(n&&n.body,20000),
+      tags:normArr(n&&n.tags).map(x=>normStr(x,24)).slice(0,8),
+      createdAt:clampNum(n&&n.createdAt,0,1e15,Date.now()),
+      updatedAt:clampNum(n&&n.updatedAt,0,1e15,Date.now()), pin:!!(n&&n.pin),
+      images:local?.images||[], audio:local?.audio||[]
+    };
+  });
+  state.notes=next.sort((a,b)=>(b.pin?1:0)-(a.pin?1:0)||b.updatedAt-a.updatedAt);
+}
+async function applyCloudPayload(remote,remoteMeta){
+  if(!remote||typeof remote!=='object') return;
+  cloudSync.applying=true;
+  try{
+    hydrate(remote);
+    if(Array.isArray(remote.notes)) mergeCloudNotes(remote.notes);
+    cloudSync.localUpdatedAt=Number(remoteMeta?.clientUpdatedAt||Date.now());
+    cloudSync.lastRemoteId=String(remoteMeta?.syncId||'');
+    await DB.put('kv',{id:'appdata',data:{user:state.user,settings:state.settings,courses:state.courses,
+      events:state.events,tasks:state.tasks,decks:state.decks,quizzes:state.quizzes,schedule:state.schedule,
+      forms:state.forms,summaries:state.summaries,focus:state.focus,islam:state.islam}});
+    savePrefs(); applyLang(); applyTheme();
+    Nav.invalidate('dashboard','analytics');
+    if(Nav.stack.length) Nav.rerenderAll();
+  }finally{ cloudSync.applying=false; }
+}
+
+function safeFileName(v){ return String(v||'file').replace(/[^a-zA-Z0-9._-]+/g,'_').slice(0,100); }
+async function buildCloudFileManifest(){
+  const files=[];
+  for(const n of state.notes){
+    for(let i=0;i<normArr(n.images).length;i++){
+      const a=n.images[i]; if(a?.blob instanceof Blob) files.push({kind:'note-image',key:`notes/${n.id}/images/${i}-${safeFileName(a.name)}`,noteId:n.id,index:i,name:a.name,type:a.blob.type});
+    }
+    for(let i=0;i<normArr(n.audio).length;i++){
+      const a=n.audio[i]; if(a?.blob instanceof Blob) files.push({kind:'note-audio',key:`notes/${n.id}/audio/${i}-${safeFileName(a.name)}`,noteId:n.id,index:i,name:a.name,type:a.blob.type});
+    }
+  }
+  const assets=await courseAssetAll();
+  /* Sync every locally stored course asset, including assets that are no longer
+     referenced by a course. This prevents orphaned files from silently
+     disappearing from the user's cloud copy and makes the cloud a true mirror
+     of the local file store. */
+  for(const a of assets){ if(a?.id&&a.blob instanceof Blob) files.push({kind:'course-asset',key:`courseAssets/${safeFileName(a.id)}`,assetId:a.id,name:a.name||'',type:a.blob.type}); }
+  for(const th of THEMES){ const r=await DB.get('kv','bg-'+th).catch(()=>null); if(r?.blob instanceof Blob) files.push({kind:'background',key:`backgrounds/${th}`,theme:th,name:th,type:r.blob.type}); }
+  return files;
+}
+async function uploadCloudFiles(manifest){
+  if(!cloudSync.active||!window.UBADAuth?.uploadFile) throw new Error('التخزين السحابي غير متاح.');
+  const out=[], failed=[];
+  for(const f of (manifest||[])){
+    let blob=null;
+    if(f.kind==='note-image'||f.kind==='note-audio'){ const n=state.notes.find(x=>x.id===f.noteId); blob=n?.[f.kind==='note-image'?'images':'audio']?.[Number(f.index)]?.blob; }
+    else if(f.kind==='course-asset') blob=await courseAssetGet(f.assetId);
+    else if(f.kind==='background'){ const r=await DB.get('kv','bg-'+f.theme).catch(()=>null); blob=r?.blob; }
+    if(!(blob instanceof Blob)){ failed.push(`${f.key} (local file missing)`); continue; }
+    const sig=`${blob.size}:${blob.type}:${blob.lastModified||0}`;
+    if(cloudSync.fileSig[f.key]===sig){ out.push({...f,size:blob.size}); continue; }
+    try{
+      await window.UBADAuth.uploadFile(`users/${cloudSync.userId}/${f.key}`,blob,{contentType:blob.type||f.type||'application/octet-stream'});
+      cloudSync.fileSig[f.key]=sig; out.push({...f,size:blob.size});
+    }catch(e){
+      console.error('[UBAD Cloud] File upload failed:',f.key,e);
+      failed.push(`${f.key} (${e?.code||e?.message||'upload failed'})`);
+    }
+  }
+  if(failed.length){ const err=new Error(`فشل رفع ${failed.length} ملف إلى السحابة. ${failed.slice(0,2).join('، ')}`); err.code='cloud/file-upload-failed'; err.failed=failed; throw err; }
+  return out;
+}
+async function downloadCloudFiles(manifest){
+  if(!window.UBADAuth?.downloadFile) return;
+  for(const f of (manifest||[])){
+    try{
+      const blob=await window.UBADAuth.downloadFile(`users/${cloudSync.userId}/${f.key}`); cloudSync.fileSig[f.key]=`${blob.size}:${blob.type}:${blob.lastModified||0}`;
+      if(f.kind==='note-image'||f.kind==='note-audio'){
+        const n=state.notes.find(x=>x.id===f.noteId); if(!n) continue;
+        const arr=f.kind==='note-image'?n.images:n.audio; arr[Number(f.index)]={name:f.name||'file',blob};
+        await DB.put('notes',n);
+      } else if(f.kind==='course-asset') await courseAssetPut(f.assetId,blob);
+      else if(f.kind==='background') await DB.put('kv',{id:'bg-'+f.theme,blob});
+    }catch(e){ console.warn('[UBAD Cloud] File restore failed:',f.key,e); }
+  }
+}
+function mergeRecords(localArr,cloudArr){
+  const map=new Map();
+  for(const x of normArr(cloudArr)){ if(x?.id) map.set(x.id,x); }
+  for(const x of normArr(localArr)){ if(!x?.id) continue; const old=map.get(x.id); const lt=Number(x.updatedAt||x.createdAt||0), rt=Number(old?.updatedAt||old?.createdAt||0); map.set(x.id, lt>=rt?x:old); }
+  return Array.from(map.values());
+}
+async function mergeCloudAndLocal(remote){
+  const local=cloudPayload();
+  const merged={...remote,user:{...remote.user,...local.user},settings:{...remote.settings,...local.settings},
+    courses:mergeRecords(local.courses,remote.courses),events:mergeRecords(local.events,remote.events),tasks:mergeRecords(local.tasks,remote.tasks),
+    decks:mergeRecords(local.decks,remote.decks),quizzes:mergeRecords(local.quizzes,remote.quizzes),schedule:mergeRecords(local.schedule,remote.schedule),
+    forms:mergeRecords(local.forms,remote.forms),summaries:mergeRecords(local.summaries,remote.summaries),
+    notes:mergeRecords(cloudNotes(),remote.notes)};
+  await applyCloudPayload(merged,{clientUpdatedAt:Date.now(),syncId:'merge-'+uid()});
+  return merged;
+}
+async function uploadDeviceToCloud(){
+  if(!cloudSync.active||!window.UBADAuth?.setCloudState){ toast(t('set.cloudSyncOff'),'err'); return false; }
+  if(!navigator.onLine){ toast(t('set.offline'),'err'); return false; }
+  /* A background sync can start immediately after Google sign-in. Manual upload
+     must not silently return while that job is still running. */
+  /* A background sync may still be uploading a file. Cancel that stale job
+     before a manual upload so the button never sits waiting on a hung upload. */
+  if(cloudSync.syncing){
+    try{ window.UBADAuth?.cancelUploads?.(); }catch(_){}
+    cloudSync.syncing=false;
+    await new Promise(r=>setTimeout(r,100));
+  }
+  cloudSync.localUpdatedAt=Date.now();
+  const ok=await pushCloudState(true);
+  if(!ok) throw new Error('تعذر رفع بيانات الجهاز إلى السحابة.');
+  return true;
+}
+async function downloadCloudToDevice(){
+  if(!cloudSync.active||!window.UBADAuth?.getCloudState){ toast(t('set.cloudSyncOff'),'err'); return false; }
+  if(!navigator.onLine){ toast(t('set.offline'),'err'); return false; }
+  const snap=await window.UBADAuth.getCloudState();
+  const data=snap?.data||{};
+  if(!data.appData){ toast(t('set.syncedFiles')+': 0','err'); return false; }
+  const ok=await new Promise(resolve=>{openModal({title:t('set.downloadCloud'),body:`<p class="m-msg">${esc(t('sync.restoreDesc'))}</p>`,actions:[{label:t('common.cancel'),onClick:close=>{close();resolve(false);}},{label:t('set.downloadCloud'),cls:'btn-primary',onClick:close=>{close();resolve(true);}}]});});
+  if(!ok) return false;
+  await applyCloudPayload(data.appData,data);
+  await downloadCloudFiles(data.files||[]);
+  await loadNotes();
+  cloudSync.remoteFiles=normArr(data.files);
+  cloudSync.localUpdatedAt=Number(data.clientUpdatedAt||Date.now());
+  cloudSync.fileSig={};
+  await bgApply();
+  if(Nav.stack.length) Nav.rerenderAll();
+  toast(t('set.cloudDownloaded'));
+  return true;
+}
+
+async function firstSyncChoice(remoteData){
+  const hasLocal=hasMeaningfulLocalData();
+  if(!hasLocal) return 'restore';
+  let remembered=''; try{ remembered=localStorage.getItem('ubad.cloud.choice.'+cloudSync.userId)||''; }catch(e){}
+  if(remembered==='upload'||remembered==='restore'||remembered==='merge') return remembered;
+  const result=await new Promise(resolve=>{
+    openModal({title:t('sync.firstTitle'),wide:true,body:`<p class="m-msg">${t('sync.firstBody')}</p>
+      <div class="sync-choice-grid"><button class="card card-pad sync-choice" data-sync-choice="upload"><b>⬆️ ${t('sync.upload')}</b><span>${t('sync.uploadDesc')}</span></button>
+      <button class="card card-pad sync-choice" data-sync-choice="restore"><b>⬇️ ${t('sync.restore')}</b><span>${t('sync.restoreDesc')}</span></button>
+      <button class="card card-pad sync-choice" data-sync-choice="merge"><b>🔀 ${t('sync.merge')}</b><span>${t('sync.mergeDesc')}</span></button></div>`,actions:[{label:t('common.cancel'),onClick:close=>{close();resolve('cancel');}}]});
+    $$('.sync-choice',activeModal.root).forEach(b=>b.addEventListener('click',()=>{const v=b.dataset.syncChoice;try{localStorage.setItem('ubad.cloud.choice.'+cloudSync.userId,v);}catch(e){};activeModal.close();resolve(v);}));
+  });
+  return result;
+}
+
+async function pushCloudState(manual=false){
+  if(!cloudSync.active||cloudSync.applying||!window.UBADAuth?.setCloudState||!navigator.onLine) return false;
+  if(cloudSync.syncing){ if(manual) return false; return false; }
+  const clientUpdatedAt=cloudSync.localUpdatedAt||Date.now();
+  const syncId=Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8);
+  const payload=cloudPayload();
+  let bytes=0;
+  try{ bytes=new Blob([JSON.stringify(payload)]).size; }catch(e){}
+  if(bytes>900000){
+    console.error('[UBAD Cloud] State is too large for a single Firestore document:',bytes);
+    if(manual) throw new Error('بيانات المزامنة كبيرة جدًا لسجل Firestore واحد.');
+    toast('بيانات المزامنة كبيرة جدًا؛ تم الاحتفاظ بها محليًا.','err');
+    return false;
+  }
+  cloudSync.syncing=true;
+  try{
+    const manifest=await buildCloudFileManifest();
+    const uploaded=await uploadCloudFiles(manifest);
+    const currentKeys=new Set(uploaded.map(f=>f.key));
+    const stale=cloudSync.remoteFiles.filter(f=>f?.key&&!currentKeys.has(f.key));
+    if(stale.length) await deleteCloudFiles(stale);
+    await window.UBADAuth.setCloudState(payload,{syncVersion:CLOUD_SYNC_VERSION,syncId,clientUpdatedAt},uploaded);
+    cloudSync.remoteFiles=uploaded;
+    cloudSync.lastRemoteId=syncId;
+    console.info('[UBAD Cloud] Synced account data:',bytes,'bytes','files:',uploaded.length);
+    return true;
+  }catch(e){
+    console.error('[UBAD Cloud] Sync failed:',e);
+    window.dispatchEvent(new CustomEvent('ubad-firebase-error',{detail:{stage:'firestore-sync',error:e}}));
+    if(manual) throw e;
+    return false;
+  }finally{
+    cloudSync.syncing=false;
+  }
+}
+function scheduleCloudSync(delay=1200){
+  if(!cloudSync.active||cloudSync.applying||!navigator.onLine) return;
+  cloudSync.localUpdatedAt=Date.now();
+  clearTimeout(cloudSync.timer);
+  cloudSync.timer=setTimeout(()=>pushCloudState(),Math.max(0,delay));
+}
+async function startCloudSync(user){
+  if(!user||!window.UBADAuth?.getCloudState) return;
+  if(cloudSync.unsubscribe){ try{ cloudSync.unsubscribe(); }catch(e){} cloudSync.unsubscribe=null; }
+  cloudSync.active=true; cloudSync.userId=user.uid; cloudSync.localUpdatedAt=0; cloudSync.remoteFiles=[]; cloudSync.fileSig={};
+  try{
+    const snap=await window.UBADAuth.getCloudState(user), data=snap?.data||{};
+    cloudSync.remoteFiles=normArr(data.files);
+    if(data.appData&&typeof data.appData==='object'){
+      const choice=await firstSyncChoice(data.appData);
+      if(choice==='upload'){
+        cloudSync.localUpdatedAt=Date.now(); await pushCloudState();
+      } else if(choice==='restore') {
+        try{ await DB.clear('notes'); await DB.clear('courseAssets'); for(const th of THEMES) await DB.del('kv','bg-'+th); }catch(e){}
+        await applyCloudPayload(data.appData,data); await downloadCloudFiles(data.files||[]); await loadNotes();
+      } else if(choice==='merge') {
+        const merged=await mergeCloudAndLocal(data.appData); await downloadCloudFiles(data.files||[]); const files=await buildCloudFileManifest(); const uploaded=await uploadCloudFiles(files);
+        await window.UBADAuth.setCloudState(merged,{syncVersion:CLOUD_SYNC_VERSION,syncId:'merge-'+uid(),clientUpdatedAt:Date.now()},uploaded);
+      } else { cloudSync.active=false; return; }
+    }else{
+      cloudSync.localUpdatedAt=Date.now(); await pushCloudState();
+    }
+    cloudSync.unsubscribe=window.UBADAuth.watchCloudState(({data:remote})=>{
+      const remoteAt=Number(remote?.clientUpdatedAt||0);
+      if(!remote?.appData||!remoteAt||remoteAt<=cloudSync.localUpdatedAt) return;
+      applyCloudPayload(remote.appData,remote).then(()=>downloadCloudFiles(remote.files||[])).catch(e=>console.error('[UBAD Cloud] Remote restore failed:',e));
+    });
+  }catch(e){
+    console.error('[UBAD Cloud] Initial sync failed:',e);
+    window.dispatchEvent(new CustomEvent('ubad-firebase-error',{detail:{stage:'firestore-initial-sync',error:e}}));
+  }
+}
+
+async function deleteCloudFiles(manifest){ for(const f of normArr(manifest)){ try{ await window.UBADAuth?.deleteFile(`users/${cloudSync.userId}/${f.key}`); }catch(e){ console.warn('[UBAD Cloud] file delete failed',f.key,e); } } }
+function stopCloudSync(){
+  cloudSync.active=false; cloudSync.userId=''; clearTimeout(cloudSync.timer);
+  if(cloudSync.unsubscribe){ try{ cloudSync.unsubscribe(); }catch(e){} cloudSync.unsubscribe=null; }
+}
+window.addEventListener('online',()=>{ if(cloudSync.active) scheduleCloudSync(500); });
+
 function saveData(){ Nav.invalidate('dashboard','analytics'); savePrefs();
   DB.put('kv',{id:'appdata',data:{user:state.user,settings:state.settings,courses:state.courses,
     events:state.events,tasks:state.tasks,decks:state.decks,quizzes:state.quizzes,schedule:state.schedule,
     forms:state.forms,summaries:state.summaries,
-    focus:state.focus,islam:state.islam}}).catch(()=>{}); }
+    focus:state.focus,islam:state.islam}}).catch(()=>{});
+  scheduleCloudSync();
+}
 
 /* ═══ 5. audio manager — fails silently, never blocks ════════ */
 const Sound={ files:{click:'assets/sounds/Click_1.mp3',move:'assets/audio/3d-move.mp3',
@@ -1079,18 +1355,29 @@ const Nav={
       it.el.replaceWith(fresh); it.el=fresh; });
     this.updateDepths(); this.parkBehind(); FX.hubGate(this); }
 };
-function chrome(o){ /* standard layer shell: back button + breadcrumb + body */
+
+function quickControls(){
+  return `<div class="quick-controls"><button class="icon-btn quick-lang" id="quick-lang" aria-label="${t('set.language')}">${ic('globe')}</button><button class="icon-btn quick-sound" id="quick-sound" aria-label="${t('set.sound')}">${ic(state.settings.sound?'vol':'volume-x')}</button><button class="icon-btn" id="quick-settings" aria-label="${t('nav.settings')}">${ic('sliders')}</button></div>`;
+}
+function bindQuickControls(sec){
+  $('#quick-lang',sec)?.addEventListener('click',()=>setLang(state.settings.lang==='ar'?'en':'ar'));
+  $('#quick-sound',sec)?.addEventListener('click',()=>{state.settings.sound=!state.settings.sound;saveData();Nav.rerenderAll();});
+  $('#quick-settings',sec)?.addEventListener('click',()=>{if(Nav.stack.at(-1)?.id!=='settings')Nav.push('settings');});
+}
+
+function chrome(o){ /* section shell: preserve full internal structure, visually compact */
   const sec=document.createElement('section'); sec.className='layer';
   const crumbs=Nav.stack.map((it,i)=>`<span class="crumb${i===Nav.stack.length-1?' cur':''}">${esc(Nav.title(it))}</span>`)
     .join(`<span class="crumb-sep">${ic('chr','dir-flip')}</span>`);
   sec.innerHTML=`
-    <header class="lhead">
+    <header class="lhead section-lhead">
       <button class="icon-btn nav-back" aria-label="${t('common.back')}">${ic('chl','dir-flip')}</button>
       <div class="lhead-mid"><span class="lhead-crumbs mono">${crumbs}</span><h1 class="lhead-title">${esc(o.title||'')}</h1></div>
-      <div class="lhead-act">${o.actions||''}</div>
+      <div class="lhead-act">${o.actions||''}${quickControls()}</div>
     </header>
     <div class="lbody"><div class="wrap">${o.body||''}</div></div>`;
   $('.nav-back',sec).addEventListener('click',()=>Nav.pop());
+  bindQuickControls(sec);
   return sec;
 }
 /* global click delegation: data-nav → push; buttons → click sound */
@@ -1099,7 +1386,6 @@ document.addEventListener('click',e=>{
   if(nv){ let p={}; try{ p=JSON.parse(nv.dataset.params||'{}'); }catch(err){}
     const navId=String(nv.dataset.nav||'');
     const rootSections=new Set(['dashboard','courses','notes','calendar','islam','study','settings','analytics']);
-    if(rootSections.has(navId)) Analytics.section(navId);
     Nav.push(navId,p); return; }
   if(e.target.closest('.nav-back')) return; /* back sound handled in pop */
   if(e.target.closest('button,a,.press')) Sound.play('click');
@@ -1221,7 +1507,7 @@ async function bgApply(){
 function uploadBg(th,file){
   if(!/^image\//.test(file.type)){ toast(t('notes.badType'),'err'); return; }
   if(file.size>5*1024*1024){ toast(t('notes.tooBig'),'err'); return; }
-  DB.put('kv',{id:'bg-'+th,blob:file}).then(()=>{ bgApply(); toast(t('set.bgApplied')); })
+  DB.put('kv',{id:'bg-'+th,blob:file}).then(()=>{ bgApply(); scheduleCloudSync(400); toast(t('set.bgApplied')); })
     .catch(()=>toast(t('toast.error'),'err')); }
 async function removeBg(th){ try{ await DB.del('kv','bg-'+th); }catch(e){}
   bgApply(); toast(t('set.bgRemoved')); }
@@ -1267,14 +1553,12 @@ LAYERS.hub={
     sec.innerHTML='<canvas class="hub-stars" aria-hidden="true"></canvas>';
     const ram=ramadanInfo();
     const cards=[
-      {id:'dashboard',icon:'grid',  acc:'acc-c',y:'8px', z:'10px',r:'7deg', fd:'7s',  fdel:'-1s'},
-      {id:'courses',  icon:'book',  acc:'acc-v',y:'-10px',z:'46px',r:'4deg', fd:'9s',  fdel:'-3s'},
-      {id:'notes',    icon:'note',  acc:'acc-b',y:'-18px',z:'64px',r:'0deg', fd:'8s',  fdel:'-2s'},
-      {id:'calendar', icon:'cal',   acc:'acc-c',y:'-10px',z:'46px',r:'-4deg',fd:'10s', fdel:'-5s'},
-      {id:'islam',    icon:'mosque',acc:'acc-v',y:'10px', z:'34px',r:'6deg', fd:'7.5s',fdel:'-4s'},
-      {id:'analytics',icon:'book', acc:'acc-b',y:'-6px', z:'58px',r:'2deg', fd:'9.5s',fdel:'-1.5s'},
-      {id:'study',    icon:'layers',acc:'acc-c',y:'4px',  z:'40px',r:'-3deg',fd:'8.5s',fdel:'-2.5s'},
-      {id:'settings', icon:'sliders',acc:'acc-v',y:'12px',z:'12px',r:'-7deg',fd:'10.5s',fdel:'-6s'},
+      {id:'courses',  icon:'book',   acc:'acc-v',y:'-8px', z:'44px',r:'-3deg',fd:'9s',  fdel:'-2s'},
+      {id:'dashboard',icon:'grid',   acc:'acc-c',y:'-14px',z:'64px',r:'0deg', fd:'8s',  fdel:'-1s'},
+      {id:'calendar', icon:'cal',    acc:'acc-b',y:'-8px', z:'44px',r:'3deg', fd:'10s', fdel:'-4s'},
+      {id:'notes',    icon:'note',   acc:'acc-b',y:'8px',  z:'36px',r:'-2deg',fd:'8s',  fdel:'-2.5s'},
+      {id:'islam',    icon:'mosque', acc:'acc-v',y:'10px', z:'34px',r:'2deg', fd:'7.5s',fdel:'-4s'},
+      {id:'study',    icon:'layers', acc:'acc-c',y:'5px',  z:'40px',r:'3deg', fd:'8.5s',fdel:'-2.5s'}
     ];
     /* += (وليس =) حتى نحافظ على كانفس النجوم المعيّن أعلاه */
     sec.innerHTML+=`
@@ -1282,32 +1566,44 @@ LAYERS.hub={
       <header class="hub-top">
         <div class="brand">${ic('logo','brand-logo')}
           <span class="brand-txt"><span class="brand-name">UBAD</span><span class="brand-sub">ACADEMY HUB</span></span></div>
-        <button class="icon-btn" id="hub-search" aria-label="${t('common.search')}">${ic('search')}</button>
+        <div class="hub-actions"><button class="icon-btn" id="hub-search" aria-label="${t('common.search')}">${ic('search')}</button>${quickControls()}</div>
       </header>
       <div class="hub-hero">
         <p class="eyebrow">${esc(fmtDateLong(new Date()))}</p>
         <h1 class="hub-title">${t('hub.head')}</h1>
       </div>
       <div class="hub-stage">
-        <button class="sat sat-date" data-nav="calendar" data-params='{"date":"${today()}"}'>
-          ${ic('cal','ic-s')}<span>${esc(fmtDate(new Date(),{weekday:'short',day:'numeric',month:'short'}))}</span></button>
         <div class="hub-grid" aria-label="${t('app.name')}">
           ${cards.map((c,i)=>`
-          <button class="hub-card pre ${c.acc} tilt-target" data-nav="${c.id}"
+          <button class="hub-card pre ${c.acc} ${c.id==='dashboard'?'hub-main':'hub-mini'}" data-nav="${c.id}" aria-label="${t('nav.'+c.id)}"
             style="--i:${i};--y0:${c.y};--z0:${c.z};--ry0:${c.r};--fd:${c.fd};--fdel:${c.fdel}">
-            <span class="hub-float"><span class="hub-inner tilt">
+            <span class="hub-float"><span class="hub-inner">
               <span class="hub-glow"></span>
               <span class="hub-ic">${ic(c.icon)}</span>
-              <span class="hub-tx"><span class="hub-t">${t('nav.'+c.id)}</span><span class="hub-s">${t('sub.'+c.id)}</span></span>
-              <span class="hub-arrow">${ic('chr','dir-flip')}</span>
+              ${c.id==='dashboard'?`<span class="hub-tx"><span class="hub-t">${t('nav.dashboard')}</span><span class="hub-s">${t('sub.dashboard')}</span></span>`:''}
             </span></span>
           </button>`).join('')}
         </div>
-        ${ram?`<button class="sat sat-gpa" data-nav="islam">${ic('moon','ic-s')}<span>${t('islam.ramadan')} <b>${ram.days}</b></span></button>`:''}
       </div>
+      <section class="hub-blog" aria-label="${t('blog.title')}">
+        <div class="hub-blog-head"><div><span class="hub-blog-kicker">${t('blog.title')}</span><span class="hub-blog-sub">${t('blog.subtitle')}</span></div><button class="btn btn-sm hub-blog-more" id="hub-blog-open">${t('blog.read')} ${ic('chr','ic-s')}</button></div>
+        <div class="hub-blog-track" id="hub-blog-list"><div class="hub-blog-loading"><span class="blog-spinner"></span></div></div>
+      </section>
       <p class="hub-foot">${t('hub.foot')}</p>
     </div></div>`;
-    $('#hub-search',sec).addEventListener('click',openSearch);
+    $('#hub-search',sec).addEventListener('click',openSearch); bindQuickControls(sec);
+    $('#hub-blog-open',sec)?.addEventListener('click',()=>Nav.push('analytics'));
+    const renderHubBlog=()=>{
+      const host=$('#hub-blog-list',sec); if(!host) return;
+      const posts=(blogState.posts||[]).slice(0,8);
+      if(!posts.length){ host.innerHTML=`<div class="hub-blog-empty">📰 <span>${blogState.loading?t('blog.loading'):t('blog.empty')}</span></div>`; return; }
+      host.innerHTML=posts.map(p=>{
+        const title=blogTitle(p)||t('blog.untitled'), img=blogImage(p);
+        const url=safeHttpUrl(p?.url||p?.link||''); return url?`<a class="hub-blog-item" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${img?`<img src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer">`:`<span class="hub-blog-thumb-empty">📰</span>`}<span class="hub-blog-copy"><b>${esc(title)}</b><small>${esc(blogExcerpt(p)||'')}</small></span></a>`:`<div class="hub-blog-item">${img?`<img src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer">`:`<span class="hub-blog-thumb-empty">📰</span>`}<span class="hub-blog-copy"><b>${esc(title)}</b><small>${esc(blogExcerpt(p)||'')}</small></span></div>`;
+      }).join('');
+    };
+    $$('#hub-blog-list',sec).forEach(()=>{});
+    (async()=>{ if(!blogState.loaded) await blogLoad(); renderHubBlog(); })();
     requestAnimationFrame(()=>requestAnimationFrame(()=>$$('.hub-card',sec).forEach(c=>c.classList.remove('pre'))));
     return sec;
   }
@@ -2542,6 +2838,7 @@ LAYERS.noteEditor={
       title:t('nav.notes'),msg:t('notes.deleteMsg'),
       onOk:async()=>{ try{ await DB.del('notes',doc.id); }catch(e){}
         state.notes=state.notes.filter(n=>n.id!==doc.id);
+        scheduleCloudSync();
         doc.images.concat(doc.audio).forEach(a=>{ try{ URL.revokeObjectURL(blobURL(a.blob)); }catch(e){} });
         doc.saved=true; Nav.invalidate('dashboard','notes'); Nav.pop(); toast(t('toast.deleted')); } }));
     sec._ed={ isDirty:()=>!doc.saved,
@@ -2731,8 +3028,8 @@ async function blogLoad({refresh=false,pageToken=null}={}){
     const res=await fetch(u.toString(),{headers:{Accept:'application/json'},cache:'no-store'});
     if(!res.ok) throw new Error('HTTP '+res.status);
     const data=await res.json();
-    const incoming=Array.isArray(data.posts)?data.posts:[];
-    blogState.posts=refresh||!pageToken?incoming:[...blogState.posts,...incoming];
+    const incoming=(Array.isArray(data.posts)?data.posts:[]).slice().sort((a,b)=>new Date(b?.published||b?.updated||0)-new Date(a?.published||a?.updated||0));
+    blogState.posts=refresh||!pageToken?[...incoming].sort((a,b)=>new Date(b?.published||b?.updated||0)-new Date(a?.published||a?.updated||0)):[...blogState.posts,...incoming].sort((a,b)=>new Date(b?.published||b?.updated||0)-new Date(a?.published||a?.updated||0));
     blogState.nextPageToken=data.nextPageToken||null;
     blogState.loaded=true;
     blogCacheWrite({posts:blogState.posts,nextPageToken:blogState.nextPageToken});
@@ -2776,15 +3073,9 @@ LAYERS.analytics={
       if(!posts.length){ list.innerHTML=`<div class="empty"><div class="blog-empty-icon">📰</div><p>${t('blog.empty')}</p>${blogState.error&&!cached?`<p class="e-h">${t('blog.error')}</p>`:''}</div>`; return; }
       list.innerHTML=`<div class="blog-grid">${posts.map(p=>{
         const title=blogTitle(p)||t('blog.untitled'), img=blogImage(p), ex=blogExcerpt(p), date=p.published||p.updated;
-        return `<article class="blog-card card">
-          ${img?`<img class="blog-thumb" src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer">`:`<div class="blog-thumb blog-thumb-empty">📰</div>`}
-          <div class="blog-card-body">
-            <div class="blog-meta mono">${date?esc(fmtDate(new Date(date),{day:'numeric',month:'short',year:'numeric'})):''}</div>
-            <h2 class="blog-card-title">${esc(title)}</h2>
-            <p class="blog-excerpt">${esc(ex||t('blog.noImage'))}</p>
-            <button class="btn btn-primary btn-sm" data-nav="analyticsPost" data-params='${esc(JSON.stringify({id:p.id}))}'>${t('blog.read')} ${ic('chr','ic-s')}</button>
-          </div>
-        </article>`;
+        const url=safeHttpUrl(p?.url||p?.link||'');
+        const card=`${img?`<img class="blog-thumb" src="${esc(img)}" alt="" loading="lazy" referrerpolicy="no-referrer">`:`<div class="blog-thumb blog-thumb-empty">📰</div>`}<div class="blog-card-body"><div class="blog-meta mono">${date?esc(fmtDate(new Date(date),{day:'numeric',month:'short',year:'numeric'})):''}</div><h2 class="blog-card-title">${esc(title)}</h2><p class="blog-excerpt">${esc(ex||t('blog.noImage'))}</p><span class="btn btn-primary btn-sm">${t('blog.read')} ${ic('chr','ic-s')}</span></div>`;
+        return url?`<a class="blog-card card" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${card}</a>`:`<article class="blog-card card">${card}</article>`;
       }).join('')}</div>`;
       if(blogState.nextPageToken && !q){
         list.insertAdjacentHTML('beforeend',`<div class="blog-more"><button class="btn" id="blog-more">${t('blog.loadMore')}</button></div>`);
@@ -3406,131 +3697,88 @@ LAYERS.quizPlay={
   }
 };
 
+/* ── Firebase auth bridge ─────────────────────────────────── */
+function authUser(){ return window.UBADAuth && window.UBADAuth.user ? window.UBADAuth.user : null; }
+function refreshAuthUI(){
+  if(Nav.stack.length && Nav.stack[Nav.stack.length-1].id==='settings') Nav.refreshTop();
+}
+window.addEventListener('error', event => {
+  const target = event?.target;
+  const src = target?.src || '';
+  if (src.includes('firebase-auth.js')) {
+    window.__UBAD_FIREBASE_AUTH_BOOT__ = { status:'load-error', code:'firebase-auth-load-failed', message:`تعذر تحميل firebase-auth.js: ${src}` };
+    console.error('[UBAD] Firebase auth module load error:', event);
+  }
+}, true);
+
+window.addEventListener('unhandledrejection', event => {
+  const reason=event?.reason;
+  const code=reason?.code||'';
+  const msg=reason?.message||'';
+  if(String(code).startsWith('auth/') || /firebase/i.test(msg)) {
+    console.error('[UBAD] Firebase unhandled rejection:', reason);
+  }
+});
+
+function bindFirebaseAuth(){
+  const attach=()=>{
+    if(!window.UBADAuth || window.__UBAD_AUTH_BOUND) return;
+    window.__UBAD_AUTH_BOUND=true;
+    window.UBADAuth.onChange(async user=>{
+      if(user){
+        if(user.displayName && state.user.name==='Ubad'){
+          state.user.name=normStr(user.displayName,40,state.user.name);
+          savePrefs();
+        }
+        await startCloudSync(user);
+      }else{
+        stopCloudSync();
+      }
+      refreshAuthUI();
+    });
+  };
+  attach();
+  window.addEventListener('ubad-firebase-ready',attach,{once:true});
+}
+
+window.addEventListener('ubad-firebase-error',event=>{
+  const e=event?.detail?.error;
+  if(!e) return;
+  console.error('[UBAD] Firebase diagnostic event:', e);
+  const code=e.code || 'unknown';
+  const message=e.message || 'Unknown error';
+  toast(`[${code}] ${message}`,'err');
+});
+
+
 /* ── SETTINGS ─────────────────────────────────────────────── */
+let activeSettingsTab='account';
 LAYERS.settings={
   title:()=>t('nav.settings'),
   render(){
-    const s=state.settings;
-    const body=`
-    <div class="set-group card card-pad">
-      <div class="set-h">${ic('globe')}<div><h2>${t('set.language')}</h2><p>${t('set.langDesc')}</p></div></div>
-      <div class="pillrow" id="set-lang">
-        <button class="pill ${s.lang!=='ar'?'on':''}" data-l="en">English</button>
-        <button class="pill ${s.lang==='ar'?'on':''}" data-l="ar">العربية</button>
-      </div>
-    </div>
-    <div class="set-group card card-pad">
-      <div class="set-h">${ic('user')}<div><h2>${t('set.profile')}</h2><p>${t('set.usernameDesc')}</p></div></div>
-      <div class="inline-form">
-        <input class="input" id="set-name" value="${esc(state.user.name)}" maxlength="40" placeholder="${t('set.usernamePh')}" aria-label="${t('set.username')}">
-        <button class="btn btn-primary" id="set-name-save">${t('common.save')}</button>
-      </div>
-    </div>
-    <div class="set-group card card-pad">
-      <div class="set-h">${(s.theme==='dark'||s.theme==='oled')?ic('moon'):ic('sun')}<div><h2>${t('set.appearance')}</h2><p>${t('set.theme')}</p></div></div>
-      <div class="swatches" id="set-theme" role="radiogroup" aria-label="${t('set.theme')}">
-        ${[['dark','#0A1024','#22D3EE|#3B82F6|#8B5CF6'],['oled','#000000','#22D3EE|#3B82F6|#8B5CF6'],
-           ['light','#F7F9FF','#0891B2|#2563EB|#7C3AED'],['paper','#FBF6EC','#0F766E|#B45309|#9F1239'],
-           ['sage','#F7FBF7','#0D9488|#047857|#4338CA'],['rose','#FDF5F8','#DB2777|#9333EA|#BE185D']]
-          .map(([id,bg,dots])=>{ const d=dots.split('|'); return `
-          <button class="swatch ${s.theme===id?'on':''}" data-th="${id}" role="radio" aria-checked="${s.theme===id}">
-            <span class="sw-prev" style="background:${bg}">
-              <i style="background:${d[0]}"></i><i style="background:${d[1]}"></i><i style="background:${d[2]}"></i>
-            </span>
-            <span class="sw-name">${t('set.th.'+id)}</span>
-          </button>`;}).join('')}
-      </div>
-    </div>
-    <div class="set-group card card-pad">
-      <div class="set-h">${ic('img')}<div><h2>${t('set.bg')}</h2><p>${t('set.bgDesc')}</p></div></div>
-      <div class="bg-cells">
-        ${THEMES.map(th=>`
-        <div class="bg-cell">
-          <span class="bg-prev" style="background:${THEME_META[th]||'#050816'}"></span>
-          <span class="bg-name">${t('set.th.'+th)}</span>
-          <div class="bg-acts">
-            <button class="btn btn-sm bg-up" data-th="${th}">${ic('ul','ic-s')}<span>${t('set.bgUp')}</span></button>
-            <button class="icon-btn icon-btn-sm bg-rm" data-th="${th}" aria-label="${t('set.bgRm')}" title="${t('set.bgRm')}">${ic('x','ic-s')}</button>
-          </div>
-        </div>`).join('')}
-      </div>
-      <input type="file" id="bg-file" accept="image/*" hidden>
-    </div>
-    <div class="set-group card card-pad set-row">
-      <div class="set-h">${ic('vol')}<div><h2>${t('set.sound')}</h2><p>${t('set.soundDesc')}</p></div></div>
-      <button class="switch ${s.sound?'on':''}" id="set-sound" role="switch" aria-checked="${s.sound}" aria-label="${t('set.sound')}"></button>
-    </div>
-    <div class="set-group card card-pad">
-      <div class="set-h">${ic('dl')}<div><h2>${t('set.backup')}</h2><p>${t('set.backupDesc')}</p></div></div>
-      <div class="pillrow">
-        <button class="btn btn-primary" id="set-export">${ic('dl','ic-s')}<span>${t('set.export')}</span></button>
-        <button class="btn" id="set-import">${ic('ul','ic-s')}<span>${t('set.import')}</span></button>
-      </div>
-      <input type="file" id="set-file" accept="application/json,.json" hidden>
-    </div>
-    <div class="set-group card card-pad">
-      <div class="set-h">${ic('heart','support-heart')}<div><h2>${t('set.support')}</h2><p>${t('set.supportDesc')}</p></div></div>
-      <div class="support-list">
-        <div class="support-item">
-          <span class="support-icon vodafone-icon">${ic('vodafone')}</span>
-          <div class="support-info"><strong>${t('set.vodafone')}</strong><span dir="ltr" class="mono">01093557071</span></div>
-          <button class="btn btn-sm support-copy" data-copy="01093557071">${ic('copy','ic-s')}<span>${t('set.copy')}</span></button>
-        </div>
-        <div class="support-item">
-          <span class="support-icon paypal-icon">${ic('paypal')}</span>
-          <div class="support-info"><strong>${t('set.paypal')}</strong><span dir="ltr" class="mono">abdalla.toaila34@gmail.com</span></div>
-          <button class="btn btn-sm support-copy" data-copy="abdalla.toaila34@gmail.com">${ic('copy','ic-s')}<span>${t('set.copy')}</span></button>
-        </div>
-      </div>
-    </div>
-    <div class="set-group card card-pad">
-      <div class="set-h">${ic('alert')}<div><h2>${t('set.danger')}</h2><p>${t('set.clearMsg')}</p></div></div>
-      <button class="btn btn-danger" id="set-wipe">${ic('trash','ic-s')}<span>${t('set.clearAll')}</span></button>
-    </div>
-    <div class="set-group card card-pad about">
-      ${ic('logo','about-logo')}
-      <div><h2>UBAD ACADEMY HUB</h2><p>${t('set.aboutBody')}</p></div>
-    </div>
-    <div class="set-group card card-pad about rights-box">
-      <div><h2>${t('rights.title')}</h2><p>${t('rights.body')}</p><p class="rights-detail">${t('rights.detail')}</p></div>
-    </div>`;
-    const sec=chrome({title:t('nav.settings'),body});
-    $('#set-lang',sec).addEventListener('click',e=>{
-      const b=e.target.closest('[data-l]'); if(b) setLang(b.dataset.l); });
-    $('#set-theme',sec).addEventListener('click',e=>{
-      const b=e.target.closest('[data-th]'); if(b) setTheme(b.dataset.th); });
-    let pendBg='dark';
-    $$('.bg-up',sec).forEach(b=>b.addEventListener('click',()=>{
-      pendBg=b.dataset.th; $('#bg-file',sec).click(); }));
-    $('#bg-file',sec).addEventListener('change',e=>{
-      const f=e.target.files[0]; e.target.value='';
-      if(f) uploadBg(pendBg,f); });
-    $$('.bg-rm',sec).forEach(b=>b.addEventListener('click',()=>removeBg(b.dataset.th)));
-    $('#set-name-save',sec).addEventListener('click',()=>{
-      const v=$('#set-name',sec).value.trim();
-      if(!v){ toast(t('set.needName'),'err'); return; }
-      state.user.name=v.slice(0,40); saveData(); toast(t('set.nameSaved')); });
-    $('#set-sound',sec).addEventListener('click',()=>{
-      state.settings.sound=!state.settings.sound; saveData();
-      const sw=$('#set-sound',sec);
-      sw.classList.toggle('on',state.settings.sound);
-      sw.setAttribute('aria-checked',String(state.settings.sound));
-      if(state.settings.sound) Sound.play('click'); });
-    $('#set-export',sec).addEventListener('click',openExportBackup);
-    $('#set-import',sec).addEventListener('click',()=>$('#set-file',sec).click());
-    $('#set-file',sec).addEventListener('change',e=>{
-      const f=e.target.files[0]; e.target.value=''; if(f) importBackup(f); });
-    $$('.support-copy',sec).forEach(b=>b.addEventListener('click',async()=>{
-      const value=b.dataset.copy||'';
-      try{
-        if(navigator.clipboard&&window.isSecureContext) await navigator.clipboard.writeText(value);
-        else { const ta=document.createElement('textarea'); ta.value=value; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
-        toast(t('set.copied'));
-      }catch(e){ toast(value); }
-    }));
-    $('#set-wipe',sec).addEventListener('click',()=>confirmModal({
-      title:t('set.clearAll'),msg:t('set.clearMsg'),okLabel:t('set.clearAll'),onOk:wipeAll }));
-    return sec;
+    const s=state.settings, user=authUser();
+    const account=`<div class="set-group card card-pad"><div class="set-h">${ic('user')}<div><h2>${t('set.googleAccount')}</h2><p>${user?esc(t('set.googleSignedIn',{name:user.displayName||user.email||'Google'})):t('set.googleNotSignedIn')}</p></div></div><div class="pillrow">${user?`<button class="btn" id="set-google-out">${t('set.googleSignOut')}</button>`:`<button class="btn btn-primary" id="set-google-in">${t('set.googleSignIn')}</button>`}</div><div class="inline-form" style="margin-top:12px"><input class="input" id="set-name" value="${esc(state.user.name)}" maxlength="40" placeholder="${t('set.usernamePh')}"><button class="btn btn-primary" id="set-name-save">${t('common.save')}</button></div>${cloudSync.active?`<div class="sync-status-card"><div class="sync-status-line"><span class="sync-dot on"></span><span><b>${t('set.cloudSync')}</b><small>${t('set.cloudSyncOn')}</small></span></div><div class="sync-stats"><span><b>${cloudSync.remoteFiles.length}</b><small>${t('set.syncedFiles')}</small></span><span><b>${navigator.onLine?t('set.online'):t('set.offline')}</b><small>${t('set.connection')}</small></span></div><div class="sync-actions"><button class="btn btn-primary" id="set-upload-cloud">${ic('ul','ic-s')}<span>${t('set.uploadCloud')}</span></button><button class="btn" id="set-download-cloud">${ic('dl','ic-s')}<span>${t('set.downloadCloud')}</span></button></div></div>`:`<div class="sync-status-card off"><div class="sync-status-line"><span class="sync-dot"></span><span><b>${t('set.cloudSync')}</b><small>${t('set.cloudSyncOff')}</small></span></div></div>`}</div>`;
+    const appearance=`<div class="set-group card card-pad appearance-panel"><div class="set-h">${s.theme==='dark'||s.theme==='oled'?ic('moon'):ic('sun')}<div><h2>${t('set.appearance')}</h2><p>${t('set.appearanceDesc')||t('set.theme')}</p></div></div><div class="appearance-block"><div class="appearance-block-head"><div><b>${t('set.theme')}</b><small>${t('set.themeDesc')||t('set.theme')}</small></div><span class="appearance-current">${esc(t('set.th.'+s.theme))}</span></div><div class="theme-grid" id="set-theme">${[['dark','#0A1024','#22D3EE|#3B82F6|#8B5CF6'],['oled','#000000','#22D3EE|#3B82F6|#8B5CF6'],['light','#F7F9FF','#0891B2|#2563EB|#7C3AED'],['paper','#FBF6EC','#0F766E|#B45309|#9F1239'],['sage','#F7FBF7','#0D9488|#047857|#4338CA'],['rose','#FDF5F8','#DB2777|#9333EA|#BE185D']].map(([id,bg,dots])=>{const d=dots.split('|');return `<div class="theme-card ${s.theme===id?'on':''}" data-th="${id}" role="button" tabindex="0" aria-pressed="${s.theme===id}"><span class="theme-preview" style="background:${bg}"><i style="background:${d[0]}"></i><i style="background:${d[1]}"></i><i style="background:${d[2]}"></i></span><span class="theme-copy"><b>${t('set.th.'+id)}</b><small>${id==='dark'||id==='oled'?'Dark':id==='rose'?'Soft rose':'Light'}</small></span><span class="theme-actions"><button type="button" class="btn btn-sm bg-up" data-th="${id}">${ic('ul','ic-s')}<span>${t('set.bgUp')}</span></button><button type="button" class="icon-btn icon-btn-sm bg-rm" data-th="${id}" aria-label="${t('set.bgRm')}">${ic('x','ic-s')}</button></span>${s.theme===id?'<span class="theme-check">✓</span>':''}</div>`}).join('')}</div><input type="file" id="bg-file" accept="image/*" hidden></div></div>`;
+    const backup=`<div class="set-group card card-pad"><div class="set-h">${ic('dl')}<div><h2>${t('set.backup')}</h2><p>${t('set.backupDesc')}</p></div></div><div class="pillrow"><button class="btn btn-primary" id="set-export">${ic('dl','ic-s')}<span>${t('set.export')}</span></button><button class="btn" id="set-import">${ic('ul','ic-s')}<span>${t('set.import')}</span></button></div><input type="file" id="set-file" accept="application/json,.json" hidden></div>`;
+    const about=`<div class="set-group card card-pad about">${ic('logo','about-logo')}<div><h2>UBAD ACADEMY HUB</h2><p>${t('set.aboutBody')}</p></div></div><div class="set-group card card-pad about"><div class="set-h">${ic('heart')}<div><h2>${t('set.support')}</h2><p>${t('set.supportDesc')}</p></div></div><div class="support-list"><div class="support-item"><span class="support-info"><strong>${t('set.vodafone')}</strong><span dir="ltr" class="mono">01093557071</span></span><button class="btn btn-sm support-copy" data-copy="01093557071">${ic('copy','ic-s')}<span>${t('set.copy')}</span></button></div><div class="support-item"><span class="support-info"><strong>${t('set.paypal')}</strong><span dir="ltr" class="mono">abdalla.toaila34@gmail.com</span></span><button class="btn btn-sm support-copy" data-copy="abdalla.toaila34@gmail.com">${ic('copy','ic-s')}<span>${t('set.copy')}</span></button></div></div></div><div class="set-group card card-pad"><div class="set-h">${ic('alert')}<div><h2>${t('set.danger')}</h2><p>${t('set.clearMsg')}</p></div></div><button class="btn btn-danger" id="set-wipe">${ic('trash','ic-s')}<span>${t('set.clearAll')}</span></button></div>`;
+    const body=`<div class="settings-nav"><button class="settings-tab on" data-tab="account">👤 <span>${t('settings.account')||'Account & Sync'}</span></button><button class="settings-tab" data-tab="appearance">🎨 <span>${t('settings.appearance')||'Appearance'}</span></button><button class="settings-tab" data-tab="backup">💾 <span>${t('settings.data')||'Data & Backup'}</span></button><button class="settings-tab" data-tab="about">🛠️ <span>${t('settings.about')||'About UBAD'}</span></button></div><div id="settings-pane"></div>`;
+    const sec=chrome({title:t('nav.settings'),body}); const pane=$('#settings-pane',sec);
+    const tabs={account,appearance,backup,about};
+    const draw=k=>{activeSettingsTab=tabs[k]?k:'account';pane.innerHTML=tabs[activeSettingsTab];$$('.settings-tab',sec).forEach(b=>b.classList.toggle('on',b.dataset.tab===activeSettingsTab));bindPane();};
+    const bindPane=()=>{
+      const googleIn=$('#set-google-in',sec); if(googleIn) googleIn.addEventListener('click',async()=>{try{googleIn.disabled=true;await window.UBADAuth.signIn();toast(t('set.nameSaved'));refreshAuthUI();}catch(e){googleIn.disabled=false;toast(`[${e.code||'auth/error'}] ${e.message||e}`,'err');}});
+      $('#set-google-out',sec)?.addEventListener('click',async()=>{await window.UBADAuth.signOut();toast(t('set.googleSignOut'));refreshAuthUI();});
+      $('#set-upload-cloud',sec)?.addEventListener('click',async()=>{const b=$('#set-upload-cloud',sec);if(b.dataset.busy)return;b.dataset.busy='1';b.disabled=true;b.innerHTML=ic('refresh','ic-s spin')+'<span>'+t('set.uploading')+'</span>';try{if(await uploadDeviceToCloud())toast(t('set.cloudUploaded'));}catch(e){console.error('[UBAD Cloud] Manual upload failed:',e);toast(e?.message||t('toast.error'),'err');}finally{b.disabled=false;delete b.dataset.busy;b.innerHTML=ic('ul','ic-s')+'<span>'+t('set.uploadCloud')+'</span>';if(Nav.stack.length)Nav.refreshTop();}});
+      $('#set-download-cloud',sec)?.addEventListener('click',async()=>{const b=$('#set-download-cloud',sec);if(b.dataset.busy)return;b.dataset.busy='1';b.disabled=true;b.innerHTML=ic('refresh','ic-s spin')+'<span>'+t('set.downloading')+'</span>';try{await downloadCloudToDevice();}catch(e){console.error('[UBAD Cloud] Manual download failed:',e);toast(e?.message||t('toast.error'),'err');}finally{if(document.body.contains(b)){b.disabled=false;delete b.dataset.busy;b.innerHTML=ic('dl','ic-s')+'<span>'+t('set.downloadCloud')+'</span>';}}});
+      $('#set-name-save',sec)?.addEventListener('click',()=>{const v=$('#set-name',sec).value.trim();if(!v){toast(t('set.needName'),'err');return;}state.user.name=v.slice(0,40);saveData();toast(t('set.nameSaved'));});
+      $('#set-theme',sec)?.addEventListener('click',e=>{const bg=e.target.closest('.bg-up'),rm=e.target.closest('.bg-rm'),card=e.target.closest('.theme-card');if(bg){e.stopPropagation();pendingBg=bg.dataset.th;$('#bg-file',sec)?.click();return;}if(rm){e.stopPropagation();removeBg(rm.dataset.th);return;}if(card)setTheme(card.dataset.th);});
+      $('#set-theme',sec)?.addEventListener('keydown',e=>{const card=e.target.closest('.theme-card');if(card&&!e.target.closest('button')&&(e.key==='Enter'||e.key===' ')){e.preventDefault();setTheme(card.dataset.th);}});
+      let pendingBg='dark'; $('#bg-file',sec)?.addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';if(f)uploadBg(pendingBg,f);});
+      $('#set-export',sec)?.addEventListener('click',openExportBackup); $('#set-import',sec)?.addEventListener('click',()=>$('#set-file',sec).click()); $('#set-file',sec)?.addEventListener('change',e=>{const f=e.target.files[0];e.target.value='';if(f)importBackup(f);});
+      $$('.support-copy',sec).forEach(b=>b.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(b.dataset.copy);toast(t('set.copied'));}catch(e){toast(b.dataset.copy);}}));
+      $('#set-wipe',sec)?.addEventListener('click',()=>confirmModal({title:t('set.clearAll'),msg:t('set.clearMsg'),okLabel:t('set.clearAll'),onOk:wipeAll}));
+    };
+    $$('.settings-tab',sec).forEach(b=>b.addEventListener('click',()=>draw(b.dataset.tab))); draw(activeSettingsTab); return sec;
   }
 };
 function applyLang(){ const l=state.settings.lang==='ar'?'ar':'en';
@@ -3547,7 +3795,16 @@ function applyTheme(){ const th=THEMES.includes(state.settings.theme)?state.sett
   try{ bgApply(); }catch(e){} }
 function setLang(l){ state.settings.lang=l; saveData(); applyLang();
   Sound.play('transition'); Nav.rerenderAll(); }
-function setTheme(th){ state.settings.theme=th; saveData(); applyTheme(); Nav.rerenderAll(); }
+function setTheme(th){
+  if(!THEMES.includes(th)) return;
+  state.settings.theme=th; saveData(); applyTheme();
+  const sec=Nav.stack.length&&Nav.stack[Nav.stack.length-1]?.id==='settings'?stageEl():null;
+  const grid=sec&&$('#set-theme',sec);
+  if(grid){
+    $$('.theme-card',grid).forEach(card=>{const on=card.dataset.th===th;card.classList.toggle('on',on);card.setAttribute('aria-pressed',String(on));const check=$('.theme-check',card);if(on&&!check){card.insertAdjacentHTML('beforeend','<span class="theme-check">✓</span>');}else if(!on&&check)check.remove();});
+    const cur=$('.appearance-current',sec);if(cur)cur.textContent=t('set.th.'+th);
+  }
+}
 async function wipeAll(){
   try{ await DB.clear('kv'); await DB.clear('notes'); await DB.clear('courseAssets'); }catch(e){}
   for(const th of THEMES){ try{ await DB.del('kv','bg-'+th); }catch(e){} }
@@ -3555,7 +3812,11 @@ async function wipeAll(){
   state.courses=[]; state.notes=[]; state.events=[]; state.tasks=[]; state.decks=[]; state.quizzes=[]; state.schedule=[];
   state.focus={day:'',done:0}; state.islam=normIslam({});
   try{ localStorage.removeItem(PREF_KEY); }catch(e){}
-  applyLang(); applyTheme(); bgApply(); Nav.popTo(0,true); Nav.rerenderAll(); toast(t('set.cleared'));
+  applyLang(); applyTheme(); bgApply(); Nav.popTo(0,true); Nav.rerenderAll();
+  try{ if(cloudSync.active&&window.UBADAuth?.getCloudState){ const remote=await window.UBADAuth.getCloudState(); await deleteCloudFiles(remote?.data?.files||[]); } if(window.UBADAuth?.deleteCloudState) await window.UBADAuth.deleteCloudState(); }catch(e){ console.error('[UBAD Cloud] Cloud clear failed:',e); }
+  cloudSync.localUpdatedAt=Date.now();
+  if(cloudSync.active) await pushCloudState();
+  toast(t('set.cleared'));
 }
 
 /* ═══ 12. search overlay (compact icon → popup) ══════════════ */
@@ -3688,7 +3949,7 @@ async function exportBackup(ids){
     if(selected.has('user')) data.user={...state.user};
     if(selected.has('courses')){
       data.courses=state.courses;
-      const needed=new Set(state.courses.flatMap(c=>courseContents(c)).map(x=>x.assetId).filter(Boolean));
+      const needed=new Set(state.courses.flatMap(c=>courseContents(c)).flatMap(x=>[x.assetId,...normArr(x.assets).map(a=>a?.id)]).filter(Boolean));
       const assets=await courseAssetAll();
       data.courseAssets=assets.filter(a=>needed.has(a.id)&&a.blob instanceof Blob).map(async a=>({
         id:a.id,name:'',type:a.blob.type,data:await blobToDataURL(a.blob)
@@ -3926,6 +4187,7 @@ async function boot(){
     }catch(e){}
   }).catch(()=>{});
   Hist.init();            /* native back + same-document root sentinel */
+  bindFirebaseAuth();     /* 8.5 Firebase Authentication */
   Nav.init('hub');        /* 9. render Main Hub */
   setTimeout(showOnboarding,220);
 }

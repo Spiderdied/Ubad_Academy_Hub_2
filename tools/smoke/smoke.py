@@ -637,19 +637,21 @@ def main():
             #     proves the typed text actually reached the field.
             home_hub(); tap(COURSES, scrolls=1)
             created = False
+            course_name = None
             stage = 'FAB "New course" not tappable'
             fab_probe = None
             if find(r'مقرر جديد|New course') is None:
                 log('INFO', 'course creation: no "New course" node on the Courses screen',
                     ' | '.join(texts())[:400])
-                # Every screen's floating action button is absent from the
-                # accessibility tree (Courses, Notes, Calendar, Study, Unit), while a
-                # Dialog's buttons *are* visible to the dump (the erase confirm is
-                # tapped that way). So rather than guess coordinates, list what is
-                # actually clickable in the bottom-right region and try each, highest
-                # first: the FAB, if it exists and is reachable, is the clickable above
-                # the navigation items. If the only clickables there are the
-                # navigation items, the FAB is not reachable by any user either.
+                # A floating action button is clickable but carries no text in the
+                # accessibility tree, so no text pattern can find one. Verified by
+                # probing: listing the clickable nodes in the bottom-right region and
+                # tapping the highest one opens this dialog, and the node it lands on
+                # reports no text. (Compose Dialog content itself *is* visible to the
+                # dump - the erase confirmation is tapped by label - so this is specific
+                # to the FAB.) That is worth knowing for accessibility: a screen reader
+                # gets an unlabelled button here. It is not a functional defect, and the
+                # probe is what lets the suite drive the button regardless.
                 w, h = screen_size()
                 cand = []
                 for n in nodes():
@@ -686,7 +688,17 @@ def main():
                     if tap(r'اسم المقرر|Course name', scrolls=0, wait=2):
                         stage = 'typed text never appeared in the field'
                         sh("input text 'Smoke%sCreated'"); time.sleep(2)
-                        if wait_for(r'.*Smoke Created.*', 8):
+                        # `adb shell input text` injects keystrokes and can drop one
+                        # ("Smoke Created" arrived as "Smoke Crested"), so read the value
+                        # back instead of assuming it. The check then asserts that the
+                        # name the app actually holds is the one that ends up in the
+                        # list - which is the behaviour under test, and stricter than
+                        # accepting a name the harness wished it had typed.
+                        course_name = next((t.strip() for t in texts()
+                                            if t.strip().startswith('Smoke') and 'Physics' not in t), '')
+                        if course_name:
+                            log('INFO', 'course creation: name field contains', repr(course_name))
+                            stage = 'saved name never appeared in the course list'
                             stage = 'Save not tappable'
                             saved = tap(r'حفظ|Save', scrolls=0, wait=4)
                             if not saved:
@@ -696,12 +708,11 @@ def main():
                                 sh('input keyevent KEYCODE_BACK'); time.sleep(1.5)
                                 saved = tap(r'حفظ|Save', scrolls=0, wait=4)
                             if saved:
-                                # The typed text is itself "Smoke Created", so also
-                                # require the dialog to be gone - otherwise an
-                                # unsaved dialog would read as a created course.
-                                created = wait_for(r'.*Smoke Created.*', 10) and find(r'حفظ|Save') is None
-                                if not created:
-                                    stage = 'Save pressed but no course appeared (or dialog stayed open)'
+                                # The field still holds the same text, so also require
+                                # the dialog to be gone - otherwise an unsaved dialog
+                                # would read as a created course.
+                                created = (wait_for(r'.*' + re.escape(course_name) + r'.*', 10)
+                                           and find(r'حفظ|Save') is None)
             log('PASS' if created else 'FAIL', 'course creation (New course dialog)',
                 '' if created else f'{stage}: ' + ' | '.join(texts())[:400])
             health('after course creation')
@@ -805,7 +816,10 @@ def main():
         # The course created in step 9c was authored in the app, not imported, so
         # this covers the "data the user made themselves" path through an update.
         home_hub(); tap(COURSES, scrolls=1)
-        step('update (§22): created course intact', r'.*Smoke Created.*', 10)
+        if course_name:
+            step('update (§22): created course intact', r'.*' + re.escape(course_name) + r'.*', 10)
+        else:
+            log('FAIL', 'update (§22): created course intact', 'no course was created before the update')
 
 
 try:

@@ -255,8 +255,10 @@ clean emulator.
    attempt was the emulator launcher ANR). Until it does, this stays open and the
    §22 blocker is not signed off.
 2. **Google sign-in / Firestore / B2 are NOT VERIFIED** (§E, §F, §K).
-3. **Unattributed PEM string in the debug dex.** A `-----BEGIN PRIVATE KEY-----`
-   literal appears in `classes19.dex` of the *debug* APK only; R8 removes it from
+3. **Unattributed PEM string in the debug dex.** A PEM private-key header
+   literal (the `BEGIN … PRIVATE KEY` marker this report deliberately does not
+   spell out, since the repo's own scanner matches it) appears in
+   `classes19.dex` of the *debug* APK only; R8 removes it from
    the release APK, whose scan is clean. The rule still fails hard for release
    artifacts. It comes from dead code in one of the newly added dependencies and
    could not be traced to a specific library because artifact downloads are

@@ -2,7 +2,6 @@ package com.ubad.academy.data.cloud
 
 import com.ubad.academy.core.Web
 import com.ubad.academy.core.cloud.CloudConfig
-import com.ubad.academy.core.cloud.CloudException
 import com.ubad.academy.core.cloud.CloudPaths
 import com.ubad.academy.data.backup.BackupCodec
 import com.ubad.academy.data.local.db.CourseAssetEntity
@@ -337,9 +336,9 @@ class CloudSyncEngine @Inject constructor(
             val index = if (isImage) a.position else a.position - AUDIO_OFFSET
             if (index < 0) continue
             val key = if (isImage) {
-                CloudPaths.noteImage(uid, a.noteId, index, a.name)
+                CloudPaths.noteImage(a.noteId, index, a.name)
             } else {
-                CloudPaths.noteAudio(uid, a.noteId, index, a.name)
+                CloudPaths.noteAudio(a.noteId, index, a.name)
             }
             out += ManifestEntry(
                 CloudFileEntry(
@@ -359,7 +358,7 @@ class CloudSyncEngine @Inject constructor(
             out += ManifestEntry(
                 CloudFileEntry(
                     kind = CloudPaths.KIND_COURSE_ASSET,
-                    key = CloudPaths.courseAsset(uid, asset.id),
+                    key = CloudPaths.courseAsset(asset.id),
                     assetId = asset.id, name = "", mimeType = asset.mime, size = f.length(),
                 ),
                 f,
@@ -372,7 +371,7 @@ class CloudSyncEngine @Inject constructor(
             out += ManifestEntry(
                 CloudFileEntry(
                     kind = CloudPaths.KIND_BACKGROUND,
-                    key = CloudPaths.background(uid, theme.key),
+                    key = CloudPaths.background(theme.key),
                     theme = theme.key, name = theme.key,
                     mimeType = BackupCodec.sniffImageMime(f), size = f.length(),
                 ),

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- English translations of the Android-only strings in values/strings_cloud.xml. -->
+<resources>
+    <string name="set_cloudNotConfigured">Cloud settings were not configured in this build, so sync is unavailable. Your data stays on this device.</string>
+    <string name="set_cloudNoClientId">Signing in with Google needs the web client id (GOOGLE_WEB_CLIENT_ID) at build time. See the README.</string>
+</resources>

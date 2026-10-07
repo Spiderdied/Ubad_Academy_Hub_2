@@ -31,25 +31,54 @@ object CloudPaths {
 
     fun userPrefix(uid: String): String = "users/${uid.trim()}/"
 
-    fun noteImage(uid: String, noteId: String, index: Int, name: String?): String =
-        "${userPrefix(uid)}notes/$noteId/images/$index-${safeFileName(name)}"
+    /*
+     * Object keys are RELATIVE, exactly as the web stores them in the Firestore
+     * file manifest (`buildCloudFileManifest` in app.js):
+     *
+     *     notes/<noteId>/images/<index>-<name>
+     *     notes/<noteId>/audio/<index>-<name>
+     *     courseAssets/<assetId>
+     *     backgrounds/<theme>
+     *
+     * The `users/<uid>/` prefix is a *transport* detail: the web prepends it at
+     * the Worker call site (`uploadFile(`users/${uid}/${f.key}`)`), and so does
+     * CloudFileApi here. Never bake it into a stored key — the web would then
+     * request `users/<uid>/users/<uid>/…` and every file would 404.
+     */
+    fun noteImage(noteId: String, index: Int, name: String?): String =
+        "notes/$noteId/images/$index-${safeFileName(name)}"
 
-    fun noteAudio(uid: String, noteId: String, index: Int, name: String?): String =
-        "${userPrefix(uid)}notes/$noteId/audio/$index-${safeFileName(name)}"
+    fun noteAudio(noteId: String, index: Int, name: String?): String =
+        "notes/$noteId/audio/$index-${safeFileName(name)}"
 
-    fun courseAsset(uid: String, assetId: String): String =
-        "${userPrefix(uid)}courseAssets/${safeFileName(assetId)}"
+    fun courseAsset(assetId: String): String = "courseAssets/${safeFileName(assetId)}"
 
-    fun background(uid: String, theme: String): String =
-        "${userPrefix(uid)}backgrounds/${safeFileName(theme)}"
+    fun background(theme: String): String = "backgrounds/${safeFileName(theme)}"
+
+    /** Full Worker object path for a relative key, validated against [uid]'s scope. */
+    fun workerPath(uid: String, key: String): String = userPrefix(uid) + key.trimStart('/')
 
     /** Cleans a file name for a key segment, exactly like the web `safeFileName`. */
     fun safeFileName(value: String?): String {
         val raw = value?.takeIf { it.isNotEmpty() } ?: "file"
-        val cleaned = raw.map { ch ->
-            if (ch.isLetterOrDigit() && ch.code < 128 || ch == '.' || ch == '_' || ch == '-') ch else '_'
-        }.joinToString("")
-        return cleaned.take(100).ifEmpty { "_" }
+        // JS: String(v||'file').replace(/[^a-zA-Z0-9._-]+/g,'_').slice(0,100)
+        // A *run* of disallowed characters collapses to ONE underscore, so a
+        // non-ASCII name maps to the same key on both clients. Replacing each
+        // character individually ("ملف" -> "___" instead of "_") would send the
+        // same file to two different objects and leave orphans behind.
+        val sb = StringBuilder(raw.length)
+        var pendingUnderscore = false
+        for (ch in raw) {
+            val allowed = (ch.code < 128 && ch.isLetterOrDigit()) || ch == '.' || ch == '_' || ch == '-'
+            if (allowed) {
+                if (pendingUnderscore) { sb.append('_'); pendingUnderscore = false }
+                sb.append(ch)
+            } else {
+                pendingUnderscore = true
+            }
+        }
+        if (pendingUnderscore) sb.append('_')
+        return sb.toString().take(100).ifEmpty { "file" }
     }
 
     /**

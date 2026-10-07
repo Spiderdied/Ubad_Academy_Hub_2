@@ -118,6 +118,8 @@ fun SettingsScreen(onBack: () -> Unit, onHome: () -> Unit, viewModel: SettingsVi
     val bgs by viewModel.backgrounds.collectAsStateWithLifecycle()
     val busy by viewModel.busy.collectAsStateWithLifecycle()
     val pending by viewModel.pendingRestore.collectAsStateWithLifecycle()
+    val cloudUser by viewModel.cloudUser.collectAsStateWithLifecycle()
+    val cloudStatus by viewModel.cloudStatus.collectAsStateWithLifecycle()
     val snackbar = remember { SnackbarHostState() }
     CollectMessages(viewModel.messages.flow, snackbar)
     val clipboard = LocalClipboardManager.current
@@ -200,6 +202,21 @@ fun SettingsScreen(onBack: () -> Unit, onHome: () -> Unit, viewModel: SettingsVi
                 }
             }
 
+            CloudSettingsSection(
+                modifier = m,
+                user = cloudUser,
+                status = cloudStatus,
+                signInAvailable = viewModel.cloudSignInAvailable,
+                configured = viewModel.cloudConfigured,
+                busy = busy,
+                onSignIn = viewModel::signIn,
+                onSignOut = viewModel::signOut,
+                onSyncNow = viewModel::uploadCloud,
+                onDownload = viewModel::downloadCloud,
+                onMerge = viewModel::mergeCloud,
+                onDismissChoice = viewModel::dismissFirstChoice,
+            )
+
             SetGroup(Icons.Outlined.Favorite, stringResource(R.string.set_support), stringResource(R.string.set_supportDesc), m) {
                 SupportRow(stringResource(R.string.set_vodafone), VODAFONE_CASH) { clipboard.setText(AnnotatedString(VODAFONE_CASH)); viewModel.messages.send(R.string.set_copied) }
                 HorizontalDivider(color = UbadThemeExt.colors.line)
@@ -275,7 +292,7 @@ private fun GroupHeader(icon: ImageVector, title: String, desc: String, modifier
 }
 
 @Composable
-private fun SetGroup(
+internal fun SetGroup(
     icon: ImageVector, title: String, desc: String, modifier: Modifier,
     tint: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.primary,
     content: @Composable () -> Unit,

@@ -1,5 +1,6 @@
 package com.ubad.academy.ui.screens.settings
 
+import android.app.Activity
 import android.content.ContentResolver
 import android.net.Uri
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,10 @@ import com.ubad.academy.core.Feedback
 import com.ubad.academy.data.backup.BackupCodec
 import com.ubad.academy.data.backup.BackupSection
 import com.ubad.academy.data.backup.ParsedBackup
+import com.ubad.academy.data.cloud.CloudAuthRepository
+import com.ubad.academy.data.cloud.CloudSyncEngine
+import com.ubad.academy.data.cloud.CloudSyncStatus
+import com.ubad.academy.data.cloud.CloudUser
 import com.ubad.academy.data.local.prefs.SettingsStore
 import com.ubad.academy.data.repository.AppDataRepository
 import com.ubad.academy.domain.model.AppLanguage
@@ -21,6 +26,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -34,6 +40,8 @@ class SettingsViewModel @Inject constructor(
     private val resolver: ContentResolver,
     private val feedback: Feedback,
     private val timer: FocusTimer,
+    private val auth: CloudAuthRepository,
+    private val cloud: CloudSyncEngine,
 ) : ViewModel() {
     val messages = MessageQueue()
     val state: StateFlow<UserSettings?> = settings.settings.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
@@ -49,6 +57,89 @@ class SettingsViewModel @Inject constructor(
     /** A parsed backup waiting for the user's section choice. */
     private val _pendingRestore = MutableStateFlow<ParsedBackup?>(null)
     val pendingRestore: StateFlow<ParsedBackup?> = _pendingRestore.asStateFlow()
+
+    // ── cloud (Google sign-in + sync) ──
+
+    val cloudUser: StateFlow<CloudUser?> = auth.user
+    val cloudStatus: StateFlow<CloudSyncStatus> = cloud.status
+    val cloudSignInAvailable: Boolean get() = auth.isSignInAvailable
+    val cloudConfigured: Boolean get() = auth.isConfigured
+
+    init {
+        /*
+         * The engine follows the signed-in user, exactly like the web's
+         * `onAuthStateChanged` callback: start syncing on sign-in, stop on
+         * sign-out. Errors are surfaced rather than swallowed — a silent failure
+         * here would look like "your data stopped syncing" with no explanation.
+         */
+        viewModelScope.launch {
+            auth.user.collect { user ->
+                if (user != null) {
+                    runCatching { cloud.onSignedIn(user) }
+                        .onFailure { messages.send(R.string.set_authError, error = true) }
+                } else {
+                    cloud.stop()
+                }
+            }
+        }
+        viewModelScope.launch {
+            auth.lastError.filterNotNull().collect { messages.send(it, error = true) }
+        }
+    }
+
+    /** Google sign-in must be launched from an Activity for the Credential Manager UI. */
+    fun signIn(activity: Activity) = viewModelScope.launch {
+        _busy.value = true
+        try {
+            auth.signInWithGoogle(activity)
+        } catch (e: Exception) {
+            if (e is kotlinx.coroutines.CancellationException) throw e
+            messages.send(R.string.set_authError, error = true)
+        } finally { _busy.value = false }
+    }
+
+    fun signOut() = viewModelScope.launch {
+        _busy.value = true
+        try { auth.signOut() } finally { _busy.value = false }
+    }
+
+    /** Settings → "Sync now": push local changes up. */
+    fun syncNow() = viewModelScope.launch {
+        _busy.value = true
+        try {
+            cloud.uploadDeviceToCloud()
+                .onSuccess { messages.send(R.string.set_cloudUploaded) }
+                .onFailure { messages.send(it.message ?: "", error = true) }
+        } finally { _busy.value = false }
+    }
+
+    fun uploadCloud() = syncNow()
+
+    fun downloadCloud() = viewModelScope.launch {
+        _busy.value = true
+        try {
+            cloud.downloadCloudToDevice()
+                .onSuccess { messages.send(R.string.set_cloudDownloaded); afterCloudApply() }
+                .onFailure { messages.send(it.message ?: "", error = true) }
+        } finally { _busy.value = false }
+    }
+
+    fun mergeCloud() = viewModelScope.launch {
+        _busy.value = true
+        try {
+            cloud.mergeWithCloud()
+                .onSuccess { messages.send(R.string.set_synced); afterCloudApply() }
+                .onFailure { messages.send(it.message ?: "", error = true) }
+        } finally { _busy.value = false }
+    }
+
+    fun dismissFirstChoice() = cloud.cancelFirstChoice()
+
+    /** A cloud apply can replace every section, so refresh what the UI caches. */
+    private fun afterCloudApply() {
+        bgTick.value++
+        timer.reconcile()
+    }
 
     fun setLanguage(l: AppLanguage) = viewModelScope.launch { settings.setLanguage(l); feedback.click() }
     fun setTheme(t: ThemeId) = viewModelScope.launch {
@@ -128,6 +219,8 @@ class SettingsViewModel @Inject constructor(
         _busy.value = true
         try {
             timer.reset()
+            // Web `wipeAll` deletes the cloud copy too. Signed out, this is a no-op.
+            runCatching { cloud.clearCloud() }
             appData.wipeAll(); bgTick.value++
             feedback.toast(R.string.set_cleared)
             then()

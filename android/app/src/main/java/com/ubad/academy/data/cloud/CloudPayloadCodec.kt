@@ -4,7 +4,6 @@ import androidx.room.withTransaction
 import com.ubad.academy.core.Web
 import com.ubad.academy.data.backup.BackupCodec
 import com.ubad.academy.data.backup.WebNormalizer
-import com.ubad.academy.data.backup.WebNormalizer.get
 import com.ubad.academy.data.local.db.IslamEntity
 import com.ubad.academy.data.local.db.NoteEntity
 import com.ubad.academy.data.local.db.UbadDatabase
@@ -224,7 +223,9 @@ class CloudPayloadCodec @Inject constructor(
         (payload["islam"] as? JsonObject)?.let { s ->
             db.islam().put(IslamEntity(json = json.encodeToString(IslamState.serializer(), WebNormalizer.islam(s))))
         }
-        (payload["notes"] as? JsonArray)?.let { arr -> mergeNotes(WebNormalizer.arr(arr), now) }
+        (payload["notes"] as? JsonArray)?.let { arr ->
+            mergeNotes(arr.mapNotNull { it as? JsonObject }, now)
+        }
     }
 
     /**
@@ -269,7 +270,7 @@ class CloudPayloadCodec @Inject constructor(
      * Attachment rows are captured before `clearNotes()` because the
      * `note_attachments` foreign key cascades on delete.
      */
-    private suspend fun mergeNotes(cloudNotes: List<JsonElement>, now: Long) {
+    private suspend fun mergeNotes(cloudNotes: List<JsonObject>, now: Long) {
         val kept = db.notes().attachments().groupBy { it.noteId }
         val seen = HashSet<String>()
         val built = cloudNotes.map { n ->

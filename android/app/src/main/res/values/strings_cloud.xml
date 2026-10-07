@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Strings that exist only on Android.
+
+  Everything else in this app's UI text is derived from the web app's I18N table
+  by `tools/i18n-to-android.js` and lives in `strings_web.xml` — that file is
+  generated, so hand edits there would be silently overwritten on the next run.
+
+  These two exist because Android has a failure mode the web does not: a build
+  can ship without Firebase client configuration, or without the Google *web*
+  client id that Credential Manager needs. Rather than showing a button that
+  fails when tapped, the UI states the situation. Arabic is the default locale.
+-->
+<resources>
+    <!-- Firebase client config absent from this build entirely. -->
+    <string name="set_cloudNotConfigured">لم تُضبط إعدادات السحابة في هذا الإصدار، لذا المزامنة غير متاحة. بياناتك تبقى على هذا الجهاز.</string>
+    <!-- Firebase config present, but no Google web client id was supplied at build time. -->
+    <string name="set_cloudNoClientId">تسجيل الدخول بحساب Google يحتاج مُعرّف عميل الويب (GOOGLE_WEB_CLIENT_ID) عند بناء التطبيق. راجع README.</string>
+</resources>

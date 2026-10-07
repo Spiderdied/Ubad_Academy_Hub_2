@@ -47,7 +47,7 @@ class CloudFileApi @Inject constructor(
      * matters for the 50 MB course videos and PDFs the web app allows.
      */
     suspend fun upload(userId: String, key: String, file: File, contentType: String?, idToken: String) {
-        requireInsideScope(userId, key)
+        val path = scopedPath(userId, key)
         if (!file.exists() || file.length() == 0L) {
             throw CloudException("Local file is missing for $key", "cloud/local-file-missing")
         }
@@ -62,24 +62,24 @@ class CloudFileApi @Inject constructor(
         val request = Request.Builder()
             .url(config.workerUrl.trimEnd('/') + "/upload")
             .header("Authorization", "Bearer $idToken")
-            .header("X-UBAD-Path", key)
+            .header("X-UBAD-Path", path)
             .header("X-UBAD-Content-Type", type)
             .post(file.asRequestBody(type.toMediaTypeOrNull()))
             .build()
 
-        execute(request, "upload", key).close()
+        execute(request, "upload", path).close()
     }
 
     /** Streams `path` into [target] (overwritten). Returns the number of bytes written. */
     suspend fun download(userId: String, key: String, target: File, idToken: String): Long {
-        requireInsideScope(userId, key)
+        val path = scopedPath(userId, key)
         val request = Request.Builder()
-            .url(config.workerUrl.trimEnd('/') + "/download?path=" + encodeKey(key))
+            .url(config.workerUrl.trimEnd('/') + "/download?path=" + encodeKey(path))
             .header("Authorization", "Bearer $idToken")
             .get()
             .build()
 
-        return use(request, "download", key) { body ->
+        return use(request, "download", path) { body ->
             target.parentFile?.mkdirs()
             // Write to a sibling temp file first so a dropped connection can never
             // leave a truncated file in place of a good one.
@@ -99,25 +99,34 @@ class CloudFileApi @Inject constructor(
     }
 
     suspend fun delete(userId: String, key: String, idToken: String) {
-        requireInsideScope(userId, key)
+        val path = scopedPath(userId, key)
         val request = Request.Builder()
-            .url(config.workerUrl.trimEnd('/') + "/delete?path=" + encodeKey(key))
+            .url(config.workerUrl.trimEnd('/') + "/delete?path=" + encodeKey(path))
             .header("Authorization", "Bearer $idToken")
             .delete()
             .build()
 
         // A missing object is already the desired state, so a 404 is not an error.
         try {
-            execute(request, "delete", key).close()
+            execute(request, "delete", path).close()
         } catch (e: CloudException) {
             if (e.code != "worker/404" && e.code != "not_found") throw e
         }
     }
 
-    private fun requireInsideScope(userId: String, key: String) {
-        if (!CloudPaths.isWithinUserScope(userId, key)) {
+    /**
+     * Turns a relative object key into the full `users/<uid>/…` Worker path.
+     *
+     * The scope check runs on the *result*, so a malformed key cannot escape the
+     * signed-in user's prefix — the same guarantee the Worker enforces server
+     * side (this is defence in depth, not the only check).
+     */
+    private fun scopedPath(userId: String, key: String): String {
+        val path = CloudPaths.workerPath(userId, key)
+        if (!CloudPaths.isWithinUserScope(userId, path)) {
             throw CloudException("Refusing to address a path outside the signed-in user.", "cloud/path-scope")
         }
+        return path
     }
 
     private fun encodeKey(key: String): String =

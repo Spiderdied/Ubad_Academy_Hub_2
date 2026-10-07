@@ -156,7 +156,10 @@ def tap_tab(pattern, anchor=r'Text · \d+|نص · \d+'):
     """Taps a tab in a horizontally scrolling tab row, swiping the row (both directions) until it shows."""
     if tap(pattern, scrolls=0):
         return True
-    a = find(anchor)
+    # Any visible tab gives the row's y coordinate. The anchor (the "Text" tab) is
+    # only a hint: a unit legitimately may have no text item, and then the old code
+    # gave up before it ever tried to scroll the tab row.
+    a = find(anchor) or find(r'.* · \d+')
     if a is None:
         return False
     _, y = center(a)
@@ -355,28 +358,46 @@ def open_course_pdf(tab_pattern=r'PDF · \d+', attempts=3):
     Returns True once the viewer's page indicator is on screen. Each attempt
     re-navigates from the Hub and waits for the action list to be present before
     tapping, so a half-completed navigation or a tap that lands while the screen
-    is still settling cannot poison the following attempt. That makes the check
-    deterministic, which matters because its result is the §22 release gate and
-    must not depend on automation luck.
+    is still settling cannot poison the following attempt.
+
+    Every failed stage is logged with the screen it saw. This check is the §22
+    release gate, so when it fails it must say where and why rather than just
+    "the viewer did not open".
     """
-    for _ in range(attempts):
+    for i in range(attempts):
+        n = i + 1
         home_hub()
         if not tap(r'Courses|المقررات', scrolls=2):
+            log('INFO', f'pdf nav {n}: hub card Courses not found')
             continue
         if not tap(r'.*Smoke Physics.*', scrolls=1):
+            log('INFO', f'pdf nav {n}: course not found')
             continue
         if not tap(r'.*Smoke Unit.*', scrolls=1):
+            log('INFO', f'pdf nav {n}: unit not found')
             continue
         if not tap_tab(tab_pattern, anchor=r'(Text|نص) · \d+'):
+            log('INFO', f'pdf nav {n}: PDF tab not selectable; tabs on screen: '
+                        + ' | '.join(t for t in texts() if ' · ' in t)[:160])
             continue
-        # The action list must actually be on screen before "Open PDF" can mean anything.
         if not wait_for(r'Open PDF|فتح PDF', 10):
+            log('INFO', f'pdf nav {n}: "Open PDF" not in the view hierarchy after tab select: '
+                        + ' | '.join(texts())[:160])
             continue
-        # No scrolling here: the button is already visible, and the scroll churn
-        # was the difference between this check and the two identical checks that
-        # pass elsewhere in the suite.
-        if tap(r'Open PDF|فتح PDF', scrolls=0, wait=4) and wait_for(r'Page 1 of 2|صفحة 1 من 2', 30):
+        # Present in the hierarchy is not the same as reachable: the PDF buttons sit
+        # in a FlowRow at the bottom of an expanded card, so they are often below the
+        # fold. tap() scrolls until the button is genuinely on screen (a match
+        # scrolled out of view is skipped instead of being tapped at coordinates
+        # outside the screen), so give it room to scroll - this is the setting the
+        # two passing PDF checks in this suite use.
+        if not tap(r'Open PDF|فتح PDF', scrolls=6, wait=4):
+            log('INFO', f'pdf nav {n}: "Open PDF" exists but no scroll position exposed it on screen: '
+                        + ' | '.join(texts())[:160])
+            continue
+        if wait_for(r'Page 1 of 2|صفحة 1 من 2', 30):
             return True
+        log('INFO', f'pdf nav {n}: tapped "Open PDF" but the page indicator never appeared: '
+                    + ' | '.join(texts())[:160])
         back()
     return False
 

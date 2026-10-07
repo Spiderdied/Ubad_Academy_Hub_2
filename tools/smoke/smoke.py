@@ -697,7 +697,10 @@ def main():
                             log('INFO', 'course creation: BACK dismissed the dialog '
                                         '(the keyboard was not covering it after all)')
                         stage = 'typed text never appeared in the field'
-                        sh("input text 'Smoke%sCreated'"); time.sleep(2)
+                        # No space and no %s escape: `input text` mangles both (a
+                        # space needs %s, and keystrokes get dropped) - "Smoke Created"
+                        # twice arrived as "Smoke Crested".
+                        sh("input text 'SmokeCourse'"); time.sleep(2)
                         # `adb shell input text` injects keystrokes and can drop one
                         # ("Smoke Created" arrived as "Smoke Crested"), so read the value
                         # back instead of assuming it. The check then asserts that the
@@ -710,6 +713,10 @@ def main():
                             log('INFO', 'course creation: name field contains', repr(course_name))
                             stage = 'saved name never appeared in the course list'
                             stage = 'Save not tappable'
+                            # Typing can leave the keyboard up, which is what pushes the
+                            # dialog's button row past the bottom edge. Clear it before
+                            # reaching for Save.
+                            sh('input keyevent KEYCODE_BACK'); time.sleep(2)
                             saved = tap(r'حفظ|Save', scrolls=0, wait=4)
                             if not saved:
                                 sv = find(r'حفظ|Save')
@@ -728,7 +735,9 @@ def main():
                                 created = (wait_for(r'.*' + re.escape(course_name) + r'.*', 10)
                                            and find(r'حفظ|Save') is None)
             log('PASS' if created else 'FAIL', 'course creation (New course dialog)',
-                '' if created else f'{stage}: ' + ' | '.join(texts())[:400])
+                '' if created else
+                f'{stage} [screen={screen_size()} density={sh("wm density").strip()[:28]}]: '
+                + ' | '.join(texts())[:400])
             health('after course creation')
 
     # 10. Arabic + RTL

@@ -686,6 +686,16 @@ def main():
                 if wait_for(r'اسم المقرر|Course name', 10):
                     stage = 'name field not tappable'
                     if tap(r'اسم المقرر|Course name', scrolls=0, wait=2):
+                        stage = 'BACK closed the dialog instead of the keyboard'
+                        # Tapping the field focuses it *and* raises the soft keyboard,
+                        # which pushes the dialog's buttons below the bottom edge - tap()
+                        # correctly refuses to press them there. Typing does not need the
+                        # keyboard on screen, and the field keeps focus, so hide it first
+                        # and let the dialog re-lay-out before touching Save.
+                        sh('input keyevent KEYCODE_BACK'); time.sleep(2)
+                        if find(r'اسم المقرر|Course name') is None:
+                            log('INFO', 'course creation: BACK dismissed the dialog '
+                                        '(the keyboard was not covering it after all)')
                         stage = 'typed text never appeared in the field'
                         sh("input text 'Smoke%sCreated'"); time.sleep(2)
                         # `adb shell input text` injects keystrokes and can drop one
@@ -702,6 +712,10 @@ def main():
                             stage = 'Save not tappable'
                             saved = tap(r'حفظ|Save', scrolls=0, wait=4)
                             if not saved:
+                                sv = find(r'حفظ|Save')
+                                log('INFO', 'course creation: Save unreachable',
+                                    f'bounds={sv.get("bounds") if sv is not None else "absent"} '
+                                    f'screen={screen_size()}')
                                 # Tapping to focus raises the soft keyboard, which
                                 # can cover the dialog buttons. BACK closes the
                                 # keyboard without dismissing the dialog.

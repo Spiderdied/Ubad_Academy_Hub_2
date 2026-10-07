@@ -556,6 +556,17 @@ def main():
                                     + ' | '.join(texts())[:200])
         else:
             log('FAIL', 'update (§22): course not openable after update', ' | '.join(texts())[:200])
+        # Note content lives in Room and its attachment bytes in
+        # filesDir/note_files/<fileId>: the body text proves the record, and the
+        # attachment image composes with contentDescription == its file name
+        # ("n.png" in the fixture), which proves the attachment row survived too.
+        home_hub(); tap(NOTES, scrolls=2)
+        if tap(r'.*Smoke Note.*', scrolls=2, wait=3):
+            step('update (§22): note body intact', r'.*ملاحظة.*', 8)
+            step('update (§22): note attachment row intact', r'n\.png', 8)
+            back()
+        else:
+            log('FAIL', 'update (§22): note not openable after update', ' | '.join(texts())[:200])
         home_hub(); tap(r'Study Tools|أدوات الدراسة', scrolls=2)
         step('update (§22): Study deck intact', r'.*Smoke Deck.*', 8)
         tap(r'Quizzes|الاختبارات', scrolls=0)

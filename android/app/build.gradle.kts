@@ -62,8 +62,11 @@ android {
         applicationId = "com.ubad.academy"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.15.4"
+        // versionCode must increase for every published build (§22: an update has
+        // to be a real upgrade, not a same-version reinstall). versionName tracks
+        // the web release it is built from — the web app ships v1.29.0.
+        versionCode = 2
+        versionName = "1.29.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 

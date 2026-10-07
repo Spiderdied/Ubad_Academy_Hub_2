@@ -56,7 +56,21 @@ object CloudPaths {
     fun background(theme: String): String = "backgrounds/${safeFileName(theme)}"
 
     /** Full Worker object path for a relative key, validated against [uid]'s scope. */
-    fun workerPath(uid: String, key: String): String = userPrefix(uid) + key.trimStart('/')
+    fun workerPath(uid: String, key: String): String {
+        val prefix = userPrefix(uid)
+        val relative = key.trimStart('/')
+        /*
+         * Tolerate a key that already carries the prefix instead of doubling it.
+         *
+         * An interim build of this app stored FULL paths in `CloudFileEntry.key`
+         * before the web's relative convention was restored. A document written
+         * by that build is still out there, and prefixing it again would make
+         * every one of its files 404. Treating both conventions as valid is
+         * exactly the "preserve, never destroy" behaviour the data-migration
+         * rules call for, and it costs one comparison.
+         */
+        return if (relative.startsWith(prefix)) relative else prefix + relative
+    }
 
     /** Cleans a file name for a key segment, exactly like the web `safeFileName`. */
     fun safeFileName(value: String?): String {

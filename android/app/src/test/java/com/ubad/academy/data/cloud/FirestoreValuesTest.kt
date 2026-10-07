@@ -56,7 +56,7 @@ class FirestoreValuesTest {
         val out = roundTrip(payload)
         assertEquals("1723456789012", out["clientUpdatedAt"]?.let { it as JsonPrimitive }?.content)
         assertTrue((out["clientUpdatedAt"] as JsonPrimitive).longOrNull == 1_723_456_789_012L)
-        assertEquals(1, (out["syncVersion"] as JsonPrimitive).longOrNull)
+        assertEquals(1L, (out["syncVersion"] as JsonPrimitive).longOrNull)
     }
 
     @Test

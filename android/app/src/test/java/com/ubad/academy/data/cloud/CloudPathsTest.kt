@@ -57,12 +57,20 @@ class CloudPathsTest {
     }
 
     @Test
-    fun `workerPath adds exactly one user prefix`() {
+    fun `workerPath adds the user prefix to a relative key`() {
         val path = CloudPaths.workerPath(uid, CloudPaths.noteImage("n1", 0, "a.png"))
         assertEquals("users/$uid/notes/n1/images/0-a.png", path)
-        // And never doubles it, even if a caller passes a full path by mistake.
-        val again = CloudPaths.workerPath(uid, path)
-        assertFalse(again.removePrefix("users/$uid/").startsWith("users/"))
+    }
+
+    @Test
+    fun `workerPath is idempotent for a key that already carries the prefix`() {
+        // Documents written by an interim Android build stored full paths. Those
+        // keys must keep working rather than doubling the prefix into a 404.
+        val full = "users/$uid/notes/n1/images/0-a.png"
+        assertEquals(full, CloudPaths.workerPath(uid, full))
+        assertEquals(full, CloudPaths.workerPath(uid, CloudPaths.workerPath(uid, CloudPaths.noteImage("n1", 0, "a.png"))))
+        // A leading slash is normalised, not doubled.
+        assertEquals(full, CloudPaths.workerPath(uid, "/notes/n1/images/0-a.png"))
     }
 
     // ── file name sanitising, mirroring the web `safeFileName` ──

@@ -27,7 +27,33 @@ SECRET_PATTERNS = {
     'Service account': r'"type"\s*:\s*"service_account"',
     'Slack token': r'\bxox[baprs]-[A-Za-z0-9-]{10,}',
     'Stripe live key': r'\b[sr]k_live_[A-Za-z0-9]{16,}',
-    'Hardcoded credential': r'(?i)\b(?:api[_-]?key|client[_-]?secret|password|passwd|auth[_-]?token|access[_-]?token|bearer)\b\s*[:=]\s*["\'][^"\'$\s{]{8,}["\']',
+    'Hardcoded credential': r'(?i)\b(?:api[_-]?key|client[_-]?secret|password|passwd|auth[_-]?token|access[_-]?token|bearer)\b\s*[:=]\s*["\']([^"\'$\s{]{8,})["\']',
+    # The Worker holds the only real cloud credentials for this project
+    # (B2_KEY_ID / B2_APPLICATION_KEY / FIREBASE_API_KEY). They are read from
+    # the Worker environment and must never be given literal values anywhere in
+    # the repository. The generic rule above cannot catch these names: a word
+    # boundary never occurs before "API" in "FIREBASE_API_KEY" because "_" is a
+    # word character. So they are matched explicitly.
+    'B2 credential': r'(?i)\bB2_(?:KEY_ID|APPLICATION_KEY|APPLICATION_KEY_ID)\b\s*[:=]\s*["\']([^"\'$\s{]{4,})["\']',
+    'Worker secret': r'(?i)\b(?:FIREBASE_API_KEY|B2_SECRET|B2_BUCKET_PRIVATE_KEY)\b\s*[:=]\s*["\']([^"\'$\s{]{6,})["\']',
+}
+
+# Values below are PUBLIC BY DESIGN and are reviewed exceptions to the patterns
+# above. Firebase's *web* API key is not a secret: it only identifies the
+# project, and every Firestore/Storage access decision is made by
+# firestore.rules / storage.rules (owner-only — see firestore.rules). The GA4
+# measurement ids are likewise public. Keep this list minimal and explicit:
+# anything not listed here still fails the scan.
+PUBLIC_CLIENT_CONFIG = {
+    'AIzaSyB8mYXZ31BUDoPN5HeB1lpSy7_Tdhvnlyk',      # Firebase web API key (project ubad-academy-hub)
+    '1:595289164594:web:6c34e660307af0a6a3652b',     # Firebase web app id
+    '595289164594',                                  # Firebase sender id
+    'G-6H0P59P553',                                  # Firebase/GA4 measurement id
+    'G-P011GS30Y3',                                  # GA4 measurement id (analytics-config.js)
+}
+# Project identifiers that appear in the public client config next to the key.
+PUBLIC_PROJECT_TOKENS = {
+    'ubad-academy-hub', 'ubad-academy-hub.firebaseapp.com', 'ubad-academy-hub.firebasestorage.app',
 }
 SECRET_FILES = re.compile(r'(?i)(\.jks|\.keystore|\.p12|\.pem|keystore\.properties|google-services\.json|service[-_]account.*\.json|local\.properties)$')
 TEXT_EXT = ('.kt', '.kts', '.java', '.xml', '.json', '.properties', '.gradle', '.toml', '.yml', '.yaml', '.js', '.html', '.md', '.pro', '.txt', '.css')
@@ -171,10 +197,37 @@ def tracked_files():
         return list(walk(ROOT))
 
 
+# Only the public client-config patterns may ever be allow-listed. The Worker
+# secret patterns (B2_* / FIREBASE_API_KEY literals) are deliberately NOT
+# allow-listable: those names belong to the Worker's environment only, so even a
+# public-looking value assigned to one is a hardcoding signal worth failing on.
+ALLOWLISTABLE = {'Google API key', 'Hardcoded credential'}
+
+
+def _reviewed_public(name, match):
+    """True when a credential match is a reviewed, public-by-design client value.
+
+    Only exact, listed values pass. Partial or unknown values still fail, so a
+    real key dropped into the same file is still reported.
+    """
+    value = (match.group(1) if match.groups() else match.group(0)).strip()
+    if name not in ALLOWLISTABLE:
+        return False
+    if value in PUBLIC_CLIENT_CONFIG or value in PUBLIC_PROJECT_TOKENS:
+        return True
+    # `apiKey:'AIza…'` and friends: accept only if every key-looking token on the
+    # matched value is itself allow-listed.
+    found = re.findall(r'AIza[0-9A-Za-z_\-]+', value)
+    return bool(found) and all(f in PUBLIC_CLIENT_CONFIG for f in found)
+
+
 def scan_text(path, text, secrets_only=False):
     for name, pat in SECRET_PATTERNS.items():
         for m in re.finditer(pat, text):
             line = text.count('\n', 0, m.start()) + 1
+            if _reviewed_public(name, m):
+                notes.append(f'{name} (reviewed public client config): {rel(path)}:{line}')
+                continue
             problems.append(f'{name}: {rel(path)}:{line}')
     if secrets_only:
         return

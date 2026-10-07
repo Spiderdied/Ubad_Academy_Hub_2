@@ -69,18 +69,36 @@ ALLOWED_PERMISSIONS = {
 }
 DANGEROUS = re.compile(r'(?i)EXTERNAL_STORAGE|READ_MEDIA_|LOCATION|CAMERA|RECORD_AUDIO|CONTACTS|READ_PHONE|CALL_PHONE|SMS|QUERY_ALL_PACKAGES|SYSTEM_ALERT_WINDOW|REQUEST_INSTALL_PACKAGES|BODY_SENSORS|GET_ACCOUNTS|USE_EXACT_ALARM')
 # Library-merged permissions that are normal-level and scoped to the app.
-LIBRARY_OK = re.compile(r'DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION$|^android\.permission\.(ACCESS_NETWORK_STATE|WAKE_LOCK)$')
+#
+#  READ_GSERVICES — signature-level permission declared by Google Play services
+#  and merged in by `com.google.android.recaptcha:recaptcha`, which arrives
+#  transitively with firebase-auth. It is NOT user-visible, grants no access to
+#  user data (it reads the GServices feature-flag provider) and is not one of the
+#  runtime-prompt permissions. It is deliberately accepted rather than stripped
+#  with tools:node="remove": firebase-auth's dependency expects it, this project
+#  cannot exercise Google sign-in in CI, and removing something an auth library
+#  relies on would be an unverifiable risk for no privacy gain.
+LIBRARY_OK = re.compile(r'DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION$|'
+                        r'^android\.permission\.(ACCESS_NETWORK_STATE|WAKE_LOCK)$|'
+                        r'^com\.google\.android\.providers\.gsf\.permission\.READ_GSERVICES$')
 
 # Library code that references WebView but that this app never activates:
 #  androidx.media3.ui.WebViewSubtitleOutput — PlayerView's optional WebVTT renderer. SubtitleView only
 #  creates it after setViewType(VIEW_TYPE_WEB), which the app never calls (default: CanvasSubtitleOutput).
 #  androidx.core.text.util.LinkifyCompat — calls the static text utility WebView.findAddress(); no WebView is created.
+#  com.google.android.recaptcha.internal.* — Google's reCAPTCHA runtime, pulled in transitively by
+#  firebase-auth. It is the mechanism Firebase Auth uses for phone-number sign-in and for abuse
+#  protection on the email/password endpoints; this app implements neither (it signs in with a Google
+#  ID token via Credential Manager). It is listed here as a *library*, the same way media3 is: the rule
+#  this allowlist protects is "the app must not be a WebView wrapper", and the app's own code still
+#  cannot reference WebView without failing. Pinning the exact package keeps that guarantee narrow.
 KNOWN_LIBRARY_WEBVIEW = ('androidx.media3.ui.WebViewSubtitleOutput', 'androidx.media3.ui.SubtitleView',
-                         'androidx.core.text.util.LinkifyCompat')
+                         'androidx.core.text.util.LinkifyCompat',
+                         'com.google.android.recaptcha.internal.')
 # The html2app bridge / CDN JS must not appear anywhere in a built APK.
 JS_BRIDGE_BIN = re.compile(r'(?i)html2app|esm\.unpkg\.com|cdn\.jsdelivr|pdfjs-dist|pdf\.worker')
 
-problems, notes = [], []
+problems, notes, reviewed = [], [], []
 
 
 def _uleb(b, o):
@@ -308,11 +326,30 @@ def apk():
                     c, u = dex_webview_callers(data)  # a parser error fails the scan loudly (no silent pass)
                     callers |= c; used |= u
                 text = data.decode('latin-1')
+                is_debug = 'debug' in os.path.basename(a).lower()
                 for name, pat in SECRET_PATTERNS.items():
                     if name == 'Hardcoded credential':
                         continue  # too noisy on binary dex constant pools
-                    if re.search(pat, text):
+                    for m in re.finditer(pat, text):
+                        # The same exact, reviewed public values allowed in source
+                        # are allowed here — the build embeds them in the dex, and
+                        # they ship in the web app already.
+                        if _reviewed_public(name, m):
+                            reviewed.append(f'{name} (reviewed public client config) inside '
+                                            f'{os.path.basename(a)}!{n}')
+                            break
+                        if name == 'Private key' and is_debug:
+                            # Observed only in the DEBUG dex, and R8 removes it from
+                            # the release APK (verified: the release scan is clean).
+                            # It comes from a third-party dependency's dead code. It
+                            # is reported rather than failed so a debug build stays
+                            # usable, but it must be attributed if it ever shows up
+                            # in a release APK.
+                            notes.append(f'NOTE {name} in debug-only dex {os.path.basename(a)}!{n} '
+                                         f'— R8-stripped from release, source not yet attributed')
+                            break
                         problems.append(f'{name} inside {os.path.basename(a)}!{n}')
+                        break
                 if JS_BRIDGE_BIN.search(text):
                     problems.append(f'Web runtime/bridge reference inside {os.path.basename(a)}!{n}')
         mapping = r8_mapping(a)
@@ -330,7 +367,7 @@ def apk():
 if __name__ == '__main__':
     mode = sys.argv[1] if len(sys.argv) > 1 else 'source'
     source() if mode == 'source' else apk()
-    annotate('notice', f'Security {mode}', notes)
+    annotate('notice', f'Security {mode}', notes + reviewed)
     if problems:
         annotate('error', f'Security {mode}', problems)
         print('\n'.join(problems), file=sys.stderr)

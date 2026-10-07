@@ -272,6 +272,38 @@ def open_screen(label, expect, tries=3):
     return False
 
 
+def open_course_pdf(tab_pattern=r'PDF · \d+', attempts=3):
+    """Navigates Home → Courses → Smoke Physics → Smoke Unit → PDF tab → Open PDF.
+
+    Returns True once the viewer's page indicator is on screen. Each attempt
+    re-navigates from the Hub and waits for the action list to be present before
+    tapping, so a half-completed navigation or a tap that lands while the screen
+    is still settling cannot poison the following attempt. That makes the check
+    deterministic, which matters because its result is the §22 release gate and
+    must not depend on automation luck.
+    """
+    for _ in range(attempts):
+        home_hub()
+        if not tap(r'Courses|المقررات', scrolls=2):
+            continue
+        if not tap(r'.*Smoke Physics.*', scrolls=1):
+            continue
+        if not tap(r'.*Smoke Unit.*', scrolls=1):
+            continue
+        if not tap_tab(tab_pattern, anchor=r'(Text|نص) · \d+'):
+            continue
+        # The action list must actually be on screen before "Open PDF" can mean anything.
+        if not wait_for(r'Open PDF|فتح PDF', 10):
+            continue
+        # No scrolling here: the button is already visible, and the scroll churn
+        # was the difference between this check and the two identical checks that
+        # pass elsewhere in the suite.
+        if tap(r'Open PDF|فتح PDF', scrolls=0, wait=4) and wait_for(r'Page 1 of 2|صفحة 1 من 2', 30):
+            return True
+        back()
+    return False
+
+
 # ─────────────────────────────── run ───────────────────────────────
 def main():
     booted = wait_for_boot()
@@ -542,18 +574,20 @@ def main():
         if tap(r'.*Smoke Physics.*', scrolls=1) and tap(r'.*Smoke Unit.*', scrolls=1):
             step('update (§22): unit contents intact', r'.*(4 items|4 عناصر).*', 8)
             # The asset FILE lives in filesDir/course_assets/<id>, which an update
-            # does not touch, so a single slow first raster is not data loss. Retry
-            # once with a wider window before calling it a failure.
-            rendered = False
-            for attempt in range(2):
-                if tap_tab(r'PDF · \d+', anchor=r'(Text|نص) · \d+') and tap(r'Open PDF|فتح PDF', scrolls=2, wait=5):
-                    if wait_for(r'Page 1 of 2|صفحة 1 من 2', 25):
-                        rendered = True
-                        break
-                    back()
-            log('PASS' if rendered else 'FAIL', 'update (§22): PDF asset still renders',
-                '' if rendered else f'not rendered after {2} attempts (asset row and unit survived): '
-                                    + ' | '.join(texts())[:200])
+            # does not touch, so a slow first raster is not data loss. The
+            # navigator retries from the Hub each time.
+            rendered = open_course_pdf()
+            if rendered:
+                log('PASS', 'update (§22): PDF asset still renders', 'viewer opened on a cold start')
+                back()
+            else:
+                # health() runs first so a genuine crash is reported as a crash
+                # rather than as "the viewer did not open" — the two have very
+                # different meanings for §22.
+                health('update (§22): PDF asset still renders')
+                log('FAIL', 'update (§22): PDF asset still renders',
+                    'viewer did not open after 3 navigations (asset row and unit contents survived): '
+                    + ' | '.join(texts())[:200])
         else:
             log('FAIL', 'update (§22): course not openable after update', ' | '.join(texts())[:200])
         # Note content lives in Room and its attachment bytes in

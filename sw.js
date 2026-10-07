@@ -6,7 +6,7 @@
    ═══════════════════════════════════════════════════════════ */
 'use strict';
 
-const VERSION = 'v1.15.4';                 /* bumped — Google Forms/Summaries, custom Focus/Break
+const VERSION = 'v1.29.0';                 /* bumped — Google Authentication/Firestore, Google Forms/Summaries, custom Focus/Break
                                               durations, new local click/alarm sounds, nav-flicker fix, PDF.js 3.11 classic build/content tabs, Blogger section, GA4 analytics */
 const CACHE   = 'ubad-hub-' + VERSION;
 
@@ -16,6 +16,7 @@ const SHELL = [
   './style.css',
   './app.js',
   './analytics-config.js',
+  './firebase-auth.js',
   './manifest.json',
   './assets/icons/icon.svg',
   './assets/icons/icon-maskable.svg',

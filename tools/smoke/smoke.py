@@ -637,23 +637,39 @@ def main():
             #     proves the typed text actually reached the field.
             home_hub(); tap(COURSES, scrolls=1)
             created = False
+            stage = 'FAB "New course" not tappable'
+            if find(r'مقرر جديد|New course') is None:
+                log('INFO', 'course creation: no "New course" node on the Courses screen',
+                    ' | '.join(texts())[:400])
             if tap(r'مقرر جديد|New course', scrolls=2, wait=3):
-                if wait_for(r'اسم المقرر|Course name', 8) and tap(r'اسم المقرر|Course name', scrolls=0, wait=2):
-                    sh("input text 'Smoke%sCreated'"); time.sleep(2)
-                    if wait_for(r'.*Smoke Created.*', 6):
-                        # Tapping to focus raises the soft keyboard, which can cover
-                        # the dialog buttons. BACK closes the keyboard without
-                        # dismissing the dialog; tap() only presses visible nodes, so
-                        # this retry is a no-op when the keyboard was not in the way.
-                        if not tap(r'حفظ|Save', scrolls=0, wait=4):
-                            sh('input keyevent KEYCODE_BACK'); time.sleep(1.5)
-                            tap(r'حفظ|Save', scrolls=0, wait=4)
-                        # The typed text is itself "Smoke Created", so require the
-                        # dialog to be gone as well - otherwise an unsaved dialog
-                        # would look like a created course.
-                        created = wait_for(r'.*Smoke Created.*', 10) and find(r'حفظ|Save') is None
+                # Record what the FAB tap actually produced before judging it: a
+                # Compose Dialog is its own window, so this also shows whether the
+                # dump sees dialog content at all.
+                log('INFO', 'course creation: FAB tapped, screen now', ' | '.join(texts())[:400])
+                stage = 'dialog did not open (no "Course name" field)'
+                if wait_for(r'اسم المقرر|Course name', 10):
+                    stage = 'name field not tappable'
+                    if tap(r'اسم المقرر|Course name', scrolls=0, wait=2):
+                        stage = 'typed text never appeared in the field'
+                        sh("input text 'Smoke%sCreated'"); time.sleep(2)
+                        if wait_for(r'.*Smoke Created.*', 8):
+                            stage = 'Save not tappable'
+                            saved = tap(r'حفظ|Save', scrolls=0, wait=4)
+                            if not saved:
+                                # Tapping to focus raises the soft keyboard, which
+                                # can cover the dialog buttons. BACK closes the
+                                # keyboard without dismissing the dialog.
+                                sh('input keyevent KEYCODE_BACK'); time.sleep(1.5)
+                                saved = tap(r'حفظ|Save', scrolls=0, wait=4)
+                            if saved:
+                                # The typed text is itself "Smoke Created", so also
+                                # require the dialog to be gone - otherwise an
+                                # unsaved dialog would read as a created course.
+                                created = wait_for(r'.*Smoke Created.*', 10) and find(r'حفظ|Save') is None
+                                if not created:
+                                    stage = 'Save pressed but no course appeared (or dialog stayed open)'
             log('PASS' if created else 'FAIL', 'course creation (New course dialog)',
-                '' if created else 'dialog did not complete: ' + ' | '.join(texts())[:200])
+                '' if created else f'{stage}: ' + ' | '.join(texts())[:400])
             health('after course creation')
 
     # 10. Arabic + RTL

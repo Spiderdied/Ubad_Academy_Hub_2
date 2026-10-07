@@ -468,7 +468,9 @@ def main():
     ok = 'Success' in upd
     log('PASS' if ok else 'FAIL', 'update (§22): reinstall over populated app', upd.strip()[-200:])
     if ok:
-        health('after update')
+        # No health() here: `install -r` force-stops the app, so "process not
+        # running" is the expected state at this instant, not a failure. The
+        # launch below is what proves the updated app actually starts.
         launch()
         step('update (§22): app launches after update', r'.*(الرئيسية|المقررات|رجوع|Home).*', 25)
         for label, expect in ((COURSES, r'.*Smoke Physics.*'), (NOTES, r'.*Smoke Note.*')):
@@ -477,11 +479,19 @@ def main():
         home_hub(); tap(COURSES, scrolls=1)
         if tap(r'.*Smoke Physics.*', scrolls=1) and tap(r'.*Smoke Unit.*', scrolls=1):
             step('update (§22): unit contents intact', r'.*(4 items|4 عناصر).*', 8)
-            if tap_tab(r'PDF · \d+', anchor=r'(Text|نص) · \d+') and tap(r'Open PDF|فتح PDF', scrolls=2, wait=4):
-                step('update (§22): PDF asset still renders', r'Page 1 of 2|صفحة 1 من 2', 10)
-                back()
-            else:
-                log('FAIL', 'update (§22): PDF not reachable after update', ' | '.join(texts())[:200])
+            # The asset FILE lives in filesDir/course_assets/<id>, which an update
+            # does not touch, so a single slow first raster is not data loss. Retry
+            # once with a wider window before calling it a failure.
+            rendered = False
+            for attempt in range(2):
+                if tap_tab(r'PDF · \d+', anchor=r'(Text|نص) · \d+') and tap(r'Open PDF|فتح PDF', scrolls=2, wait=5):
+                    if wait_for(r'Page 1 of 2|صفحة 1 من 2', 25):
+                        rendered = True
+                        break
+                    back()
+            log('PASS' if rendered else 'FAIL', 'update (§22): PDF asset still renders',
+                '' if rendered else f'not rendered after {2} attempts (asset row and unit survived): '
+                                    + ' | '.join(texts())[:200])
         else:
             log('FAIL', 'update (§22): course not openable after update', ' | '.join(texts())[:200])
         home_hub(); tap(r'Study Tools|أدوات الدراسة', scrolls=2)

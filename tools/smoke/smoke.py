@@ -182,6 +182,13 @@ ANR_DIALOG = r".*(?:isn't|isn\u2019t|not responding|لا يستجيب).*"
 ANR_DISMISS = r"Wait|انتظار|إنتظار"
 
 
+# The PDF viewer's "Page 1 of 2" indicator. Android formats %d with the *locale's*
+# numerals, so the same string resource renders "صفحة ١ من ٢" in Arabic: the failure
+# this replaced was an assertion that only accepted Western digits, which made a
+# working viewer look broken. Match either script.
+PDF_PAGE_INDICATOR = r'Page\s+\d+\s+of\s+\d+|صفحة\s+[0-9\u0660-\u0669\u06F0-\u06F9]+\s+من\s+[0-9\u0660-\u0669\u06F0-\u06F9]+'
+
+
 def dismiss_anr(attempts=3):
     """Clears a system ANR dialog. Returns True when one was dismissed.
 
@@ -394,7 +401,7 @@ def open_course_pdf(tab_pattern=r'PDF · \d+', attempts=3):
             log('INFO', f'pdf nav {n}: "Open PDF" exists but no scroll position exposed it on screen: '
                         + ' | '.join(texts())[:160])
             continue
-        if wait_for(r'Page 1 of 2|صفحة 1 من 2', 30):
+        if wait_for(PDF_PAGE_INDICATOR, 30):
             return True
         log('INFO', f'pdf nav {n}: tapped "Open PDF" but the page indicator never appeared: '
                     + ' | '.join(texts())[:160])
@@ -463,7 +470,7 @@ def main():
                 step('Unit', r'.*Smoke.*', 10)
                 if tap_tab(r'PDF · \d+'):
                     if tap(r'Open PDF', scrolls=2, wait=4):
-                        step('PDF viewer (PdfRenderer)', r'.*1.*2.*|.*[Pp]age.*', 10)
+                        step('PDF viewer (PdfRenderer)', PDF_PAGE_INDICATOR, 15)
                         back()
                     else:
                         log('FAIL', 'Open PDF button not found', ' | '.join(texts())[:200])
@@ -609,7 +616,7 @@ def main():
             if tap(r'.*Smoke Physics.*', scrolls=1) and tap(r'.*Smoke Unit.*', scrolls=1):
                 step('after re-import: unit contents + progress intact', r'.*(4 items|4 عناصر).*', 8)
                 if tap_tab(r'PDF · \d+', anchor=r'(Text|نص) · \d+') and tap(r'Open PDF|فتح PDF', scrolls=2, wait=4):
-                    step('after re-import: PDF asset opens and renders', r'Page 1 of 2|صفحة 1 من 2', 10)
+                    step('after re-import: PDF asset opens and renders', PDF_PAGE_INDICATOR, 15)
                     back()
                 else:
                     log('FAIL', 'after re-import: PDF not reachable', ' | '.join(texts())[:200])

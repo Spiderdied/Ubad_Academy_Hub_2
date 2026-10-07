@@ -482,7 +482,7 @@ def main():
                 else:
                     log('FAIL', 'Audio tab / Play not found')
                 if tap_tab(r'Text · \d+'):
-                    step('Text content (Arabic + English)', r'(?s).*سطر عربي.*|(?s).*English line.*', 5)
+                    step('Text content (Arabic + English)', r'(?s).*(?:سطر عربي|English line).*', 5)
     home_hub()
     for label, expect in ((r'Notes', r'.*Smoke Note.*'), (r'Calendar', r'.*'), (r'Dashboard', r'.*'),
                           (r'I am Muslim', r'.*'), (r'Blog', r'.*')):

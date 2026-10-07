@@ -112,7 +112,7 @@ fun CloudSettingsSection(
         // ── signed in ──
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Text(
-                stringResource(R.string.set_googleSignedIn, user.name.ifBlank { user.email }),
+                stringResource(R.string.set_googleSignedIn, user.label),
                 style = MaterialTheme.typography.bodyLarge,
             )
             if (user.email.isNotBlank()) {

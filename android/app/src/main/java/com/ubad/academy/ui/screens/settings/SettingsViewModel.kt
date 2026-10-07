@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -82,9 +81,6 @@ class SettingsViewModel @Inject constructor(
                 }
             }
         }
-        viewModelScope.launch {
-            auth.lastError.filterNotNull().collect { messages.send(it, error = true) }
-        }
     }
 
     /** Google sign-in must be launched from an Activity for the Credential Manager UI. */
@@ -109,7 +105,7 @@ class SettingsViewModel @Inject constructor(
         try {
             cloud.uploadDeviceToCloud()
                 .onSuccess { messages.send(R.string.set_cloudUploaded) }
-                .onFailure { messages.send(it.message ?: "", error = true) }
+                .onFailure { messages.sendRaw(it.message, error = true) }
         } finally { _busy.value = false }
     }
 
@@ -120,7 +116,7 @@ class SettingsViewModel @Inject constructor(
         try {
             cloud.downloadCloudToDevice()
                 .onSuccess { messages.send(R.string.set_cloudDownloaded); afterCloudApply() }
-                .onFailure { messages.send(it.message ?: "", error = true) }
+                .onFailure { messages.sendRaw(it.message, error = true) }
         } finally { _busy.value = false }
     }
 
@@ -129,7 +125,7 @@ class SettingsViewModel @Inject constructor(
         try {
             cloud.mergeWithCloud()
                 .onSuccess { messages.send(R.string.set_synced); afterCloudApply() }
-                .onFailure { messages.send(it.message ?: "", error = true) }
+                .onFailure { messages.sendRaw(it.message, error = true) }
         } finally { _busy.value = false }
     }
 

@@ -107,6 +107,12 @@ jobs:
             android/app/build/outputs/apk/**/*.apk
             android/app/build/outputs/bundle/**/*.aab
             android/app/build/outputs/mapping/release/mapping.txt
+            # Room's exported schema. Committing the v1 baseline is what makes a
+            # future v1->v2 migration writable AND testable (MigrationTestHelper
+            # diffs against these JSON files). §22 makes this a release concern:
+            # without a baseline, a later schema change has nothing to migrate
+            # from, and Room would throw on open rather than upgrade the data.
+            android/app/schemas/**
           if-no-files-found: ignore
 
   # Runtime smoke test of the R8-minified release APK on an emulator (release runs only).

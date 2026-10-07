@@ -6,7 +6,8 @@
 Drives the real UI through `adb` + `uiautomator dump`: onboarding, language switch, every hub
 section, Study tabs, all 6 themes, deep links, rotation, night mode, offline Blog, the focus
 alarm receiver, backup import (web-shaped v2 file) through the system picker, the imported PDF
-/ image / audio in the native viewers, and backup export validated as JSON v2.
+/ image / audio in the native viewers, backup export validated as JSON v2, and an
+install-over-existing-data update (§22 data-migration release blocker).
 
 Hard failures (exit 1): the process crashes or dies, the app does not launch, onboarding cannot be
 completed, or a checked screen never appears. Everything is written to <out-dir>/report.txt plus
@@ -455,6 +456,40 @@ def main():
     step('relaunch after process kill (state restored, Arabic kept)', r'.*(الإعدادات|المقررات|المدونة|الرئيسية|رجوع).*', 15)
     home_hub(); tap(r'المقررات', scrolls=1)
     step('imported data persisted after restart', r'.*Smoke Physics.*', 10)
+
+    # ── §22 data-migration release blocker: an app UPDATE must not lose data ──
+    # `adb install -r` over an installed, already-populated app exercises the same
+    # on-device path as a store update: the APK is replaced while /data survives,
+    # so Room must open the existing database (a missing migration would throw
+    # here), and DataStore plus the file store must come back untouched. Nothing
+    # in this step clears data — if anything is missing afterwards, the update
+    # path is destructive and the build must not ship.
+    upd = adb('install', '-r', '-g', APK, timeout=300)
+    ok = 'Success' in upd
+    log('PASS' if ok else 'FAIL', 'update (§22): reinstall over populated app', upd.strip()[-200:])
+    if ok:
+        health('after update')
+        launch()
+        step('update (§22): app launches after update', r'.*(الرئيسية|المقررات|رجوع|Home).*', 25)
+        for label, expect in ((COURSES, r'.*Smoke Physics.*'), (NOTES, r'.*Smoke Note.*')):
+            home_hub(); tap(label, scrolls=2)
+            step(f'update (§22): {label.split("|")[0]} intact', expect, 10)
+        home_hub(); tap(COURSES, scrolls=1)
+        if tap(r'.*Smoke Physics.*', scrolls=1) and tap(r'.*Smoke Unit.*', scrolls=1):
+            step('update (§22): unit contents intact', r'.*(4 items|4 عناصر).*', 8)
+            if tap_tab(r'PDF · \d+', anchor=r'(Text|نص) · \d+') and tap(r'Open PDF|فتح PDF', scrolls=2, wait=4):
+                step('update (§22): PDF asset still renders', r'Page 1 of 2|صفحة 1 من 2', 10)
+                back()
+            else:
+                log('FAIL', 'update (§22): PDF not reachable after update', ' | '.join(texts())[:200])
+        else:
+            log('FAIL', 'update (§22): course not openable after update', ' | '.join(texts())[:200])
+        home_hub(); tap(r'Study Tools|أدوات الدراسة', scrolls=2)
+        step('update (§22): Study deck intact', r'.*Smoke Deck.*', 8)
+        tap(r'Quizzes|الاختبارات', scrolls=0)
+        step('update (§22): quiz intact', r'.*Smoke Quiz.*', 8)
+        home_hub(); tap(r'Dashboard|لوحة التحكم', scrolls=1)
+        step('update (§22): settings and user name intact', r'.*Smoke Tester.*', 8)
 
 
 try:

@@ -32,9 +32,6 @@ class CloudAuthRepository @Inject constructor(
     /** The signed-in account, or null. Also null when cloud is not configured. */
     val user: StateFlow<CloudUser?> = _user.asStateFlow()
 
-    private val _lastError = MutableStateFlow<String?>(null)
-    val lastError: StateFlow<String?> = _lastError.asStateFlow()
-
     init {
         runCatching {
             bootstrap.auth()?.addAuthStateListener { auth ->
@@ -71,7 +68,6 @@ class CloudAuthRepository @Inject constructor(
 
         val user = firebaseUser.toCloudUser()
         _user.value = user
-        _lastError.value = null
         return user
     }
 
@@ -89,8 +85,6 @@ class CloudAuthRepository @Inject constructor(
         val current = bootstrap.auth()?.currentUser ?: return null
         return runCatching { current.getIdToken(forceRefresh).awaitOrThrow().token }.getOrNull()
     }
-
-    fun recordError(message: String?) { _lastError.value = message }
 
     private fun FirebaseUser.toCloudUser() = CloudUser(
         uid = uid,

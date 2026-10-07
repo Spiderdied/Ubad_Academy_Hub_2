@@ -627,6 +627,35 @@ def main():
             home_hub(); tap(r'Dashboard|لوحة التحكم', scrolls=1)
             step('after re-import: user name intact', r'.*Smoke Tester.*', 8)
 
+            # 9c. Course creation through the app's own dialog. The 25-point test
+            #     list includes creating a course, and this doubles as §22 evidence:
+            #     the course exists before the update below and is re-checked after
+            #     it, which tests data the *user created in the app* rather than
+            #     data restored from a backup file.
+            #     Save stays disabled while the name is blank (CourseDialog:
+            #     `TextButton(enabled = name.isNotBlank())`), so a saved course also
+            #     proves the typed text actually reached the field.
+            home_hub(); tap(COURSES, scrolls=1)
+            created = False
+            if tap(r'مقرر جديد|New course', scrolls=2, wait=3):
+                if wait_for(r'اسم المقرر|Course name', 8) and tap(r'اسم المقرر|Course name', scrolls=0, wait=2):
+                    sh("input text 'Smoke%sCreated'"); time.sleep(2)
+                    if wait_for(r'.*Smoke Created.*', 6):
+                        # Tapping to focus raises the soft keyboard, which can cover
+                        # the dialog buttons. BACK closes the keyboard without
+                        # dismissing the dialog; tap() only presses visible nodes, so
+                        # this retry is a no-op when the keyboard was not in the way.
+                        if not tap(r'حفظ|Save', scrolls=0, wait=4):
+                            sh('input keyevent KEYCODE_BACK'); time.sleep(1.5)
+                            tap(r'حفظ|Save', scrolls=0, wait=4)
+                        # The typed text is itself "Smoke Created", so require the
+                        # dialog to be gone as well - otherwise an unsaved dialog
+                        # would look like a created course.
+                        created = wait_for(r'.*Smoke Created.*', 10) and find(r'حفظ|Save') is None
+            log('PASS' if created else 'FAIL', 'course creation (New course dialog)',
+                '' if created else 'dialog did not complete: ' + ' | '.join(texts())[:200])
+            health('after course creation')
+
     # 10. Arabic + RTL
     home_hub(); tap(r'Settings|الإعدادات', scrolls=2)
     if find(r'.*الإعدادات.*') is not None or tap(r'العربية', scrolls=4, wait=4):
@@ -723,6 +752,10 @@ def main():
         step('update (§22): quiz intact', r'.*Smoke Quiz.*', 8)
         home_hub(); tap(r'Dashboard|لوحة التحكم', scrolls=1)
         step('update (§22): settings and user name intact', r'.*Smoke Tester.*', 8)
+        # The course created in step 9c was authored in the app, not imported, so
+        # this covers the "data the user made themselves" path through an update.
+        home_hub(); tap(COURSES, scrolls=1)
+        step('update (§22): created course intact', r'.*Smoke Created.*', 10)
 
 
 try:

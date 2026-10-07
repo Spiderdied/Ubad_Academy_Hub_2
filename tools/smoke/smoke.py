@@ -638,10 +638,28 @@ def main():
             home_hub(); tap(COURSES, scrolls=1)
             created = False
             stage = 'FAB "New course" not tappable'
+            fab_probe = None
             if find(r'مقرر جديد|New course') is None:
                 log('INFO', 'course creation: no "New course" node on the Courses screen',
                     ' | '.join(texts())[:400])
-            if tap(r'مقرر جديد|New course', scrolls=2, wait=3):
+                # Every screen's floating action button is absent from the
+                # accessibility tree (Courses, Notes, Calendar, Study, Unit). Probe the
+                # two places a Scaffold can put one: above the navigation suite, which
+                # means it is merely not exposed, and at the bottom edge, which means it
+                # is drawn underneath the navigation suite and no user can reach it.
+                w, h = screen_size()
+                for label, y in (('above the navigation suite', h - 326),
+                                 ('at the bottom edge (under it)', h - 116)):
+                    sh(f'input tap {w - 230} {y}'); time.sleep(3)
+                    if find(r'اسم المقرر|Course name') is not None:
+                        fab_probe = label
+                        log('INFO', f'course creation: FAB answered a tap at y={y}px — {label}')
+                        break
+                    home_hub(); tap(COURSES, scrolls=1)
+            # Short-circuit: if the probe already opened the dialog, tapping again
+            # would land on the dialog's own title (same string).
+            opened = fab_probe is not None or tap(r'مقرر جديد|New course', scrolls=2, wait=3)
+            if opened:
                 # Record what the FAB tap actually produced before judging it: a
                 # Compose Dialog is its own window, so this also shows whether the
                 # dump sees dialog content at all.

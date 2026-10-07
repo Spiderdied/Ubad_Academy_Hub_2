@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,7 +25,7 @@ private val Context.cloudDataStore: DataStore<Preferences> by preferencesDataSto
  * apart preserves that behaviour without special-casing `wipe()`.
  */
 @Singleton
-class CloudPrefsStore @Inject constructor(context: Context) {
+class CloudPrefsStore @Inject constructor(@ApplicationContext context: Context) {
     private val store = context.cloudDataStore
 
     private object K {

@@ -16,7 +16,7 @@ import androidx.compose.material.icons.outlined.Cloud
 import androidx.compose.material.icons.outlined.CloudDone
 import androidx.compose.material.icons.outlined.CloudOff
 import androidx.compose.material.icons.outlined.CloudUpload
-import androidx.compose.material.icons.outlined.Logout
+import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -159,7 +159,7 @@ fun CloudSettingsSection(
                 Text(stringResource(R.string.set_downloadCloud))
             }
             OutlinedButton(onClick = onSignOut, enabled = !busy && !status.busy) {
-                Icon(Icons.Outlined.Logout, null, Modifier.size(18.dp))
+                Icon(Icons.AutoMirrored.Outlined.Logout, null, Modifier.size(18.dp))
                 Spacer(Modifier.width(6.dp))
                 Text(stringResource(R.string.set_googleSignOut))
             }

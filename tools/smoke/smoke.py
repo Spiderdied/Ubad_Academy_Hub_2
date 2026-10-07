@@ -8,6 +8,8 @@ section, Study tabs, all 6 themes, deep links, rotation, night mode, offline Blo
 alarm receiver, backup import (web-shaped v2 file) through the system picker, the imported PDF
 / image / audio in the native viewers, backup export validated as JSON v2, and an
 install-over-existing-data update (§22 data-migration release blocker).
+The harness waits for boot and clears system ANR dialogs, so an unstable emulator is
+reported as such instead of as an app failure.
 
 Hard failures (exit 1): the process crashes or dies, the app does not launch, onboarding cannot be
 completed, or a checked screen never appears. Everything is written to <out-dir>/report.txt plus
@@ -120,6 +122,53 @@ def tap_tab(pattern, anchor=r'Text · \d+|نص · \d+'):
     return False
 
 
+# A system "… isn't responding" dialog (typically the launcher, while the
+# emulator is still settling) covers the screen and makes every later UI check
+# fail. Matched as a FULL match because `find()` uses fullmatch on each text
+# node. Both the typographic and the plain apostrophe are covered.
+ANR_DIALOG = r".*(?:isn't|isn\u2019t|not responding|لا يستجيب).*"
+# "Wait" keeps the process alive. If it is *our* app that is genuinely hung, the
+# dialog returns and the check still fails on the retry — so dismissing never
+# hides a real defect, it only clears emulator obstruction.
+ANR_DISMISS = r"Wait|انتظار|إنتظار"
+
+
+def dismiss_anr(attempts=3):
+    """Clears a system ANR dialog. Returns True when one was dismissed.
+
+    Keeps emulator instability from being reported as an app failure: the caller
+    retries the check afterwards, so a real failure survives both attempts.
+    """
+    dismissed = False
+    for _ in range(attempts):
+        if find(ANR_DIALOG) is None:
+            return dismissed
+        dismissed = True
+        if not tap(ANR_DISMISS, scrolls=0, wait=1.5):
+            sh('input keyevent KEYCODE_BACK')   # no Wait button — dismiss the dialog
+            time.sleep(1)
+        time.sleep(1)
+    return dismissed
+
+
+def wait_for_boot(max_secs=240):
+    """Waits for the emulator to finish booting and settle before driving the UI.
+
+    An ANR during boot was observed covering the screen before the app could be
+    tested; waiting here makes an unstable CI emulator distinguishable from a
+    broken app.
+    """
+    adb('wait-for-device', timeout=max_secs)
+    end = time.time() + max_secs
+    while time.time() < end:
+        if sh('getprop sys.boot_completed').strip() == '1':
+            break
+        time.sleep(2)
+    time.sleep(5)          # let SystemUI and the launcher settle
+    dismiss_anr()
+    return sh('getprop sys.boot_completed').strip() == '1'
+
+
 def wait_for(pattern, secs=15):
     end = time.time() + secs
     while time.time() < end:
@@ -160,6 +209,11 @@ def health(name):
 def step(name, expect=None, secs=15):
     """Checks health, optionally waits for a text regex, records the visible texts and a screenshot."""
     ok = wait_for(expect, secs) if expect else True
+    if not ok and expect and dismiss_anr():
+        # One retry after clearing an emulator obstruction. A real app failure
+        # fails both attempts; a transient emulator stall does not.
+        log('INFO', f'{name}: system ANR dialog dismissed, retrying')
+        ok = wait_for(expect, secs)
     healthy = health(name)
     vis = ' | '.join(dict.fromkeys(texts()))[:400]
     if healthy:
@@ -175,8 +229,12 @@ def back(times=1):
 
 
 def launch():
+    dismiss_anr()
     sh(f'am start -W -n {PKG}/.MainActivity')
     time.sleep(3)
+    # A launcher ANR can appear over the app right after a cold start; clear it so
+    # the next check inspects the app rather than the dialog.
+    dismiss_anr()
 
 
 def deeplink(uri):
@@ -216,7 +274,8 @@ def open_screen(label, expect, tries=3):
 
 # ─────────────────────────────── run ───────────────────────────────
 def main():
-    adb('wait-for-device')
+    booted = wait_for_boot()
+    log('PASS' if booted else 'FAIL', 'emulator boot completed')
     adb('root'); time.sleep(3); adb('wait-for-device')
     sh('settings put global package_verifier_enable 0')
     out = adb('install', '-r', '-g', APK, timeout=300)
@@ -473,6 +532,9 @@ def main():
         # launch below is what proves the updated app actually starts.
         launch()
         step('update (§22): app launches after update', r'.*(الرئيسية|المقررات|رجوع|Home).*', 25)
+        # The language is a persisted setting: were DataStore reset by the update,
+        # the UI would be back to English instead of Arabic.
+        step('update (§22): language setting intact (Arabic UI)', r'.*(المقررات|الرئيسية|لوحة التحكم).*', 10)
         for label, expect in ((COURSES, r'.*Smoke Physics.*'), (NOTES, r'.*Smoke Note.*')):
             home_hub(); tap(label, scrolls=2)
             step(f'update (§22): {label.split("|")[0]} intact', expect, 10)

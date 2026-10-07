@@ -643,17 +643,33 @@ def main():
                 log('INFO', 'course creation: no "New course" node on the Courses screen',
                     ' | '.join(texts())[:400])
                 # Every screen's floating action button is absent from the
-                # accessibility tree (Courses, Notes, Calendar, Study, Unit). Probe the
-                # two places a Scaffold can put one: above the navigation suite, which
-                # means it is merely not exposed, and at the bottom edge, which means it
-                # is drawn underneath the navigation suite and no user can reach it.
+                # accessibility tree (Courses, Notes, Calendar, Study, Unit), while a
+                # Dialog's buttons *are* visible to the dump (the erase confirm is
+                # tapped that way). So rather than guess coordinates, list what is
+                # actually clickable in the bottom-right region and try each, highest
+                # first: the FAB, if it exists and is reachable, is the clickable above
+                # the navigation items. If the only clickables there are the
+                # navigation items, the FAB is not reachable by any user either.
                 w, h = screen_size()
-                for label, y in (('above the navigation suite', h - 326),
-                                 ('at the bottom edge (under it)', h - 116)):
-                    sh(f'input tap {w - 230} {y}'); time.sleep(3)
+                cand = []
+                for n in nodes():
+                    if n.get('clickable') != 'true':
+                        continue
+                    b = re.findall(r'\d+', n.get('bounds') or '')
+                    if len(b) < 4:
+                        continue
+                    x1, y1, x2, y2 = (int(v) for v in b[:4])
+                    if x2 > w * 0.55 and y2 > h * 0.55:
+                        label = (n.get('text') or n.get('content-desc') or '(no text)')[:18]
+                        cand.append((y1, (x1 + x2) // 2, (y1 + y2) // 2, label))
+                cand.sort()
+                log('INFO', 'course creation: clickables in the bottom-right, top-down',
+                    ' | '.join(f'{lb}@{x},{y}' for _, x, y, lb in cand[:6]))
+                for _, x, y, lb in cand:
+                    sh(f'input tap {x} {y}'); time.sleep(3)
                     if find(r'اسم المقرر|Course name') is not None:
-                        fab_probe = label
-                        log('INFO', f'course creation: FAB answered a tap at y={y}px — {label}')
+                        fab_probe = f'{lb} at {x},{y}'
+                        log('INFO', 'course creation: the new-course dialog opened from a tap on', fab_probe)
                         break
                     home_hub(); tap(COURSES, scrolls=1)
             # Short-circuit: if the probe already opened the dialog, tapping again

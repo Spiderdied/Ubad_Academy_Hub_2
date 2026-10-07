@@ -228,10 +228,23 @@ def back(times=1):
         time.sleep(1.2)
 
 
-def launch():
+def launch(timeout=40):
+    """Starts the app and waits until it is genuinely interactive.
+
+    A fixed sleep here was the cause of a real false failure: cold starts on a
+    fresh AVD measured 11.7 s, so a 3 s wait let the next interaction (tapping the
+    onboarding language chip) fire while the screen was still settling. Waiting for
+    the app's activity to be the resumed one *and* for it to have drawn content is
+    both faster in the common case and immune to slow boots.
+    """
     dismiss_anr()
     sh(f'am start -W -n {PKG}/.MainActivity')
-    time.sleep(3)
+    end = time.time() + timeout
+    while time.time() < end:
+        if PKG in sh('dumpsys activity activities | grep -m1 ResumedActivity') and texts():
+            time.sleep(1.5)   # let the first frame settle before interacting
+            break
+        time.sleep(1)
     # A launcher ANR can appear over the app right after a cold start; clear it so
     # the next check inspects the app rather than the dialog.
     dismiss_anr()
@@ -323,8 +336,11 @@ def main():
     log('INFO', 'cold start', f'{time.time() - t0:.1f}s')
     if not step('launch → onboarding (Arabic default)', r'ابدأ|Get started', 25):
         return
-    # 2. Switch to English inside onboarding, then finish
-    tap(r'English', scrolls=0)
+    # 2. Switch to English inside onboarding, then finish.
+    # The chip can miss if the screen is still settling; retry the tap once. The
+    # assertion below stays hard - it still fails if English never appears.
+    if not (tap(r'English', scrolls=0, wait=3) and wait_for(r'Get started', 8)):
+        tap(r'English', scrolls=0, wait=3)
     step('onboarding: English', r'Get started', 10)
     tap(r'Get started', scrolls=2, wait=3)
     if not step('onboarding done → Home', r'ACADEMY HUB', 15):

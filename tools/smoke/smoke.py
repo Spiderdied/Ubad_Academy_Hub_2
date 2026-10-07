@@ -70,6 +70,43 @@ def center(n):
     return (x1 + x2) // 2, (y1 + y2) // 2
 
 
+_SCREEN = None
+
+
+def screen_size():
+    """(width, height) of the emulator screen, read once and cached."""
+    global _SCREEN
+    if _SCREEN is None:
+        m = re.findall(r'(\d+)x(\d+)', sh('wm size'))
+        _SCREEN = (int(m[-1][0]), int(m[-1][1])) if m else (1080, 1920)
+    return _SCREEN
+
+
+def visible_center(n, margin=6):
+    """Centre of the part of node `n` that is actually on screen, or None.
+
+    uiautomator dumps include nodes that are scrolled out of view. Tapping such a
+    node's geometric centre puts the tap outside the screen (or on whatever else
+    is there) and silently does nothing, while the caller believes it tapped.
+
+    That is exactly what made the §22 post-update PDF check fail three times in a
+    row while the identical interaction passed elsewhere in the suite: the action
+    list containing "Open PDF" sat below the fold in that particular navigation, so
+    "Open PDF" was found in the dump but tapping it did nothing. Callers must keep
+    scrolling while this returns None.
+    """
+    b = re.findall(r'\d+', n.get('bounds') or '')
+    if len(b) < 4:
+        return None
+    x1, y1, x2, y2 = (int(v) for v in b[:4])
+    w, h = screen_size()
+    cx1, cy1 = max(x1, 0), max(y1, 0)
+    cx2, cy2 = min(x2, w), min(y2, h)
+    if cx2 - cx1 < margin or cy2 - cy1 < margin:
+        return None
+    return (cx1 + cx2) // 2, (cy1 + cy2) // 2
+
+
 def find(pattern, ns=None, last=False):
     rx = re.compile(pattern)
     hits = [n for n in (nodes() if ns is None else ns)
@@ -92,15 +129,24 @@ def swipe_down():
 
 
 def tap(pattern, scrolls=4, wait=2.0, last=False):
-    """Taps the first node whose text/content-desc fully matches; scrolls down, then back up, to find it."""
+    """Taps the first ON-SCREEN node matching; scrolls down, then back up, to find one.
+
+    Only nodes with a visible area are tapped (see visible_center): a match that is
+    scrolled out of view is skipped and the scroll continues, instead of firing a
+    tap at coordinates outside the screen and silently doing nothing.
+    """
+    rx = re.compile(pattern)
     moves = [None] + [swipe_up] * scrolls + [swipe_down] * (scrolls * 2)
     for move in moves:
         if move:
             move()
-        n = find(pattern, last=last)
-        if n is not None:
-            x, y = center(n)
-            sh(f'input tap {x} {y}')
+        hits = [n for n in nodes()
+                if any(t and rx.fullmatch(t.strip()) for t in (n.get('text'), n.get('content-desc')))]
+        for n in (list(reversed(hits)) if last else hits):
+            pos = visible_center(n)
+            if pos is None:
+                continue
+            sh(f'input tap {pos[0]} {pos[1]}')
             time.sleep(wait)
             return True
     return False
@@ -283,6 +329,24 @@ def open_screen(label, expect, tries=3):
         if tap(label, scrolls=3, wait=2.5) and wait_for(expect, 8):
             return True
     return False
+
+
+def files_dir_state():
+    """Every file under the app's filesDir, as "md5  path" lines (root shell).
+
+    Byte-level evidence for §22. `install -r` replaces the APK and force-stops the
+    app, but must not alter a single byte the user already stored. Comparing the
+    whole directory before and after the update is independent of any UI
+    automation, so data preservation can be judged even if a screen check is flaky.
+    """
+    base = f'/data/data/{PKG}/files'
+    listing = sh(f'find {base} -type f 2>/dev/null')
+    rows = []
+    for path in sorted(p for p in listing.split() if p):
+        digest = sh(f'md5sum {path} 2>/dev/null').split()
+        if digest:
+            rows.append(f'{digest[0]}  {path}')
+    return '\n'.join(rows)
 
 
 def open_course_pdf(tab_pattern=r'PDF · \d+', attempts=3):
@@ -571,10 +635,18 @@ def main():
     # here), and DataStore plus the file store must come back untouched. Nothing
     # in this step clears data — if anything is missing afterwards, the update
     # path is destructive and the build must not ship.
+    files_before = files_dir_state()
+    log('INFO', 'filesDir before update', f'{len(files_before.splitlines())} file(s) hashed')
     upd = adb('install', '-r', '-g', APK, timeout=300)
     ok = 'Success' in upd
     log('PASS' if ok else 'FAIL', 'update (§22): reinstall over populated app', upd.strip()[-200:])
     if ok:
+        # Independent of the UI: every user file must be byte-identical afterwards.
+        files_after = files_dir_state()
+        same = bool(files_before) and files_before == files_after
+        log('PASS' if same else 'FAIL', 'update (§22): every file in filesDir unchanged (md5)',
+            f'{len(files_after.splitlines())} file(s) after, {len(files_before.splitlines())} before'
+            + ('' if same else ' — CONTENT CHANGED OR MISSING'))
         # No health() here: `install -r` force-stops the app, so "process not
         # running" is the expected state at this instant, not a failure. The
         # launch below is what proves the updated app actually starts.
